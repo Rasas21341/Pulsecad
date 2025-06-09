@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SARP Applications</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .btn {
+      padding: 15px 30px;
+      background-color: #007bff;
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    .container {
+      display: none;
+      margin-top: 30px;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    .submit-btn {
+      background-color: green;
+      color: white;
+      font-weight: bold;
+    }
+
+    .back-btn {
+      background-color: gray;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="mainPage">
+    <h1>SARP Staff Application</h1>
+    <button class="btn" onclick="showForm()">Applications</button>
+    <button class="btn" onclick="requestPassword()">Staff Panel</button>
+  </div>
+
+  <!-- Application Form -->
+  <div class="container" id="applicationForm">
+    <form onsubmit="handleSubmit(event)">
+      <input type="text" id="discord" placeholder="Discord Username" required><br>
+      <input type="text" id="roblox" placeholder="Roblox Username" required><br>
+      <textarea id="reason" placeholder="Why do you want to join the SARP Staff Team?" required></textarea><br>
+      <input type="number" id="activity" min="1" max="10" placeholder="How active are you? (1-10)" required><br>
+      <button type="submit" class="btn submit-btn">Submit Application</button>
+    </form>
+    <button class="btn back-btn" onclick="goBack()">Back</button>
+  </div>
+
+  <!-- Password Prompt -->
+  <div class="container" id="passwordContainer">
+    <h2>Staff Panel Login</h2>
+    <input type="password" id="staffPassword" placeholder="Enter Password">
+    <button class="btn" onclick="checkPassword()">Login</button>
+    <button class="btn back-btn" onclick="goBack()">Back</button>
+  </div>
+
+  <!-- "Private" Staff Panel Page -->
+  <div class="container" id="staffPanel">
+    <h2>🔒 Private Staff Panel</h2>
+    <p>Welcome to the private panel.</p>
+    <button class="btn" onclick="showResults()">View Applications</button>
+    <button class="btn back-btn" onclick="returnToHome()">Logout</button>
+  </div>
+
+  <!-- Application Results -->
+  <div class="container" id="resultsContainer">
+    <h2>Application Results</h2>
+    <div id="results"></div>
+    <button class="btn back-btn" onclick="showStaffPanel()">Back to Panel</button>
+  </div>
+
+  <script>
+    const applications = [];
+    const adminPassword = "admin123123";
+
+    function hideAll() {
+      document.querySelectorAll('.container').forEach(el => el.style.display = 'none');
+      document.getElementById("mainPage").style.display = "none";
+    }
+
+    function showForm() {
+      hideAll();
+      document.getElementById("applicationForm").style.display = "block";
+    }
+
+    function requestPassword() {
+      hideAll();
+      document.getElementById("passwordContainer").style.display = "block";
+    }
+
+    function checkPassword() {
+      const entered = document.getElementById("staffPassword").value;
+      if (entered === adminPassword) {
+        showStaffPanel();
+      } else {
+        alert("Incorrect password!");
+      }
+    }
+
+    function showStaffPanel() {
+      hideAll();
+      document.getElementById("staffPanel").style.display = "block";
+    }
+
+    function showResults() {
+      hideAll();
+      const results = document.getElementById("results");
+      results.innerHTML = "";
+
+      if (applications.length === 0) {
+        results.innerHTML = "<p>No applications submitted yet.</p>";
+      } else {
+        applications.forEach((app, index) => {
+          results.innerHTML += `
+            <div style="margin-bottom: 20px; padding: 10px; border-bottom: 1px solid #ccc;">
+              <strong>Application #${index + 1}</strong><br>
+              Discord: ${app.discord}<br>
+              Roblox: ${app.roblox}<br>
+              Reason: ${app.reason}<br>
+              Activity: ${app.activity}/10
+            </div>
+          `;
+        });
+      }
+
+      document.getElementById("resultsContainer").style.display = "block";
+    }
+
+    function goBack() {
+      hideAll();
+      document.getElementById("mainPage").style.display = "block";
+    }
+
+    function returnToHome() {
+      hideAll();
+      document.getElementById("mainPage").style.display = "block";
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+
+      const discord = document.getElementById("discord").value;
+      const roblox = document.getElementById("roblox").value;
+      const reason = document.getElementById("reason").value;
+      const activity = document.getElementById("activity").value;
+
+      applications.push({ discord, roblox, reason, activity });
+
+      alert("Application Submitted!");
+      e.target.reset();
+      goBack();
+    }
+
+    // Show homepage initially
+    document.getElementById("mainPage").style.display = "block";
+  </script>
+
+</body>
+</html>
