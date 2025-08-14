@@ -2,188 +2,147 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SARP Applications</title>
+  <title>Pulse Cad System's</title>
   <style>
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      text-align: center;
-      padding: 50px;
+      background-color: #000;
+      color: #fff;
     }
-
-    .btn {
-      padding: 15px 30px;
-      background-color: #007bff;
-      color: white;
-      font-size: 18px;
-      border: none;
-      border-radius: 8px;
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      border-bottom: 2px solid #333;
+    }
+    .logo-title {
+      display: flex;
+      align-items: center;
+    }
+    .logo-title img {
+      height: 50px;
+      margin-right: 15px;
+    }
+    .logo-title h1 {
+      font-size: 24px;
+      margin: 0;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .buttons button {
+      padding: 10px 20px;
+      font-size: 16px;
       cursor: pointer;
-      margin: 10px;
+      border: none;
+      background-color: #007BFF;
+      color: white;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
     }
-
-    .container {
-      display: none;
-      margin-top: 30px;
-      background: white;
+    .buttons button:hover {
+      background-color: #0056b3;
+    }
+    .content {
+      padding: 40px;
+      text-align: center;
+    }
+    .login-container {
+      background-color: #111;
       padding: 30px;
       border-radius: 10px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      text-align: left;
+      box-shadow: 0 0 10px #007BFF;
+      width: 300px;
+      margin: 40px auto;
     }
-
-    input, textarea {
+    .login-container h2 {
+      margin-bottom: 20px;
+    }
+    .login-container input {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
+      border: none;
+      border-radius: 5px;
     }
-
-    .submit-btn {
-      background-color: green;
+    .login-container button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007BFF;
       color: white;
-      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
     }
-
-    .back-btn {
-      background-color: gray;
-      margin-top: 15px;
+    .login-container button:hover {
+      background-color: #0056b3;
+    }
+    .discord-btn {
+      background-color: #5865F2;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-
-  <div id="mainPage">
-    <h1>SARP Staff Application</h1>
-    <button class="btn" onclick="showForm()">Applications</button>
-    <button class="btn" onclick="requestPassword()">Staff Panel</button>
+  <div class="header">
+    <div class="logo-title">
+      <img src="https://cdn.discordapp.com/attachments/1398783328768757760/1398797372427079700/WINCaNA.png?ex=689dbd51&is=689c6bd1&hm=12e7444a5ca9212cf360d5409791c0ff96400a326f6f4258d245fa44329792c4&" alt="Pulse Logo">
+      <h1>Pulse Cad System's</h1>
+    </div>
+    <div class="buttons">
+      <button onclick="showHome()">Home</button>
+      <button onclick="showTeam()">Team</button>
+      <button onclick="showLogin()">Login</button>
+    </div>
   </div>
 
-  <!-- Application Form -->
-  <div class="container" id="applicationForm">
-    <form onsubmit="handleSubmit(event)">
-      <input type="text" id="discord" placeholder="Discord Username" required><br>
-      <input type="text" id="roblox" placeholder="Roblox Username" required><br>
-      <textarea id="reason" placeholder="Why do you want to join the SARP Staff Team?" required></textarea><br>
-      <input type="number" id="activity" min="1" max="10" placeholder="How active are you? (1-10)" required><br>
-      <button type="submit" class="btn submit-btn">Submit Application</button>
-    </form>
-    <button class="btn back-btn" onclick="goBack()">Back</button>
-  </div>
-
-  <!-- Password Prompt -->
-  <div class="container" id="passwordContainer">
-    <h2>Staff Panel Login</h2>
-    <input type="password" id="staffPassword" placeholder="Enter Password">
-    <button class="btn" onclick="checkPassword()">Login</button>
-    <button class="btn back-btn" onclick="goBack()">Back</button>
-  </div>
-
-  <!-- "Private" Staff Panel Page -->
-  <div class="container" id="staffPanel">
-    <h2>🔒 Private Staff Panel</h2>
-    <p>Welcome to the private panel.</p>
-    <button class="btn" onclick="showResults()">View Applications</button>
-    <button class="btn back-btn" onclick="returnToHome()">Logout</button>
-  </div>
-
-  <!-- Application Results -->
-  <div class="container" id="resultsContainer">
-    <h2>Application Results</h2>
-    <div id="results"></div>
-    <button class="btn back-btn" onclick="showStaffPanel()">Back to Panel</button>
+  <div class="content" id="main-content">
+    <h2>Welcome to Pulse Cad System's</h2>
+    <p>This is your homepage. Click "Login" to access your account.</p>
   </div>
 
   <script>
-    const applications = [];
-    const adminPassword = "admin123123";
-
-    function hideAll() {
-      document.querySelectorAll('.container').forEach(el => el.style.display = 'none');
-      document.getElementById("mainPage").style.display = "none";
+    function showHome() {
+      document.getElementById('main-content').innerHTML = `
+        <h2>Welcome to Pulse Cad System's</h2>
+        <p>This is your homepage. Click "Login" to access your account.</p>
+      `;
     }
 
-    function showForm() {
-      hideAll();
-      document.getElementById("applicationForm").style.display = "block";
+    function showTeam() {
+      document.getElementById('main-content').innerHTML = `
+        <h2>Meet the Team</h2>
+        <p>Team details will go here.</p>
+      `;
     }
 
-    function requestPassword() {
-      hideAll();
-      document.getElementById("passwordContainer").style.display = "block";
+    function showLogin() {
+      document.getElementById('main-content').innerHTML = `
+        <div class="login-container">
+          <h2>Login</h2>
+          <input type="text" placeholder="Username">
+          <input type="password" placeholder="Password">
+          <button>Login</button>
+          <button class="discord-btn" onclick="loginWithDiscord()">Login with Discord</button>
+        </div>
+      `;
     }
 
-    function checkPassword() {
-      const entered = document.getElementById("staffPassword").value;
-      if (entered === adminPassword) {
-        showStaffPanel();
-      } else {
-        alert("Incorrect password!");
-      }
+    function loginWithDiscord() {
+      const clientId = 'YOUR_DISCORD_CLIENT_ID';
+      const redirectUri = 'YOUR_REDIRECT_URI';
+      const scope = 'identify email';
+      const discordAuthUrl = 'https://discord.com/oauth2/authorize?client_id=' + clientId +
+        '&redirect_uri=' + encodeURIComponent(redirectUri) +
+        '&response_type=code&scope=' + encodeURIComponent(scope);
+      window.location.href = discordAuthUrl;
     }
-
-    function showStaffPanel() {
-      hideAll();
-      document.getElementById("staffPanel").style.display = "block";
-    }
-
-    function showResults() {
-      hideAll();
-      const results = document.getElementById("results");
-      results.innerHTML = "";
-
-      if (applications.length === 0) {
-        results.innerHTML = "<p>No applications submitted yet.</p>";
-      } else {
-        applications.forEach((app, index) => {
-          results.innerHTML += `
-            <div style="margin-bottom: 20px; padding: 10px; border-bottom: 1px solid #ccc;">
-              <strong>Application #${index + 1}</strong><br>
-              Discord: ${app.discord}<br>
-              Roblox: ${app.roblox}<br>
-              Reason: ${app.reason}<br>
-              Activity: ${app.activity}/10
-            </div>
-          `;
-        });
-      }
-
-      document.getElementById("resultsContainer").style.display = "block";
-    }
-
-    function goBack() {
-      hideAll();
-      document.getElementById("mainPage").style.display = "block";
-    }
-
-    function returnToHome() {
-      hideAll();
-      document.getElementById("mainPage").style.display = "block";
-    }
-
-    function handleSubmit(e) {
-      e.preventDefault();
-
-      const discord = document.getElementById("discord").value;
-      const roblox = document.getElementById("roblox").value;
-      const reason = document.getElementById("reason").value;
-      const activity = document.getElementById("activity").value;
-
-      applications.push({ discord, roblox, reason, activity });
-
-      alert("Application Submitted!");
-      e.target.reset();
-      goBack();
-    }
-
-    // Show homepage initially
-    document.getElementById("mainPage").style.display = "block";
   </script>
-
 </body>
 </html>
+
