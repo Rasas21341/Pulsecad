@@ -1,148 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Pulse Cad System's</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pulse CAD System</title>
   <style>
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #000;
-      color: #fff;
+      margin: 0; font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      color: #333;
     }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      border-bottom: 2px solid #333;
+    #topBar {
+      display: flex; justify-content: flex-end; align-items: center;
+      background: rgba(255,255,255,0.2); padding: 10px;
     }
-    .logo-title {
-      display: flex;
-      align-items: center;
+    #topBar button {
+      background: #4facfe; color: white; border: none;
+      padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-left: 10px;
     }
-    .logo-title img {
-      height: 50px;
-      margin-right: 15px;
+    .login-box {
+      margin: 100px auto; width: 300px; padding: 20px;
+      background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      display: none;
     }
-    .logo-title h1 {
-      font-size: 24px;
-      margin: 0;
+    input { width: 100%; padding: 10px; margin: 10px 0; }
+    button.action {
+      padding: 10px 20px; cursor: pointer;
+      background: #4facfe; color: white; border: none;
+      border-radius: 5px; margin: 10px 5px;
     }
-    .buttons {
-      display: flex;
-      gap: 10px;
+    #dashboard, #cadScreen, #ownerDashboard, #teamSection {
+      display: none; padding: 20px;
     }
-    .buttons button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      background-color: #007BFF;
-      color: white;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
+    .cad-card {
+      background: white; margin: 10px 0; padding: 10px;
+      border-radius: 5px; cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
-    .buttons button:hover {
-      background-color: #0056b3;
+    .cad-card img {
+      width: 100px; height: auto; display: block;
     }
-    .content {
-      padding: 40px;
-      text-align: center;
+    .suspended-label {
+      color: red; font-weight: bold;
     }
-    .login-container {
-      background-color: #111;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #007BFF;
-      width: 300px;
-      margin: 40px auto;
-    }
-    .login-container h2 {
-      margin-bottom: 20px;
-    }
-    .login-container input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 5px;
-    }
-    .login-container button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 5px;
-      background-color: #007BFF;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .login-container button:hover {
-      background-color: #0056b3;
-    }
-    .discord-btn {
-      background-color: #5865F2;
-      margin-top: 10px;
+    #actionButtons {
+      margin: 20px 0;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="logo-title">
-      <img src="https://cdn.discordapp.com/attachments/1398783328768757760/1398797372427079700/WINCaNA.png?ex=689dbd51&is=689c6bd1&hm=12e7444a5ca9212cf360d5409791c0ff96400a326f6f4258d245fa44329792c4&" alt="Pulse Logo">
-      <h1>Pulse Cad System's</h1>
-    </div>
-    <div class="buttons">
-      <button onclick="showHome()">Home</button>
-      <button onclick="showTeam()">Team</button>
-      <button onclick="showLogin()">Login</button>
-    </div>
+
+<div id="topBar">
+  <button onclick="goHome()">Home</button>
+  <button onclick="showTeam()">Team</button>
+  <button onclick="showLogin()">Login</button>
+  <button onclick="showOwnerLogin()">Owner Login</button>
+</div>
+
+<!-- User Login -->
+<div class="login-box" id="loginBox">
+  <h2>Pulse CAD Login</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- Owner Login -->
+<div class="login-box" id="ownerLoginBox">
+  <h2>Owner Dashboard Login</h2>
+  <input type="text" id="adminUser" placeholder="Username">
+  <input type="password" id="adminPass" placeholder="Password">
+  <button onclick="adminLogin()">Login</button>
+</div>
+
+<!-- User Dashboard -->
+<div id="dashboard">
+  <h2>Your CADs</h2>
+  <div id="actionButtons">
+    <button class="action" onclick="createCad()">Create CAD</button>
+    <button class="action" onclick="joinCad()">Join CAD</button>
   </div>
+  <div id="cadList"></div>
+</div>
 
-  <div class="content" id="main-content">
-    <h2>Welcome to Pulse Cad System's</h2>
-    <p>This is your homepage. Click "Login" to access your account.</p>
-  </div>
+<!-- CAD Screen -->
+<div id="cadScreen">
+  <h2>CAD System</h2>
+  <p>Welcome to your CAD!</p>
+  <button onclick="goBack()">Back</button>
+</div>
 
-  <script>
-    function showHome() {
-      document.getElementById('main-content').innerHTML = `
-        <h2>Welcome to Pulse Cad System's</h2>
-        <p>This is your homepage. Click "Login" to access your account.</p>
+<!-- Owner Dashboard -->
+<div id="ownerDashboard">
+  <h2>Owner Dashboard</h2>
+  <div id="serverList"></div>
+</div>
+
+<!-- Team Section -->
+<div id="teamSection">
+  <h2>Meet the Team</h2>
+  <p>This section can showcase your developers, admins, and contributors.</p>
+</div>
+
+<script>
+  const defaultUserKey = 'user_RYAN';
+  if (!localStorage.getItem(defaultUserKey)) {
+    const defaultData = {
+      password: 'RYAN',
+      cads: [
+        { name: 'Pulse RP', owner: 'RYAN', website: 'https://pulserp.example.com', suspended: false },
+        { name: 'Emergency Services', owner: 'RYAN', website: 'https://ems.example.com', suspended: true }
+      ]
+    };
+    localStorage.setItem(defaultUserKey, JSON.stringify(defaultData));
+  }
+
+  function goHome() {
+    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('ownerLoginBox').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('cadScreen').style.display = 'none';
+    document.getElementById('ownerDashboard').style.display = 'none';
+    document.getElementById('teamSection').style.display = 'none';
+  }
+
+  function showTeam() {
+    goHome();
+    document.getElementById('teamSection').style.display = 'block';
+  }
+
+  function showLogin() {
+    goHome();
+    document.getElementById('loginBox').style.display = 'block';
+  }
+
+  function showOwnerLogin() {
+    goHome();
+    document.getElementById('ownerLoginBox').style.display = 'block';
+  }
+
+  function login() {
+    const user = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+    const key = `user_${user}`;
+    const data = JSON.parse(localStorage.getItem(key));
+    if (data && data.password === pass) {
+      goHome();
+      document.getElementById('dashboard').style.display = 'block';
+      loadCADs(data.cads);
+    } else {
+      alert("Invalid login");
+    }
+  }
+
+  function loadCADs(cads) {
+    const cadList = document.getElementById('cadList');
+    cadList.innerHTML = '';
+    cads.forEach((cad, index) => {
+      const card = document.createElement('div');
+      card.className = 'cad-card';
+      card.innerHTML = `
+        <img src="https://cdn.discordapp.com/attachments/1398783328768757760/1398797372427079700/WINCaNA.png" />
+        <strong>${cad.name}</strong> ${cad.suspended ? '<span class="suspended-label">[SUSPENDED]</span>' : ''}
       `;
-    }
+      card.onclick = () => {
+        if (cad.suspended) {
+          alert("This CAD is suspended.");
+          return;
+        }
+        document.getElementById('dashboard').style.display = 'none';
+        document.getElementById('cadScreen').style.display = 'block';
+      };
+      cadList.appendChild(card);
+    });
+  }
 
-    function showTeam() {
-      document.getElementById('main-content').innerHTML = `
-        <h2>Meet the Team</h2>
-        <p>Team details will go here.</p>
-      `;
-    }
+  function goBack() {
+    document.getElementById('cadScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+  }
 
-    function showLogin() {
-      document.getElementById('main-content').innerHTML = `
-        <div class="login-container">
-          <h2>Login</h2>
-          <input type="text" placeholder="Username">
-          <input type="password" placeholder="Password">
-          <button>Login</button>
-          <button class="discord-btn" onclick="loginWithDiscord()">Login with Discord</button>
-        </div>
-      `;
-    }
+  function createCad() {
+    const name = prompt("Enter CAD name:");
+    if (!name) return;
+    const key = 'user_RYAN';
+    const data = JSON.parse(localStorage.getItem(key));
+    data.cads.push({ name, owner: 'RYAN', website: 'https://pulsecad.org', suspended: false });
+    localStorage.setItem(key, JSON.stringify(data));pulsecad.org
+    loadCADs(data.cads);
+  }
 
-    function loginWithDiscord() {
-      const clientId = 'YOUR_DISCORD_CLIENT_ID';
-      const redirectUri = 'YOUR_REDIRECT_URI';
-      const scope = 'identify email';
-      const discordAuthUrl = 'https://discord.com/oauth2/authorize?client_id=' + clientId +
-        '&redirect_uri=' + encodeURIComponent(redirectUri) +
-        '&response_type=code&scope=' + encodeURIComponent(scope);
-      window.location.href = discordAuthUrl;
+  function joinCad() {
+    const name = prompt("Enter CAD name to join:");
+    if (!name) return;
+    alert(`Request sent to join CAD: ${name}`);
+  }
+
+  function adminLogin() {
+    const user = document.getElementById('adminUser').value;
+    const pass = document.getElementById('adminPass').value;
+    if (user === 'theboyrp1234' && pass === 'theboyrp1234') {
+      goHome();
+      document.getElementById('ownerDashboard').style.display = 'block';
+      showServers();
+    } else {
+      alert("Invalid admin credentials");
     }
-  </script>
+  }
+
+  function showServers() {
+    const serverList = document.getElementById('serverList');
+    serverList.innerHTML = '';
+
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('user_')) {
+        const username = key.replace('user_', '');
+        const data = JSON.parse(localStorage.getItem(key));
+
+        if (data && data.cads) {
+          data.cads.forEach((cad, index) => {
+            const div = document.createElement('div');
+            div.innerHTML = `
+              <strong>${cad.name}</strong> 
+              ${cad.suspended ? '<span class="suspended-label">[SUSPENDED]</span>' : ''}
+              <br><small>Owner: ${cad.owner}</small>
+              <br><a href="${cad.website}" target="_blank">Visit Website</a>
+              <br>
+              <button onclick="toggleSuspend('${key}', ${index})">
+                ${cad.suspended ? 'Unsuspend' : 'Suspend'}
+              </button>
+            `;
+            serverList.appendChild(div);
+          });
+        }
+      }
+    });
+  }
+
+  function toggleSuspend(userKey, cadIndex) {
+    const data = JSON.parse(localStorage.getItem(userKey));
+    if (data && data.cads && data.cads[cadIndex]) {
+      data.cads[cadIndex].suspended = !data.cads[cadIndex].suspended;
+      localStorage.setItem(userKey, JSON.stringify(data));
+      showServers();
+    }
+  }
+</script>
 </body>
 </html>
-
