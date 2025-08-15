@@ -9,6 +9,7 @@
       margin: 0; font-family: Arial, sans-serif;
       background: linear-gradient(to right, #4facfe, #00f2fe);
       color: #333;
+      text-align: center;
     }
     #topBar {
       display: flex; justify-content: flex-end; align-items: center;
@@ -27,18 +28,18 @@
     button.action {
       padding: 10px 20px; cursor: pointer;
       background: #4facfe; color: white; border: none;
-      border-radius: 5px; margin: 10px 5px;
+      border-radius: 5px; margin: 10px;
     }
-    #dashboard, #cadScreen, #ownerDashboard, #teamSection {
+    #dashboard, #cadScreen, #teamSection, #buttonScreen, #supportArea {
       display: none; padding: 20px;
     }
     .cad-card {
-      background: white; margin: 10px 0; padding: 10px;
-      border-radius: 5px; cursor: pointer;
+      background: white; margin: 10px auto; padding: 10px;
+      border-radius: 5px; cursor: pointer; max-width: 300px;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
     .cad-card img {
-      width: 100px; height: auto; display: block;
+      width: 100px; height: auto; display: block; margin: auto;
     }
     .suspended-label {
       color: red; font-weight: bold;
@@ -54,7 +55,6 @@
   <button onclick="goHome()">Home</button>
   <button onclick="showTeam()">Team</button>
   <button onclick="showLogin()">Login</button>
-  <button onclick="showOwnerLogin()">Owner Login</button>
 </div>
 
 <!-- User Login -->
@@ -65,15 +65,14 @@
   <button onclick="login()">Login</button>
 </div>
 
-<!-- Owner Login -->
-<div class="login-box" id="ownerLoginBox">
-  <h2>Owner Dashboard Login</h2>
-  <input type="text" id="adminUser" placeholder="Username">
-  <input type="password" id="adminPass" placeholder="Password">
-  <button onclick="adminLogin()">Login</button>
+<!-- Two Button Screen -->
+<div id="buttonScreen">
+  <h2>Welcome</h2>
+  <button class="action" onclick="openCadArea()">Go to CAD Area</button>
+  <button class="action" id="supportBtn" onclick="openSupportArea()">Go to Support Area</button>
 </div>
 
-<!-- User Dashboard -->
+<!-- CAD Area -->
 <div id="dashboard">
   <h2>Your CADs</h2>
   <div id="actionButtons">
@@ -90,9 +89,9 @@
   <button onclick="goBack()">Back</button>
 </div>
 
-<!-- Owner Dashboard -->
-<div id="ownerDashboard">
-  <h2>Owner Dashboard</h2>
+<!-- Support Area -->
+<div id="supportArea">
+  <h2>Support Area</h2>
   <div id="serverList"></div>
 </div>
 
@@ -116,12 +115,8 @@
   }
 
   function goHome() {
-    document.getElementById('loginBox').style.display = 'none';
-    document.getElementById('ownerLoginBox').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('cadScreen').style.display = 'none';
-    document.getElementById('ownerDashboard').style.display = 'none';
-    document.getElementById('teamSection').style.display = 'none';
+    document.querySelectorAll('#loginBox,#dashboard,#cadScreen,#teamSection,#buttonScreen,#supportArea')
+      .forEach(el => el.style.display = 'none');
   }
 
   function showTeam() {
@@ -134,29 +129,48 @@
     document.getElementById('loginBox').style.display = 'block';
   }
 
-  function showOwnerLogin() {
-    goHome();
-    document.getElementById('ownerLoginBox').style.display = 'block';
-  }
-
   function login() {
-    const user = document.getElementById('username').value;
-    const pass = document.getElementById('password').value;
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value.trim();
     const key = `user_${user}`;
     const data = JSON.parse(localStorage.getItem(key));
+
     if (data && data.password === pass) {
-      goHome();
-      document.getElementById('dashboard').style.display = 'block';
-      loadCADs(data.cads);
+      // Special accounts
+      if ((user === 'RYAN' && pass === 'RYAN') || (user === 'Tbrfrag89' && pass === 'COCRPff')) {
+        goHome();
+        document.getElementById('buttonScreen').style.display = 'block';
+        document.getElementById('supportBtn').style.display = 'inline-block';
+      } else {
+        // Normal accounts go straight to CAD
+        goHome();
+        document.getElementById('dashboard').style.display = 'block';
+        loadCADs(data.cads);
+      }
     } else {
       alert("Invalid login");
     }
   }
 
+  function openCadArea() {
+    goHome();
+    const user = document.getElementById('username').value.trim();
+    const key = `user_${user}`;
+    const data = JSON.parse(localStorage.getItem(key));
+    document.getElementById('dashboard').style.display = 'block';
+    loadCADs(data.cads);
+  }
+
+  function openSupportArea() {
+    goHome();
+    document.getElementById('supportArea').style.display = 'block';
+    showServers();
+  }
+
   function loadCADs(cads) {
     const cadList = document.getElementById('cadList');
     cadList.innerHTML = '';
-    cads.forEach((cad, index) => {
+    cads.forEach(cad => {
       const card = document.createElement('div');
       card.className = 'cad-card';
       card.innerHTML = `
@@ -183,10 +197,11 @@
   function createCad() {
     const name = prompt("Enter CAD name:");
     if (!name) return;
-    const key = 'user_RYAN';
+    const user = document.getElementById('username').value.trim();
+    const key = `user_${user}`;
     const data = JSON.parse(localStorage.getItem(key));
-    data.cads.push({ name, owner: 'RYAN', website: 'https://pulsecad.org', suspended: false });
-    localStorage.setItem(key, JSON.stringify(data));pulsecad.org
+    data.cads.push({ name, owner: user, website: 'https://example.com', suspended: false });
+    localStorage.setItem(key, JSON.stringify(data));
     loadCADs(data.cads);
   }
 
@@ -196,27 +211,12 @@
     alert(`Request sent to join CAD: ${name}`);
   }
 
-  function adminLogin() {
-    const user = document.getElementById('adminUser').value;
-    const pass = document.getElementById('adminPass').value;
-    if (user === 'theboyrp1234' && pass === 'theboyrp1234') {
-      goHome();
-      document.getElementById('ownerDashboard').style.display = 'block';
-      showServers();
-    } else {
-      alert("Invalid admin credentials");
-    }
-  }
-
   function showServers() {
     const serverList = document.getElementById('serverList');
     serverList.innerHTML = '';
-
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('user_')) {
-        const username = key.replace('user_', '');
         const data = JSON.parse(localStorage.getItem(key));
-
         if (data && data.cads) {
           data.cads.forEach((cad, index) => {
             const div = document.createElement('div');
