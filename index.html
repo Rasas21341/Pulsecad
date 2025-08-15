@@ -1,140 +1,303 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>All-in-One Portal</title>
-<style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    flex-direction: column;
-  }
-  .hidden { display: none; }
-  input {
-    width: 200px;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  button {
-    padding: 15px 30px;
-    margin: 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    background: #007bff;
-    color: white;
-  }
-  #supportBtn { background: #dc3545; }
-  .teams-screen, .cad-screen, .support-screen {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-  .teams-screen { background: white; }
-  .cad-screen { background: #e0f7fa; }
-  .support-screen { background: #f8d7da; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAD System</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1e1e2f;
+            color: #fff;
+        }
+
+        /* Top right buttons */
+        .top-right {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .top-right button {
+            padding: 10px 20px;
+            background-color: #3a3a5a;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Centered login/create account box */
+        .center-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2a2a3a;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .center-box input {
+            display: block;
+            width: 250px;
+            margin: 10px auto;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .center-box button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #5a5aff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .small-text {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        /* Hidden sections */
+        .hidden {
+            display: none;
+        }
+
+        /* Left menu */
+        .left-menu {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .left-menu button {
+            padding: 10px 20px;
+            background-color: #3a3a5a;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* User admin menu */
+        .user-admin-menu {
+            position: fixed;
+            top: 50px;
+            left: 200px;
+            background-color: #2a2a3a;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+        }
+
+        .user-admin-menu input {
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .user-admin-menu .checkboxes {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .user-admin-menu button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #5a5aff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Admin list */
+        .admin-list {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #1e1e2f;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .admin-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            padding: 5px 10px;
+            background-color: #3a3a5a;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
 
-<!-- Login Screen -->
-<div id="loginScreen">
-  <h2>Login</h2>
-  <input type="text" id="username" placeholder="Username">
-  <input type="password" id="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <button onclick="showTeams()">Teams</button>
-</div>
+    <!-- Top right buttons -->
+    <div class="top-right">
+        <button id="teamBtn">Team</button>
+        <button id="loginBtn">Login</button>
+    </div>
 
-<!-- Dashboard Screen -->
-<div id="dashboardScreen" class="hidden">
-  <button onclick="showCAD()">Go to CAD Area</button>
-  <button id="supportBtn" class="hidden" onclick="showSupport()">Go to Support Area</button>
-</div>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="center-box hidden">
+        <h2>Login</h2>
+        <input type="text" id="loginUsername" placeholder="Username">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button id="doLogin">Login</button>
+        <div class="small-text" id="createAccountText">Create Account</div>
 
-<!-- Teams Screen -->
-<div id="teamsScreen" class="hidden teams-screen">
-  <h1>Teams Screen</h1>
-  <button onclick="backToLogin()">Back</button>
-</div>
+        <!-- Create Account -->
+        <div id="createAccountBox" class="hidden">
+            <input type="text" id="newUsername" placeholder="Username">
+            <input type="password" id="newPassword" placeholder="Password">
+            <button id="createAccountBtn">Create</button>
+        </div>
+    </div>
 
-<!-- CAD Screen -->
-<div id="cadScreen" class="hidden cad-screen">
-  <h1>CAD Area</h1>
-  <button onclick="alert('CAD Created!')">Create CAD</button>
-  <button onclick="backToDashboard()">Back</button>
-</div>
+    <!-- Blank Screen After Login -->
+    <div id="dashboardScreen" class="hidden" style="text-align:center; padding-top:50px;">
+        <button id="cadAreaBtn">CAD Area</button>
+        <div class="small-text"><span id="gotoCadBtn">Go to →</span></div>
 
-<!-- Support Screen -->
-<div id="supportScreen" class="hidden support-screen">
-  <h1>Support Area</h1>
-  <button onclick="alert('Server Suspended!')">Suspend Server</button>
-  <button onclick="backToDashboard()">Back</button>
-</div>
+        <h3>Support Team Area</h3>
+        <div class="small-text"><span id="gotoSupportBtn">Go to →</span></div>
+    </div>
 
-<script>
-let role = "";
+    <!-- Left menu for dashboard -->
+    <div id="leftMenu" class="left-menu hidden">
+        <button id="serversBtn">Servers</button>
+        <button id="userAdminsBtn">User Admins</button>
+        <button id="websiteLogsBtn">Website Logs</button>
+    </div>
 
-function login() {
-  const user = document.getElementById('username').value;
-  const pass = document.getElementById('password').value;
+    <!-- User Admin Menu -->
+    <div id="userAdminMenu" class="user-admin-menu hidden">
+        <div style="display:flex; justify-content:space-between;">
+            <h3>User Admins</h3>
+            <button id="createAdminBtn">Create Admin</button>
+        </div>
 
-  if(user === "RYAN" && pass === "RYAN") {
-    role = "cad";
-    showDashboard();
-  } else if(user === "Tbrfrag89" && pass === "COCRPff") {
-    role = "full";
-    showDashboard();
-  } else {
-    alert("Invalid credentials!");
-  }
-}
+        <div id="createAdminForm" class="hidden">
+            <input type="text" id="adminDiscord" placeholder="Discord Username">
+            <input type="text" id="adminUsername" placeholder="Username">
+            <input type="text" id="adminEmail" placeholder="Email">
 
-function showDashboard() {
-  document.getElementById('loginScreen').classList.add('hidden');
-  document.getElementById('dashboardScreen').classList.remove('hidden');
-  if(role === "full") {
-    document.getElementById('supportBtn').classList.remove('hidden');
-  }
-}
+            <div class="checkboxes">
+                <label><input type="checkbox" id="serversCheck"> Servers</label>
+                <label><input type="checkbox" id="websiteLogsCheck"> Website Logs</label>
+            </div>
 
-function showTeams() {
-  document.getElementById('loginScreen').classList.add('hidden');
-  document.getElementById('teamsScreen').classList.remove('hidden');
-}
+            <button id="saveAdminBtn">Save Admin</button>
+        </div>
 
-function showCAD() {
-  document.getElementById('dashboardScreen').classList.add('hidden');
-  document.getElementById('cadScreen').classList.remove('hidden');
-}
+        <div class="admin-list" id="adminList"></div>
+    </div>
 
-function showSupport() {
-  document.getElementById('dashboardScreen').classList.add('hidden');
-  document.getElementById('supportScreen').classList.remove('hidden');
-}
+    <script>
+        // Show login screen
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            document.getElementById('loginScreen').classList.remove('hidden');
+        });
 
-function backToLogin() {
-  document.getElementById('teamsScreen').classList.add('hidden');
-  document.getElementById('loginScreen').classList.remove('hidden');
-}
+        // Toggle create account box
+        document.getElementById('createAccountText').addEventListener('click', () => {
+            document.getElementById('createAccountBox').classList.toggle('hidden');
+        });
 
-function backToDashboard() {
-  document.getElementById('cadScreen').classList.add('hidden');
-  document.getElementById('supportScreen').classList.add('hidden');
-  document.getElementById('dashboardScreen').classList.remove('hidden');
-}
-</script>
+        // Create Account
+        document.getElementById('createAccountBtn').addEventListener('click', () => {
+            const username = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+            if(username && password){
+                localStorage.setItem('cadUser', username);
+                localStorage.setItem('cadPass', password);
+                alert('Account Created! Use it to login.');
+                document.getElementById('createAccountBox').classList.add('hidden');
+            }
+        });
 
+        // Login
+        document.getElementById('doLogin').addEventListener('click', () => {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const storedUser = localStorage.getItem('cadUser') || 'RYAN';
+            const storedPass = localStorage.getItem('cadPass') || 'RYAN';
+
+            if(username === storedUser && password === storedPass){
+                alert('Login Successful!');
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('topMenu').classList?.add('hidden');
+                document.querySelector('.top-right').classList.add('hidden');
+                document.getElementById('dashboardScreen').classList.remove('hidden');
+                document.getElementById('leftMenu').classList.remove('hidden');
+            } else {
+                alert('Invalid Credentials!');
+            }
+        });
+
+        // Go to CAD / Support blank screens
+        document.getElementById('gotoCadBtn').addEventListener('click', () => {
+            document.getElementById('dashboardScreen').innerHTML = '<h2>CAD Area</h2>';
+        });
+
+        document.getElementById('gotoSupportBtn').addEventListener('click', () => {
+            document.getElementById('dashboardScreen').innerHTML = '<h2>Support Team Area</h2>';
+        });
+
+        // User Admin menu toggle
+        document.getElementById('userAdminsBtn').addEventListener('click', () => {
+            document.getElementById('userAdminMenu').classList.toggle('hidden');
+        });
+
+        // Show Create Admin form
+        document.getElementById('createAdminBtn').addEventListener('click', () => {
+            document.getElementById('createAdminForm').classList.remove('hidden');
+        });
+
+        // Save admin info
+        document.getElementById('saveAdminBtn').addEventListener('click', () => {
+            const discord = document.getElementById('adminDiscord').value;
+            const username = document.getElementById('adminUsername').value;
+            const email = document.getElementById('adminEmail').value;
+            const servers = document.getElementById('serversCheck').checked;
+            const websiteLogs = document.getElementById('websiteLogsCheck').checked;
+
+            if(discord && username && email){
+                const adminList = document.getElementById('adminList');
+                const div = document.createElement('div');
+                div.classList.add('admin-item');
+                div.textContent = `${discord} | ${username} | ${email} | Servers: ${servers} | Website Logs: ${websiteLogs}`;
+                adminList.appendChild(div);
+
+                // Clear form
+                document.getElementById('adminDiscord').value = '';
+                document.getElementById('adminUsername').value = '';
+                document.getElementById('adminEmail').value = '';
+                document.getElementById('serversCheck').checked = false;
+                document.getElementById('websiteLogsCheck').checked = false;
+
+                document.getElementById('createAdminForm').classList.add('hidden');
+            } else {
+                alert('Please fill all fields.');
+            }
+        });
+    </script>
 </body>
 </html>
