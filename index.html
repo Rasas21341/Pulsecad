@@ -1,250 +1,182 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pulse CAD System</title>
-  <style>
+<title>Login System with CAD & Support</title>
+<style>
     body {
-      margin: 0; font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #4facfe, #00f2fe);
-      color: #333;
-      text-align: center;
+        font-family: Arial, sans-serif;
+        background: #111;
+        color: white;
+        text-align: center;
+        margin: 0;
     }
-    #topBar {
-      display: flex; justify-content: flex-end; align-items: center;
-      background: rgba(255,255,255,0.2); padding: 10px;
+    .hidden { display: none; }
+    button {
+        background: #444;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        margin: 10px;
+        cursor: pointer;
+        border-radius: 8px;
     }
-    #topBar button {
-      background: #4facfe; color: white; border: none;
-      padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-left: 10px;
-    }
-    .login-box {
-      margin: 100px auto; width: 300px; padding: 20px;
-      background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      display: none;
-    }
-    input { width: 100%; padding: 10px; margin: 10px 0; }
-    button.action {
-      padding: 10px 20px; cursor: pointer;
-      background: #4facfe; color: white; border: none;
-      border-radius: 5px; margin: 10px;
-    }
-    #dashboard, #cadScreen, #teamSection, #buttonScreen, #supportArea {
-      display: none; padding: 20px;
-    }
-    .cad-card {
-      background: white; margin: 10px auto; padding: 10px;
-      border-radius: 5px; cursor: pointer; max-width: 300px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    .cad-card img {
-      width: 100px; height: auto; display: block; margin: auto;
+    button:hover { background: #666; }
+    .center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
     }
     .suspended-label {
-      color: red; font-weight: bold;
+        color: red;
+        font-weight: bold;
     }
-    #actionButtons {
-      margin: 20px 0;
-    }
-  </style>
+</style>
 </head>
 <body>
 
-<div id="topBar">
-  <button onclick="goHome()">Home</button>
-  <button onclick="showTeam()">Team</button>
-  <button onclick="showLogin()">Login</button>
+<!-- Login Screen -->
+<div id="loginScreen" class="center">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
 </div>
 
-<!-- User Login -->
-<div class="login-box" id="loginBox">
-  <h2>Pulse CAD Login</h2>
-  <input type="text" id="username" placeholder="Username">
-  <input type="password" id="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-</div>
-
-<!-- Two Button Screen -->
-<div id="buttonScreen">
-  <h2>Welcome</h2>
-  <button class="action" onclick="openCadArea()">Go to CAD Area</button>
-  <button class="action" id="supportBtn" onclick="openSupportArea()">Go to Support Area</button>
+<!-- Menu Screen -->
+<div id="menuScreen" class="center hidden">
+    <h2>Welcome</h2>
+    <div id="menuButtons"></div>
 </div>
 
 <!-- CAD Area -->
-<div id="dashboard">
-  <h2>Your CADs</h2>
-  <div id="actionButtons">
-    <button class="action" onclick="createCad()">Create CAD</button>
-    <button class="action" onclick="joinCad()">Join CAD</button>
-  </div>
-  <div id="cadList"></div>
-</div>
-
-<!-- CAD Screen -->
-<div id="cadScreen">
-  <h2>CAD System</h2>
-  <p>Welcome to your CAD!</p>
-  <button onclick="goBack()">Back</button>
+<div id="cadScreen" class="hidden">
+    <h2>CAD Area</h2>
+    <p>Here you can join or create CADs.</p>
+    <button onclick="goMenu()">Back to Menu</button>
 </div>
 
 <!-- Support Area -->
-<div id="supportArea">
-  <h2>Support Area</h2>
-  <div id="serverList"></div>
+<div id="supportScreen" class="hidden">
+    <h2>Support Area</h2>
+    <button onclick="showSuspendScreen()">Suspend Servers</button><br><br>
+    <button onclick="goMenu()">Back to Menu</button>
 </div>
 
-<!-- Team Section -->
-<div id="teamSection">
-  <h2>Meet the Team</h2>
-  <p>This section can showcase your developers, admins, and contributors.</p>
+<!-- Suspend Servers Screen -->
+<div id="suspendScreen" class="hidden">
+    <h2>Suspend Servers</h2>
+    <div id="serverList"></div>
+    <button onclick="goSupport()">Back to Support</button>
 </div>
 
 <script>
-  const defaultUserKey = 'user_RYAN';
-  if (!localStorage.getItem(defaultUserKey)) {
-    const defaultData = {
-      password: 'RYAN',
-      cads: [
-        { name: 'Pulse RP', owner: 'RYAN', website: 'https://pulserp.example.com', suspended: false },
-        { name: 'Emergency Services', owner: 'RYAN', website: 'https://ems.example.com', suspended: true }
-      ]
-    };
-    localStorage.setItem(defaultUserKey, JSON.stringify(defaultData));
-  }
+let currentUser = null;
+const supportAccounts = [
+    { username: "RYAN", password: "RYAN" },
+    { username: "Tbrfrag89", password: "COCRPff" }
+];
 
-  function goHome() {
-    document.querySelectorAll('#loginBox,#dashboard,#cadScreen,#teamSection,#buttonScreen,#supportArea')
-      .forEach(el => el.style.display = 'none');
-  }
+function login() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+    currentUser = user;
 
-  function showTeam() {
-    goHome();
-    document.getElementById('teamSection').style.display = 'block';
-  }
+    const isSupport = supportAccounts.some(acc => acc.username === user && acc.password === pass);
 
-  function showLogin() {
-    goHome();
-    document.getElementById('loginBox').style.display = 'block';
-  }
-
-  function login() {
-    const user = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value.trim();
-    const key = `user_${user}`;
-    const data = JSON.parse(localStorage.getItem(key));
-
-    if (data && data.password === pass) {
-      // Special accounts
-      if ((user === 'RYAN' && pass === 'RYAN') || (user === 'Tbrfrag89' && pass === 'COCRPff')) {
-        goHome();
-        document.getElementById('buttonScreen').style.display = 'block';
-        document.getElementById('supportBtn').style.display = 'inline-block';
-      } else {
-        // Normal accounts go straight to CAD
-        goHome();
-        document.getElementById('dashboard').style.display = 'block';
-        loadCADs(data.cads);
-      }
+    // Successful login
+    if (isSupport) {
+        showMenu(true);
+    } else if (localStorage.getItem("user_" + user) || pass === "test") {
+        showMenu(false); // CAD only
     } else {
-      alert("Invalid login");
+        alert("Invalid login");
     }
-  }
+}
 
-  function openCadArea() {
-    goHome();
-    const user = document.getElementById('username').value.trim();
-    const key = `user_${user}`;
-    const data = JSON.parse(localStorage.getItem(key));
-    document.getElementById('dashboard').style.display = 'block';
-    loadCADs(data.cads);
-  }
+function showMenu(hasSupport) {
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("menuScreen").classList.remove("hidden");
 
-  function openSupportArea() {
-    goHome();
-    document.getElementById('supportArea').style.display = 'block';
+    const menuButtons = document.getElementById("menuButtons");
+    menuButtons.innerHTML = '';
+
+    // CAD Area button
+    let cadBtn = document.createElement("button");
+    cadBtn.innerText = "Go to CAD Area";
+    cadBtn.onclick = () => {
+        document.getElementById("menuScreen").classList.add("hidden");
+        document.getElementById("cadScreen").classList.remove("hidden");
+    };
+    menuButtons.appendChild(cadBtn);
+
+    // Support Area button (only for special accounts)
+    if (hasSupport) {
+        let supportBtn = document.createElement("button");
+        supportBtn.innerText = "Go to Support Area";
+        supportBtn.onclick = () => {
+            document.getElementById("menuScreen").classList.add("hidden");
+            document.getElementById("supportScreen").classList.remove("hidden");
+        };
+        menuButtons.appendChild(supportBtn);
+    }
+}
+
+function goMenu() {
+    document.querySelectorAll("div").forEach(div => div.classList.add("hidden"));
+    document.getElementById("menuScreen").classList.remove("hidden");
+}
+
+function goSupport() {
+    document.querySelectorAll("div").forEach(div => div.classList.add("hidden"));
+    document.getElementById("supportScreen").classList.remove("hidden");
+}
+
+function showSuspendScreen() {
+    document.querySelectorAll("div").forEach(div => div.classList.add("hidden"));
+    document.getElementById("suspendScreen").classList.remove("hidden");
     showServers();
-  }
+}
 
-  function loadCADs(cads) {
-    const cadList = document.getElementById('cadList');
-    cadList.innerHTML = '';
-    cads.forEach(cad => {
-      const card = document.createElement('div');
-      card.className = 'cad-card';
-      card.innerHTML = `
-        <img src="https://cdn.discordapp.com/attachments/1398783328768757760/1398797372427079700/WINCaNA.png" />
-        <strong>${cad.name}</strong> ${cad.suspended ? '<span class="suspended-label">[SUSPENDED]</span>' : ''}
-      `;
-      card.onclick = () => {
-        if (cad.suspended) {
-          alert("This CAD is suspended.");
-          return;
-        }
-        document.getElementById('dashboard').style.display = 'none';
-        document.getElementById('cadScreen').style.display = 'block';
-      };
-      cadList.appendChild(card);
-    });
-  }
-
-  function goBack() {
-    document.getElementById('cadScreen').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-  }
-
-  function createCad() {
-    const name = prompt("Enter CAD name:");
-    if (!name) return;
-    const user = document.getElementById('username').value.trim();
-    const key = `user_${user}`;
-    const data = JSON.parse(localStorage.getItem(key));
-    data.cads.push({ name, owner: user, website: 'https://example.com', suspended: false });
-    localStorage.setItem(key, JSON.stringify(data));
-    loadCADs(data.cads);
-  }
-
-  function joinCad() {
-    const name = prompt("Enter CAD name to join:");
-    if (!name) return;
-    alert(`Request sent to join CAD: ${name}`);
-  }
-
-  function showServers() {
+function showServers() {
     const serverList = document.getElementById('serverList');
     serverList.innerHTML = '';
-    Object.keys(localStorage).forEach(key => {
-      if (key.startsWith('user_')) {
-        const data = JSON.parse(localStorage.getItem(key));
-        if (data && data.cads) {
-          data.cads.forEach((cad, index) => {
-            const div = document.createElement('div');
-            div.innerHTML = `
-              <strong>${cad.name}</strong> 
-              ${cad.suspended ? '<span class="suspended-label">[SUSPENDED]</span>' : ''}
-              <br><small>Owner: ${cad.owner}</small>
-              <br><a href="${cad.website}" target="_blank">Visit Website</a>
-              <br>
-              <button onclick="toggleSuspend('${key}', ${index})">
-                ${cad.suspended ? 'Unsuspend' : 'Suspend'}
-              </button>
-            `;
-            serverList.appendChild(div);
-          });
-        }
-      }
-    });
-  }
 
-  function toggleSuspend(userKey, cadIndex) {
+    Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('user_')) {
+            const username = key.replace('user_', '');
+            const data = JSON.parse(localStorage.getItem(key));
+
+            if (data && data.cads) {
+                data.cads.forEach((cad, index) => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <strong>${cad.name}</strong> 
+                        ${cad.suspended ? '<span class="suspended-label">[SUSPENDED]</span>' : ''}
+                        <br><small>Owner: ${cad.owner}</small>
+                        <br><a href="${cad.website}" target="_blank">Visit Website</a>
+                        <br>
+                        <button onclick="toggleSuspend('${key}', ${index})">
+                            ${cad.suspended ? 'Unsuspend' : 'Suspend'}
+                        </button>
+                        <hr>
+                    `;
+                    serverList.appendChild(div);
+                });
+            }
+        }
+    });
+}
+
+function toggleSuspend(userKey, cadIndex) {
     const data = JSON.parse(localStorage.getItem(userKey));
     if (data && data.cads && data.cads[cadIndex]) {
-      data.cads[cadIndex].suspended = !data.cads[cadIndex].suspended;
-      localStorage.setItem(userKey, JSON.stringify(data));
-      showServers();
+        data.cads[cadIndex].suspended = !data.cads[cadIndex].suspended;
+        localStorage.setItem(userKey, JSON.stringify(data));
+        showServers();
     }
-  }
+}
 </script>
 </body>
 </html>
