@@ -1,182 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Login System with CAD & Support</title>
+<meta charset="UTF-8">
+<title>All-in-One Portal</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #111;
-        color: white;
-        text-align: center;
-        margin: 0;
-    }
-    .hidden { display: none; }
-    button {
-        background: #444;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        margin: 10px;
-        cursor: pointer;
-        border-radius: 8px;
-    }
-    button:hover { background: #666; }
-    .center {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-    }
-    .suspended-label {
-        color: red;
-        font-weight: bold;
-    }
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+  }
+  .hidden { display: none; }
+  input {
+    width: 200px;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  button {
+    padding: 15px 30px;
+    margin: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #007bff;
+    color: white;
+  }
+  #supportBtn { background: #dc3545; }
+  .teams-screen, .cad-screen, .support-screen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .teams-screen { background: white; }
+  .cad-screen { background: #e0f7fa; }
+  .support-screen { background: #f8d7da; }
 </style>
 </head>
 <body>
 
 <!-- Login Screen -->
-<div id="loginScreen" class="center">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username"><br>
-    <input type="password" id="password" placeholder="Password"><br>
-    <button onclick="login()">Login</button>
+<div id="loginScreen">
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <button onclick="showTeams()">Teams</button>
 </div>
 
-<!-- Menu Screen -->
-<div id="menuScreen" class="center hidden">
-    <h2>Welcome</h2>
-    <div id="menuButtons"></div>
+<!-- Dashboard Screen -->
+<div id="dashboardScreen" class="hidden">
+  <button onclick="showCAD()">Go to CAD Area</button>
+  <button id="supportBtn" class="hidden" onclick="showSupport()">Go to Support Area</button>
 </div>
 
-<!-- CAD Area -->
-<div id="cadScreen" class="hidden">
-    <h2>CAD Area</h2>
-    <p>Here you can join or create CADs.</p>
-    <button onclick="goMenu()">Back to Menu</button>
+<!-- Teams Screen -->
+<div id="teamsScreen" class="hidden teams-screen">
+  <h1>Teams Screen</h1>
+  <button onclick="backToLogin()">Back</button>
 </div>
 
-<!-- Support Area -->
-<div id="supportScreen" class="hidden">
-    <h2>Support Area</h2>
-    <button onclick="showSuspendScreen()">Suspend Servers</button><br><br>
-    <button onclick="goMenu()">Back to Menu</button>
+<!-- CAD Screen -->
+<div id="cadScreen" class="hidden cad-screen">
+  <h1>CAD Area</h1>
+  <button onclick="alert('CAD Created!')">Create CAD</button>
+  <button onclick="backToDashboard()">Back</button>
 </div>
 
-<!-- Suspend Servers Screen -->
-<div id="suspendScreen" class="hidden">
-    <h2>Suspend Servers</h2>
-    <div id="serverList"></div>
-    <button onclick="goSupport()">Back to Support</button>
+<!-- Support Screen -->
+<div id="supportScreen" class="hidden support-screen">
+  <h1>Support Area</h1>
+  <button onclick="alert('Server Suspended!')">Suspend Server</button>
+  <button onclick="backToDashboard()">Back</button>
 </div>
 
 <script>
-let currentUser = null;
-const supportAccounts = [
-    { username: "RYAN", password: "RYAN" },
-    { username: "Tbrfrag89", password: "COCRPff" }
-];
+let role = "";
 
 function login() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
-    currentUser = user;
+  const user = document.getElementById('username').value;
+  const pass = document.getElementById('password').value;
 
-    const isSupport = supportAccounts.some(acc => acc.username === user && acc.password === pass);
-
-    // Successful login
-    if (isSupport) {
-        showMenu(true);
-    } else if (localStorage.getItem("user_" + user) || pass === "test") {
-        showMenu(false); // CAD only
-    } else {
-        alert("Invalid login");
-    }
+  if(user === "RYAN" && pass === "RYAN") {
+    role = "cad";
+    showDashboard();
+  } else if(user === "Tbrfrag89" && pass === "COCRPff") {
+    role = "full";
+    showDashboard();
+  } else {
+    alert("Invalid credentials!");
+  }
 }
 
-function showMenu(hasSupport) {
-    document.getElementById("loginScreen").classList.add("hidden");
-    document.getElementById("menuScreen").classList.remove("hidden");
-
-    const menuButtons = document.getElementById("menuButtons");
-    menuButtons.innerHTML = '';
-
-    // CAD Area button
-    let cadBtn = document.createElement("button");
-    cadBtn.innerText = "Go to CAD Area";
-    cadBtn.onclick = () => {
-        document.getElementById("menuScreen").classList.add("hidden");
-        document.getElementById("cadScreen").classList.remove("hidden");
-    };
-    menuButtons.appendChild(cadBtn);
-
-    // Support Area button (only for special accounts)
-    if (hasSupport) {
-        let supportBtn = document.createElement("button");
-        supportBtn.innerText = "Go to Support Area";
-        supportBtn.onclick = () => {
-            document.getElementById("menuScreen").classList.add("hidden");
-            document.getElementById("supportScreen").classList.remove("hidden");
-        };
-        menuButtons.appendChild(supportBtn);
-    }
+function showDashboard() {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('dashboardScreen').classList.remove('hidden');
+  if(role === "full") {
+    document.getElementById('supportBtn').classList.remove('hidden');
+  }
 }
 
-function goMenu() {
-    document.querySelectorAll("div").forEach(div => div.classList.add("hidden"));
-    document.getElementById("menuScreen").classList.remove("hidden");
+function showTeams() {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('teamsScreen').classList.remove('hidden');
 }
 
-function goSupport() {
-    document.querySelectorAll("div").forEach(div => div.classList.add("hidden"));
-    document.getElementById("supportScreen").classList.remove("hidden");
+function showCAD() {
+  document.getElementById('dashboardScreen').classList.add('hidden');
+  document.getElementById('cadScreen').classList.remove('hidden');
 }
 
-function showSuspendScreen() {
-    document.querySelectorAll("div").forEach(div => div.classList.add("hidden"));
-    document.getElementById("suspendScreen").classList.remove("hidden");
-    showServers();
+function showSupport() {
+  document.getElementById('dashboardScreen').classList.add('hidden');
+  document.getElementById('supportScreen').classList.remove('hidden');
 }
 
-function showServers() {
-    const serverList = document.getElementById('serverList');
-    serverList.innerHTML = '';
-
-    Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('user_')) {
-            const username = key.replace('user_', '');
-            const data = JSON.parse(localStorage.getItem(key));
-
-            if (data && data.cads) {
-                data.cads.forEach((cad, index) => {
-                    const div = document.createElement('div');
-                    div.innerHTML = `
-                        <strong>${cad.name}</strong> 
-                        ${cad.suspended ? '<span class="suspended-label">[SUSPENDED]</span>' : ''}
-                        <br><small>Owner: ${cad.owner}</small>
-                        <br><a href="${cad.website}" target="_blank">Visit Website</a>
-                        <br>
-                        <button onclick="toggleSuspend('${key}', ${index})">
-                            ${cad.suspended ? 'Unsuspend' : 'Suspend'}
-                        </button>
-                        <hr>
-                    `;
-                    serverList.appendChild(div);
-                });
-            }
-        }
-    });
+function backToLogin() {
+  document.getElementById('teamsScreen').classList.add('hidden');
+  document.getElementById('loginScreen').classList.remove('hidden');
 }
 
-function toggleSuspend(userKey, cadIndex) {
-    const data = JSON.parse(localStorage.getItem(userKey));
-    if (data && data.cads && data.cads[cadIndex]) {
-        data.cads[cadIndex].suspended = !data.cads[cadIndex].suspended;
-        localStorage.setItem(userKey, JSON.stringify(data));
-        showServers();
-    }
+function backToDashboard() {
+  document.getElementById('cadScreen').classList.add('hidden');
+  document.getElementById('supportScreen').classList.add('hidden');
+  document.getElementById('dashboardScreen').classList.remove('hidden');
 }
 </script>
+
 </body>
 </html>
