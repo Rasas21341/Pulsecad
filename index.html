@@ -92,7 +92,8 @@
 <!-- Support Area -->
 <div id="supportArea">
   <h2>Support Area</h2>
-  <div id="serverList"></div>
+  <button class="action" onclick="toggleServerPanel()">Manage Servers</button>
+  <div id="serverList" style="display:none;"></div>
 </div>
 
 <!-- Team Section -->
@@ -164,7 +165,6 @@
   function openSupportArea() {
     goHome();
     document.getElementById('supportArea').style.display = 'block';
-    showServers();
   }
 
   function loadCADs(cads) {
@@ -211,6 +211,16 @@
     alert(`Request sent to join CAD: ${name}`);
   }
 
+  function toggleServerPanel() {
+    const serverList = document.getElementById('serverList');
+    if (serverList.style.display === 'none') {
+      serverList.style.display = 'block';
+      showServers();
+    } else {
+      serverList.style.display = 'none';
+    }
+  }
+
   function showServers() {
     const serverList = document.getElementById('serverList');
     serverList.innerHTML = '';
@@ -229,6 +239,7 @@
               <button onclick="toggleSuspend('${key}', ${index})">
                 ${cad.suspended ? 'Unsuspend' : 'Suspend'}
               </button>
+              <hr>
             `;
             serverList.appendChild(div);
           });
