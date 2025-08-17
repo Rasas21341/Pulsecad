@@ -2,218 +2,139 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CAD System</title>
+<title>All-in-One Portal</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0; padding: 0;
-        background-color: #1e1e1e;
-        color: white;
-    }
-    .top-right {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-    }
-    button {
-        padding: 8px 14px;
-        margin: 4px;
-        border: none;
-        cursor: pointer;
-        background: #444;
-        color: white;
-        border-radius: 6px;
-    }
-    button:hover { background: #666; }
-    .center {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 90vh;
-        text-align: center;
-    }
-    input {
-        padding: 6px;
-        margin: 4px;
-        border: none;
-        border-radius: 4px;
-    }
-    .sidebar {
-        position: fixed;
-        top: 0; left: 0;
-        width: 180px;
-        height: 100%;
-        background: #2c2c2c;
-        display: flex;
-        flex-direction: column;
-        padding-top: 20px;
-    }
-    .sidebar button {
-        background: none;
-        border: none;
-        color: white;
-        padding: 12px;
-        text-align: left;
-        font-size: 14px;
-    }
-    .sidebar button:hover {
-        background: #3c3c3c;
-    }
-    .popup {
-        position: fixed;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        background: #333;
-        padding: 20px;
-        border-radius: 8px;
-        z-index: 1000;
-        display: none;
-    }
-    .popup input[type="text"], .popup input[type="email"] {
-        width: 100%;
-    }
-    .overlay {
-        display: none;
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6);
-        z-index: 999;
-    }
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+  }
+  .hidden { display: none; }
+  input {
+    width: 200px;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  button {
+    padding: 15px 30px;
+    margin: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #007bff;
+    color: white;
+  }
+  #supportBtn { background: #dc3545; }
+  .teams-screen, .cad-screen, .support-screen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .teams-screen { background: white; }
+  .cad-screen { background: #e0f7fa; }
+  .support-screen { background: #f8d7da; }
 </style>
 </head>
 <body>
 
-<div id="mainScreen" class="top-right">
-    <button onclick="showLogin()">Login</button>
-    <button onclick="alert('Team page coming soon')">Team</button>
+<!-- Login Screen -->
+<div id="loginScreen">
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <button onclick="showTeams()">Teams</button>
 </div>
 
-<div id="loginScreen" class="center" style="display:none;">
-    <h2>Login</h2>
-    <input id="loginUser" type="text" placeholder="Username"><br>
-    <input id="loginPass" type="password" placeholder="Password"><br>
-    <button onclick="login()">Login</button><br>
-    <small style="cursor:pointer;color:lightblue;" onclick="showCreateAccount()">Create Account</small>
+<!-- Dashboard Screen -->
+<div id="dashboardScreen" class="hidden">
+  <button onclick="showCAD()">Go to CAD Area</button>
+  <button id="supportBtn" class="hidden" onclick="showSupport()">Go to Support Area</button>
 </div>
 
-<div id="createAccountScreen" class="center" style="display:none;">
-    <h2>Create Account</h2>
-    <input id="newUser" type="text" placeholder="Username"><br>
-    <input id="newPass" type="password" placeholder="Password"><br>
-    <button onclick="createAccount()">Create</button>
+<!-- Teams Screen -->
+<div id="teamsScreen" class="hidden teams-screen">
+  <h1>Teams Screen</h1>
+  <button onclick="backToLogin()">Back</button>
 </div>
 
-<div id="afterLoginScreen" class="center" style="display:none;">
-    <button onclick="alert('CAD Area Screen')">Cad Area</button>
-    <p style="cursor:pointer;color:lightblue;" onclick="showSupportTeam()">Go to ➡ Support team Area</p>
+<!-- CAD Screen -->
+<div id="cadScreen" class="hidden cad-screen">
+  <h1>CAD Area</h1>
+  <button onclick="alert('CAD Created!')">Create CAD</button>
+  <button onclick="backToDashboard()">Back</button>
 </div>
 
-<div id="supportTeamScreen" style="display:none;">
-    <div class="sidebar">
-        <button>Servers</button>
-        <button onclick="showUserAdmins()">User Admins</button>
-        <button>Website Logs</button>
-    </div>
+<!-- Support Screen -->
+<div id="supportScreen" class="hidden support-screen">
+  <h1>Support Area</h1>
+  <button onclick="alert('Server Suspended!')">Suspend Server</button>
+  <button onclick="backToDashboard()">Back</button>
 </div>
-
-<div id="userAdminsMenu" class="popup">
-    <h3>User Admins</h3>
-    <button onclick="showCreateAdmin()">Create Admin</button>
-    <ul id="adminsList"></ul>
-    <br>
-    <button onclick="saveAdmins()">Save</button>
-    <button onclick="closePopup()">Close</button>
-</div>
-
-<div id="createAdminMenu" class="popup">
-    <h3>Create Admin</h3>
-    <input id="discordUser" type="text" placeholder="Discord Username"><br>
-    <input id="adminUser" type="text" placeholder="Username"><br>
-    <input id="adminEmail" type="email" placeholder="Email"><br>
-    <hr>
-    <label><input type="checkbox" id="chkServers"> Servers</label><br>
-    <label><input type="checkbox" id="chkLogs"> Website Logs</label><br><br>
-    <button onclick="createAdmin()">Create</button>
-</div>
-
-<div id="overlay" class="overlay" onclick="closePopup()"></div>
 
 <script>
-    let accounts = JSON.parse(localStorage.getItem('accounts')) || [{username:"RYAN",password:"RYAN"}];
-    let admins = JSON.parse(localStorage.getItem('admins')) || [];
+let role = "";
 
-    function showLogin(){
-        document.getElementById("mainScreen").style.display="none";
-        document.getElementById("loginScreen").style.display="flex";
-    }
-    function showCreateAccount(){
-        document.getElementById("loginScreen").style.display="none";
-        document.getElementById("createAccountScreen").style.display="flex";
-    }
-    function createAccount(){
-        let u = document.getElementById("newUser").value;
-        let p = document.getElementById("newPass").value;
-        if(u && p){
-            accounts.push({username:u,password:p});
-            localStorage.setItem('accounts', JSON.stringify(accounts));
-            alert("Account created!");
-            document.getElementById("createAccountScreen").style.display="none";
-            document.getElementById("loginScreen").style.display="flex";
-        }
-    }
-    function login(){
-        let u = document.getElementById("loginUser").value;
-        let p = document.getElementById("loginPass").value;
-        if(accounts.find(a=>a.username===u && a.password===p)){
-            document.getElementById("loginScreen").style.display="none";
-            document.getElementById("afterLoginScreen").style.display="flex";
-        } else {
-            alert("Invalid credentials");
-        }
-    }
-    function showSupportTeam(){
-        document.getElementById("afterLoginScreen").style.display="none";
-        document.getElementById("supportTeamScreen").style.display="block";
-    }
-    function showUserAdmins(){
-        document.getElementById("overlay").style.display="block";
-        document.getElementById("userAdminsMenu").style.display="block";
-        renderAdmins();
-    }
-    function showCreateAdmin(){
-        document.getElementById("userAdminsMenu").style.display="none";
-        document.getElementById("createAdminMenu").style.display="block";
-    }
-    function createAdmin(){
-        let d = document.getElementById("discordUser").value;
-        let u = document.getElementById("adminUser").value;
-        let e = document.getElementById("adminEmail").value;
-        let s = document.getElementById("chkServers").checked;
-        let l = document.getElementById("chkLogs").checked;
-        admins.push({discord:d,username:u,email:e,servers:s,logs:l});
-        renderAdmins();
-        document.getElementById("createAdminMenu").style.display="none";
-        document.getElementById("userAdminsMenu").style.display="block";
-    }
-    function renderAdmins(){
-        let list = document.getElementById("adminsList");
-        list.innerHTML = "";
-        admins.forEach(a=>{
-            let li = document.createElement("li");
-            li.textContent = `${a.username} (${a.discord}) - ${a.email}`;
-            list.appendChild(li);
-        });
-    }
-    function saveAdmins(){
-        localStorage.setItem('admins', JSON.stringify(admins));
-        alert("Admins saved!");
-    }
-    function closePopup(){
-        document.getElementById("overlay").style.display="none";
-        document.querySelectorAll(".popup").forEach(p=>p.style.display="none");
-    }
+function login() {
+  const user = document.getElementById('username').value;
+  const pass = document.getElementById('password').value;
+
+  if(user === "RYAN" && pass === "RYAN") {
+    role = "cad";
+    showDashboard();
+  } else if(user === "Tbrfrag89" && pass === "COCRPff") {
+    role = "full";
+    showDashboard();
+  } else {
+    alert("Invalid credentials!");
+  }
+}
+
+function showDashboard() {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('dashboardScreen').classList.remove('hidden');
+  if(role === "full") {
+    document.getElementById('supportBtn').classList.remove('hidden');
+  }
+}
+
+function showTeams() {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('teamsScreen').classList.remove('hidden');
+}
+
+function showCAD() {
+  document.getElementById('dashboardScreen').classList.add('hidden');
+  document.getElementById('cadScreen').classList.remove('hidden');
+}
+
+function showSupport() {
+  document.getElementById('dashboardScreen').classList.add('hidden');
+  document.getElementById('supportScreen').classList.remove('hidden');
+}
+
+function backToLogin() {
+  document.getElementById('teamsScreen').classList.add('hidden');
+  document.getElementById('loginScreen').classList.remove('hidden');
+}
+
+function backToDashboard() {
+  document.getElementById('cadScreen').classList.add('hidden');
+  document.getElementById('supportScreen').classList.add('hidden');
+  document.getElementById('dashboardScreen').classList.remove('hidden');
+}
 </script>
+
 </body>
 </html>
