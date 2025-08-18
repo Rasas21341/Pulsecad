@@ -1,273 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Pulse CAD System</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
-    h1 { background: #333; color: #fff; padding: 10px; margin: 0; }
-    .hidden { display: none; }
-    .card {
-      background: #fff;
-      padding: 20px;
-      margin: 20px auto;
-      width: 300px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    input { display: block; margin: 10px auto; padding: 8px; width: 90%; }
-    button {
-      padding: 10px 20px;
-      margin: 5px;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      background: #333;
-      color: #fff;
-    }
-    button:hover { background: #555; }
-    .action { margin: 10px; }
-    .cad-card {
-      background: #eee;
-      padding: 10px;
-      margin: 10px;
-      border-radius: 5px;
-    }
-    #supportArea {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: flex-start;
-      text-align: left;
-    }
-    #supportContent {
-      flex: 1;
-      padding: 20px;
-    }
-    #manageServersBtn {
-      margin: 20px;
-      align-self: flex-start;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard System</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #121212; color: #fff; }
+  .container { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+  .login-box, .register-box, .dashboard { background: #1e1e1e; padding: 40px; border-radius: 10px; width: 350px; text-align: center; }
+  input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
+  button { width: 100%; padding: 10px; margin-top: 10px; border: none; border-radius: 5px; background-color: #007bff; color: #fff; cursor: pointer; }
+  .link { color: #007bff; cursor: pointer; display: block; margin-top: 10px; }
+  .hidden { display: none; }
+  .panel { display: flex; margin-top: 20px; }
+  .sidebar { width: 150px; background: #2c2c2c; padding: 10px; border-radius: 10px; }
+  .sidebar button { width: 100%; margin-bottom: 10px; }
+  .content { flex: 1; margin-left: 20px; background: #2a2a2a; padding: 20px; border-radius: 10px; }
+</style>
 </head>
 <body>
-  <h1>Pulse CAD System</h1>
 
-  <!-- Login Screen -->
-  <div id="loginScreen" class="card">
+<div class="container">
+
+  <!-- LOGIN BOX -->
+  <div class="login-box" id="loginBox">
     <h2>Login</h2>
     <input type="text" id="loginUsername" placeholder="Username">
     <input type="password" id="loginPassword" placeholder="Password">
     <button onclick="login()">Login</button>
-    <p id="loginMsg" style="color:red;"></p>
-    <p><a href="#" onclick="showRegister()">Create Login</a></p>
+    <span class="link" onclick="showRegister()">Create Login</span>
   </div>
 
-  <!-- Register Screen -->
-  <div id="registerScreen" class="card hidden">
-    <h2>Create Account</h2>
-    <input type="text" id="regUsername" placeholder="Choose Username">
-    <input type="password" id="regPassword" placeholder="Choose Password">
-    <button onclick="register()">Create</button>
-    <p id="registerMsg" style="color:red;"></p>
-    <p><a href="#" onclick="showLogin()">Back to Login</a></p>
+  <!-- REGISTER BOX -->
+  <div class="register-box hidden" id="registerBox">
+    <h2>Create Login</h2>
+    <input type="text" id="regUsername" placeholder="New Username">
+    <input type="password" id="regPassword" placeholder="New Password">
+    <button onclick="register()">Register</button>
+    <span class="link" onclick="showLogin()">Back to Login</span>
   </div>
 
-  <!-- Dashboard -->
-  <div id="dashboard" class="hidden">
-    <h2>Welcome, <span id="currentUserSpan"></span></h2>
-    <button class="action" onclick="showCadArea()">CAD</button>
-    <button class="action" onclick="showSupport()">Support Area</button>
-    <button class="action" onclick="showTeam()">Team</button>
-    <button class="action" onclick="logout()">Logout</button>
-  </div>
-
-  <!-- CAD Area -->
-  <div id="cadArea" class="hidden">
-    <h2>Your CADs</h2>
-    <div id="cadList"></div>
-    <button onclick="createCad()">Create CAD</button>
-    <button onclick="goHome()">Back</button>
-  </div>
-
-  <!-- Support Area -->
-  <div id="supportArea" class="hidden">
-    <button id="manageServersBtn" class="action" onclick="toggleServerPanel()">Manage Servers</button>
-    <div id="supportContent">
-      <h2>Support Area</h2>
-      <div id="serverList" style="display:none;"></div>
-      <button onclick="goHome()">Back</button>
+  <!-- DASHBOARD -->
+  <div class="dashboard hidden" id="dashboard">
+    <h2>Welcome, <span id="userDisplay"></span></h2>
+    <div class="panel">
+      <div class="sidebar">
+        <button onclick="showContent('support')">Support</button>
+        <button onclick="showContent('cad')">CAD</button>
+        <button onclick="showContent('team')">Team</button>
+      </div>
+      <div class="content" id="contentArea">
+        <h3>Select a panel</h3>
+      </div>
     </div>
   </div>
 
-  <!-- Team Area -->
-  <div id="teamArea" class="hidden">
-    <h2>Team Members</h2>
-    <p>- RYAN (Admin)</p>
-    <p>- kammhunter1 (Admin)</p>
-    <button onclick="goHome()">Back</button>
-  </div>
+</div>
 
 <script>
-let currentUser = null;
+  // Predefined accounts
+  const accounts = [
+    { username: 'RYAN', password: 'RYAN123', fullAccess: true },
+    { username: 'kammhunter1', password: 'Sunny101282', fullAccess: true }
+  ];
 
-// Seed demo accounts
-if (!localStorage.getItem("user_RYAN")) {
-  localStorage.setItem("user_RYAN", JSON.stringify({ password: "1220013ryan", cads: [] }));
-}
-if (!localStorage.getItem("user_kammhunter1")) {
-  localStorage.setItem("user_kammhunter1", JSON.stringify({ password: "Sunny101282", cads: [] }));
-}
+  let currentUser = null;
 
-function login() {
-  const u = document.getElementById("loginUsername").value.trim();
-  const p = document.getElementById("loginPassword").value.trim();
-  const data = localStorage.getItem("user_" + u);
-  if (!data) {
-    document.getElementById("loginMsg").innerText = "User not found.";
-    return;
-  }
-  const obj = JSON.parse(data);
-  if (obj.password === p) {
-    currentUser = u;
-    document.getElementById("loginScreen").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
-    document.getElementById("currentUserSpan").innerText = currentUser;
-    document.getElementById("loginMsg").innerText = "";
-  } else {
-    document.getElementById("loginMsg").innerText = "Incorrect password.";
-  }
-}
+  function login() {
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    const user = accounts.find(u => u.username === username && u.password === password);
 
-function showRegister() {
-  document.getElementById("loginScreen").classList.add("hidden");
-  document.getElementById("registerScreen").classList.remove("hidden");
-}
-function showLogin() {
-  document.getElementById("registerScreen").classList.add("hidden");
-  document.getElementById("loginScreen").classList.remove("hidden");
-}
-function register() {
-  const u = document.getElementById("regUsername").value.trim();
-  const p = document.getElementById("regPassword").value.trim();
-  if (!u || !p) {
-    document.getElementById("registerMsg").innerText = "Fill all fields.";
-    return;
-  }
-  if (localStorage.getItem("user_" + u)) {
-    document.getElementById("registerMsg").innerText = "Username already exists.";
-    return;
-  }
-  localStorage.setItem("user_" + u, JSON.stringify({ password: p, cads: [] }));
-  alert("Account created! You can now login.");
-  showLogin();
-}
-
-function logout() {
-  currentUser = null;
-  document.getElementById("dashboard").classList.add("hidden");
-  document.getElementById("loginScreen").classList.remove("hidden");
-}
-
-function hideAll() {
-  document.getElementById("cadArea").classList.add("hidden");
-  document.getElementById("supportArea").classList.add("hidden");
-  document.getElementById("teamArea").classList.add("hidden");
-}
-
-function showCadArea() {
-  hideAll();
-  document.getElementById("cadArea").classList.remove("hidden");
-  loadCads();
-}
-function createCad() {
-  const data = JSON.parse(localStorage.getItem("user_" + currentUser));
-  const cadName = prompt("Enter CAD name:");
-  if (!cadName) return;
-  data.cads.push({ name: cadName, suspended: false, website: "https://example.com" });
-  localStorage.setItem("user_" + currentUser, JSON.stringify(data));
-  loadCads();
-}
-function loadCads() {
-  const data = JSON.parse(localStorage.getItem("user_" + currentUser));
-  const list = document.getElementById("cadList");
-  list.innerHTML = "";
-  data.cads.forEach((cad, i) => {
-    const div = document.createElement("div");
-    div.className = "cad-card";
-    div.innerHTML = `
-      <strong>${cad.name}</strong> ${cad.suspended ? "(Suspended)" : ""}
-      <br><a href="${cad.website}" target="_blank">Visit CAD Website</a>`;
-    list.appendChild(div);
-  });
-}
-
-function showSupport() {
-  hideAll();
-  document.getElementById("supportArea").classList.remove("hidden");
-  const manageBtn = document.getElementById("manageServersBtn");
-  if (currentUser === "RYAN" || currentUser === "kammhunter1") {
-    manageBtn.style.display = "block";
-  } else {
-    manageBtn.style.display = "none";
-  }
-}
-
-function toggleServerPanel() {
-  const serverList = document.getElementById('serverList');
-  if (serverList.style.display === 'none') {
-    serverList.style.display = 'block';
-    showServers();
-  } else {
-    serverList.style.display = 'none';
-  }
-}
-
-function showServers() {
-  const serverList = document.getElementById('serverList');
-  serverList.innerHTML = "";
-  for (let key in localStorage) {
-    if (key.startsWith("user_")) {
-      const userData = JSON.parse(localStorage.getItem(key));
-      const username = key.replace("user_", "");
-      userData.cads.forEach((cad, index) => {
-        const div = document.createElement("div");
-        div.className = "cad-card";
-        div.innerHTML = `
-          <strong>${username}'s ${cad.name}</strong> 
-          ${cad.suspended ? "(Suspended)" : ""}
-          <br>
-          <button onclick="toggleSuspend('${username}', ${index})">
-            ${cad.suspended ? "Unsuspend" : "Suspend"}
-          </button>`;
-        serverList.appendChild(div);
-      });
+    if(user) {
+      currentUser = user;
+      document.getElementById('loginBox').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      document.getElementById('userDisplay').innerText = currentUser.username;
+      showContent('support');
+    } else {
+      alert('Invalid username or password!');
     }
   }
-}
 
-function toggleSuspend(username, cadIndex) {
-  const data = JSON.parse(localStorage.getItem("user_" + username));
-  data.cads[cadIndex].suspended = !data.cads[cadIndex].suspended;
-  localStorage.setItem("user_" + username, JSON.stringify(data));
-  showServers();
-}
+  function showRegister() {
+    document.getElementById('loginBox').classList.add('hidden');
+    document.getElementById('registerBox').classList.remove('hidden');
+  }
 
-function showTeam() {
-  hideAll();
-  document.getElementById("teamArea").classList.remove("hidden");
-}
+  function showLogin() {
+    document.getElementById('registerBox').classList.add('hidden');
+    document.getElementById('loginBox').classList.remove('hidden');
+  }
 
-function goHome() {
-  hideAll();
-  document.getElementById("dashboard").classList.remove("hidden");
-}
+  function register() {
+    const username = document.getElementById('regUsername').value;
+    const password = document.getElementById('regPassword').value;
+    if(username && password) {
+      accounts.push({ username, password, fullAccess: true });
+      alert('Account created! You can now login.');
+      showLogin();
+    } else {
+      alert('Please fill out both fields.');
+    }
+  }
+
+  function showContent(panel) {
+    const area = document.getElementById('contentArea');
+    if(panel === 'support') {
+      area.innerHTML = `<h3>Support Panel</h3>
+        <button onclick="manageServers()">Manage Servers</button>`;
+    } else if(panel === 'cad') {
+      area.innerHTML = `<h3>CAD Panel</h3>
+        <p>CAD functionality here...</p>`;
+    } else if(panel === 'team') {
+      area.innerHTML = `<h3>Team Panel</h3>
+        <p>Team management here...</p>`;
+    }
+  }
+
+  function manageServers() {
+    alert('Manage Servers clicked!'); // replace with real functionality
+  }
 </script>
+
 </body>
 </html>
