@@ -1,127 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard System</title>
-<style>
-  body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #121212; color: #fff; }
-  .container { width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
-  .login-box, .register-box, .dashboard { background: #1e1e1e; padding: 40px; border-radius: 10px; width: 350px; text-align: center; }
-  input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
-  button { width: 100%; padding: 10px; margin-top: 10px; border: none; border-radius: 5px; background-color: #007bff; color: #fff; cursor: pointer; }
-  .link { color: #007bff; cursor: pointer; display: block; margin-top: 10px; }
-  .hidden { display: none; }
-  .panel { display: flex; margin-top: 20px; }
-  .sidebar { width: 150px; background: #2c2c2c; padding: 10px; border-radius: 10px; }
-  .sidebar button { width: 100%; margin-bottom: 10px; }
-  .content { flex: 1; margin-left: 20px; background: #2a2a2a; padding: 20px; border-radius: 10px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulse Cad Opening Date</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: #181818;
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+        }
+        .countdown {
+            font-size: 2rem;
+            background: #222;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+    </style>
 </head>
 <body>
-
-<div class="container">
-
-  <!-- LOGIN BOX -->
-  <div class="login-box" id="loginBox">
-    <h2>Login</h2>
-    <input type="text" id="loginUsername" placeholder="Username">
-    <input type="password" id="loginPassword" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <span class="link" onclick="showRegister()">Create Login</span>
-  </div>
-
-  <!-- REGISTER BOX -->
-  <div class="register-box hidden" id="registerBox">
-    <h2>Create Login</h2>
-    <input type="text" id="regUsername" placeholder="New Username">
-    <input type="password" id="regPassword" placeholder="New Password">
-    <button onclick="register()">Register</button>
-    <span class="link" onclick="showLogin()">Back to Login</span>
-  </div>
-
-  <!-- DASHBOARD -->
-  <div class="dashboard hidden" id="dashboard">
-    <h2>Welcome, <span id="userDisplay"></span></h2>
-    <div class="panel">
-      <div class="sidebar">
-        <button onclick="showContent('support')">Support</button>
-        <button onclick="showContent('cad')">CAD</button>
-        <button onclick="showContent('team')">Team</button>
-      </div>
-      <div class="content" id="contentArea">
-        <h3>Select a panel</h3>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<script>
-  // Predefined accounts
-  const accounts = [
-    { username: 'RYAN', password: 'RYAN123', fullAccess: true },
-    { username: 'kammhunter1', password: 'Sunny101282', fullAccess: true }
-  ];
-
-  let currentUser = null;
-
-  function login() {
-    const username = document.getElementById('loginUsername').value;
-    const password = document.getElementById('loginPassword').value;
-    const user = accounts.find(u => u.username === username && u.password === password);
-
-    if(user) {
-      currentUser = user;
-      document.getElementById('loginBox').classList.add('hidden');
-      document.getElementById('dashboard').classList.remove('hidden');
-      document.getElementById('userDisplay').innerText = currentUser.username;
-      showContent('support');
-    } else {
-      alert('Invalid username or password!');
-    }
-  }
-
-  function showRegister() {
-    document.getElementById('loginBox').classList.add('hidden');
-    document.getElementById('registerBox').classList.remove('hidden');
-  }
-
-  function showLogin() {
-    document.getElementById('registerBox').classList.add('hidden');
-    document.getElementById('loginBox').classList.remove('hidden');
-  }
-
-  function register() {
-    const username = document.getElementById('regUsername').value;
-    const password = document.getElementById('regPassword').value;
-    if(username && password) {
-      accounts.push({ username, password, fullAccess: true });
-      alert('Account created! You can now login.');
-      showLogin();
-    } else {
-      alert('Please fill out both fields.');
-    }
-  }
-
-  function showContent(panel) {
-    const area = document.getElementById('contentArea');
-    if(panel === 'support') {
-      area.innerHTML = `<h3>Support Panel</h3>
-        <button onclick="manageServers()">Manage Servers</button>`;
-    } else if(panel === 'cad') {
-      area.innerHTML = `<h3>CAD Panel</h3>
-        <p>CAD functionality here...</p>`;
-    } else if(panel === 'team') {
-      area.innerHTML = `<h3>Team Panel</h3>
-        <p>Team management here...</p>`;
-    }
-  }
-
-  function manageServers() {
-    alert('Manage Servers clicked!'); // replace with real functionality
-  }
-</script>
-
+    <h1>Pulse Cad</h1>
+    <div class="subtitle">Opening Date 9/20/2025</div>
+    <div class="countdown" id="countdown"></div>
+    <script>
+        function updateCountdown() {
+            const openingDate = new Date('2025-09-20T00:00:00');
+            const now = new Date();
+            const diff = openingDate - now;
+            if (diff <= 0) {
+                document.getElementById('countdown').textContent = 'We are open!';
+                return;
+            }
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+            document.getElementById('countdown').textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
 </body>
 </html>
