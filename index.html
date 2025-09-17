@@ -3,61 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pulse Cad Opening Date</title>
+    <title>Pulse Cad Systems</title>
     <style>
         body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f7f8fa;
+            color: #ffffff;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 20px 40px 20px 20px;
+            background: #000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .logo {
+            height: 48px;
+            width: 48px;
+            margin-right: 18px;
+        }
+        .title {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .main {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background: #181818;
-            color: #fff;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            height: 70vh;
         }
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            letter-spacing: 2px;
+        .message {
+            font-size: 1.5rem;
+            background: #fff;
+            padding: 32px 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+            text-align: center;
         }
-        .subtitle {
-            font-size: 1.2rem;
-            color: #aaa;
-            margin-bottom: 2rem;
-        }
-        .countdown {
-            font-size: 2rem;
-            background: #222;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        @media (max-width: 600px) {
+            .header { flex-direction: column; align-items: flex-start; }
+            .title { font-size: 1.2rem; }
+            .main { height: auto; margin-top: 40px; }
+            .message { font-size: 1rem; padding: 18px 12px; }
         }
     </style>
 </head>
 <body>
-    <h1>Pulse Cad</h1>
-    <div class="subtitle">Opening Date 9/21/2025</div>
-    <div class="countdown" id="countdown"></div>
-    <script>
-        function updateCountdown() {
-            const openingDate = new Date('2025-09-21T00:00:00');
-            const now = new Date();
-            const diff = openingDate - now;
-            if (diff <= 0) {
-                document.getElementById('countdown').textContent = 'We are open!';
-                return;
-            }
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const minutes = Math.floor((diff / (1000 * 60)) % 60);
-            const seconds = Math.floor((diff / 1000) % 60);
-            document.getElementById('countdown').textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-        }
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-    </script>
+    <div class="header">
+        <img class="logo" src="https://cdn.discordapp.com/attachments/1398783328768757760/1398797372427079700/WINCaNA.png?ex=68cc8a91&is=68cb3911&hm=98
+        <span class="title">Pulse Cad Systems</span>
+    </div>
+    <div class="main">
+        <div class="message">
+            We are a couple days out<br>
+            <span style="font-weight: 500; color: #000000;">stay alert inside of our discord server</span>
+        </div>
+    </div>
 </body>
 </html>
-
-
