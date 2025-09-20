@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community View</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: white;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .community-title {
+            color: #333;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .back-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            gap: 2rem;
+        }
+        
+        .role-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .role-btn {
+            padding: 20px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            color: #333;
+            text-align: center;
+            background: #f8f9fa;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .role-btn.civilian {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+        
+        .role-btn.civilian:hover {
+            background: #28a745;
+            color: white;
+        }
+        
+        .role-btn.police {
+            border-color: #007bff;
+            background: #f8fbff;
+        }
+        
+        .role-btn.police:hover {
+            background: #007bff;
+            color: white;
+        }
+        
+        .role-btn.dispatch {
+            border-color: #ffc107;
+            background: #fffef8;
+        }
+        
+        .role-btn.dispatch:hover {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .role-btn.admin {
+            border-color: #dc3545;
+            background: #fff8f8;
+        }
+        
+        .role-btn.admin:hover {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .role-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        @media (max-width: 768px) {
+            .role-buttons {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .community-title {
+                font-size: 1.5rem;
+            }
+            
+            .role-selection h2 {
+                font-size: 2rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="community-title" id="communityTitle">Community Name</h1>
+        <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+    </div>
+    
+    <div class="main-content">
+        <div class="role-buttons">
+            <button class="role-btn civilian" onclick="selectRole('civilian')">
+                <span>Civilian</span>
+            </button>
+            <button class="role-btn police" onclick="selectRole('police')">
+                <span>Police</span>
+            </button>
+            <button class="role-btn dispatch" onclick="selectRole('dispatch')">
+                <span>Dispatch</span>
+            </button>
+            <button class="role-btn admin" onclick="selectRole('admin')">
+                <span>Admin</span>
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Load community information
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const communityId = urlParams.get('id');
+            const communityType = urlParams.get('type') || 'owned';
+            
+            if (!communityId) {
+                alert('No community specified. Redirecting to dashboard.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            const username = sessionStorage.getItem('username');
+            let community = null;
+            
+            // Find the community based on type
+            if (communityType === 'owned') {
+                const userCommunities = JSON.parse(localStorage.getItem(`communities_${username}`) || '[]');
+                community = userCommunities.find(c => c.id == communityId);
+            } else {
+                const joinedCommunities = JSON.parse(localStorage.getItem(`joined_communities_${username}`) || '[]');
+                community = joinedCommunities.find(c => c.id == communityId);
+            }
+            
+            if (community) {
+                // Store community info for role selection
+                sessionStorage.setItem('currentCommunity', JSON.stringify(community));
+                sessionStorage.setItem('communityType', communityType);
+            } else {
+                alert('Community not found. Redirecting to dashboard.');
+                window.location.href = 'dashboard.html';
+            }
+        });
+        
+        function goBack() {
+            window.location.href = 'dashboard.html';
+        }
+        
+        function selectRole(role) {
+            const community = JSON.parse(sessionStorage.getItem('currentCommunity'));
+            
+            if (role === 'civilian') {
+                // Redirect to civilian form page
+                window.location.href = `civilian-form.html?communityId=${community.id}`;
+            } else if (role === 'police') {
+                // Redirect to police interface page
+                window.location.href = `police-interface.html?communityId=${community.id}`;
+            } else if (role === 'dispatch') {
+                // Redirect to dispatch interface page
+                window.location.href = `dispatch-interface.html?communityId=${community.id}`;
+            } else if (role === 'admin') {
+                alert(`Admin role selected for ${community.name}. Admin interface coming soon!`);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form Test</title>
+</head>
+<body>
+    <h1>Contact Form Test</h1>
+    
+    <form id="testContactForm">
+        <div>
+            <label>Name:</label>
+            <input type="text" id="testName" required>
+        </div>
+        <div>
+            <label>Phone:</label>
+            <input type="tel" id="testPhone" required>
+        </div>
+        <div>
+            <label>Email:</label>
+            <input type="email" id="testEmail" required>
+        </div>
+        <div>
+            <label>Message:</label>
+            <textarea id="testMessage" required></textarea>
+        </div>
+        <button type="submit">Test Submit</button>
+    </form>
+    
+    <div id="testResult"></div>
+    
+    <script>
+        document.getElementById('testContactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            console.log('Test form submitted!');
+            
+            const formData = {
+                name: document.getElementById('testName').value.trim(),
+                phone: document.getElementById('testPhone').value.trim(),
+                email: document.getElementById('testEmail').value.trim(),
+                message: document.getElementById('testMessage').value.trim()
+            };
+            
+            console.log('Test form data:', formData);
+            
+            try {
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                document.getElementById('testResult').innerHTML = 
+                    `<h3>Result:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                    
+            } catch (error) {
+                console.error('Test error:', error);
+                document.getElementById('testResult').innerHTML = 
+                    `<h3>Error:</h3><pre>${error.message}</pre>`;
+            }
+        });
+    </script>
+</body>
+</html>

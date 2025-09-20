@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulsecad Login Portal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Pricing Button -->
+    <div class="pricing-header">
+        <button class="pricing-btn" onclick="showPricing()">View Pricing</button>
+    </div>
+    
+    <!-- Pricing Modal -->
+    <div id="pricingModal" class="pricing-modal" style="display: none;">
+        <div class="pricing-modal-content">
+            <span class="close-btn" onclick="closePricing()">&times;</span>
+            <h2>Choose Your Plan</h2>
+            
+            <div class="pricing-plans">
+                <div class="pricing-card beginner">
+                    <h3>Beginner</h3>
+                    <div class="price">FREE</div>
+                    <ul>
+                        <li>Basic features</li>
+                        <li>Limited access</li>
+                        <li>Community support</li>
+                    </ul>
+                    <button class="select-plan-btn" onclick="selectPlan('Beginner')">Get Started</button>
+                </div>
+                
+                <div class="pricing-card premium">
+                    <h3>Premium</h3>
+                    <div class="price">$12.99<span>/month</span></div>
+                    <ul>
+                        <li>All basic features</li>
+                        <li>Advanced tools</li>
+                        <li>Priority support</li>
+                        <li>Analytics dashboard</li>
+                    </ul>
+                    <button class="select-plan-btn" onclick="selectPlan('Premium')">Choose Premium</button>
+                </div>
+                
+                <div class="pricing-card super-premium">
+                    <h3>Super Premium</h3>
+                    <div class="price">$20.00<span>/month</span></div>
+                    <ul>
+                        <li>Everything in Premium</li>
+                        <li>Unlimited access</li>
+                        <li>24/7 dedicated support</li>
+                        <li>Custom integrations</li>
+                        <li>Priority updates</li>
+                    </ul>
+                    <button class="select-plan-btn" onclick="selectPlan('Super Premium')">Go Super</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="login-container">
+        <div class="login-form">
+            <div class="login-header">
+                <h1>Pulsecad Login</h1>
+                <p>Please enter your credentials</p>
+              
+                 
+                </div>
+            </div>
+            
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <div class="input-group">
+                    <button type="submit" class="login-btn">Login</button>
+                </div>
+            </form>
+            
+            <div class="input-group">
+                <button type="button" class="create-login-btn" onclick="createLogin()">Create Login</button>
+            </div>
+            
+            <div id="error-message" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>Pulsecad Login
+Please enter your credentials
+

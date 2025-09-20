@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+        }
+        
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        
+        .dashboard-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100vh;
+            gap: 20px;
+            padding-top: 15vh;
+        }
+        
+        .welcome-message {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .community-buttons {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .separator-line {
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            margin: 2rem 0;
+        }
+        
+        .community-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .community-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .community-btn.create {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .community-btn.join {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .join-code-input {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 1rem;
+            width: 150px;
+            text-align: center;
+        }
+        
+        .join-code-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .join-code-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .modal-header h2 {
+            color: #333;
+            margin: 0;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .modal-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        
+        .modal-btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .modal-btn.secondary {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #ddd;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: -10px;
+        }
+        
+        .close-modal:hover {
+            color: #000;
+        }
+        
+        /* Communities List */
+        .communities-section {
+            width: 80%;
+            margin-top: 2rem;
+        }
+        
+        .communities-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 1rem;
+        }
+        
+        .community-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 15px 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .community-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .community-btn-small {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .community-btn-small:hover {
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Logout button -->
+    <button class="logout-btn" onclick="logout()">Logout</button>
+    
+    <!-- Main dashboard content -->
+    <div class="dashboard-content">
+        <div class="welcome-message" id="welcomeMessage">Welcome to Pulsecad</div>
+        
+        <div class="community-buttons">
+            <button class="community-btn join" onclick="showJoinModal()">
+                <span>Join Community</span>
+            </button>
+            <button class="community-btn create" onclick="showCreateModal()">Create Community</button>
+        </div>
+        
+        <div class="separator-line"></div>
+        
+        <div class="communities-section">
+            <div class="communities-list" id="communitiesList">
+                <!-- Created communities will appear here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Join Community Modal -->
+    <div id="joinModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('joinModal')">&times;</span>
+            <div class="modal-header">
+                <h2>Join Community</h2>
+            </div>
+            <input type="text" id="joinCodeInput" class="modal-input" placeholder="Enter Join Code" maxlength="20">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeModal('joinModal')">Cancel</button>
+                <button class="modal-btn primary" onclick="joinCommunity()">Join</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Create Community Modal -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('createModal')">&times;</span>
+            <div class="modal-header">
+                <h2>Create Community</h2>
+            </div>
+            <input type="text" id="communityNameInput" class="modal-input" placeholder="Community Name" maxlength="50">
+            <input type="text" id="communityOwnerInput" class="modal-input" placeholder="Owner of Community" maxlength="30">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeModal('createModal')">Cancel</button>
+                <button class="modal-btn primary" onclick="createCommunity()">Create</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Check if user is logged in
+        window.addEventListener('load', function() {
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+            const username = sessionStorage.getItem('username');
+            
+            if (isLoggedIn !== 'true' || !username) {
+                // Redirect to login if not logged in
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Update welcome message with username
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            welcomeMessage.textContent = `Welcome to Pulsecad, ${username}!`;
+            
+            // Load user's communities
+            loadUserCommunities();
+        });
+
+        // Modal functions
+        function showJoinModal() {
+            document.getElementById('joinModal').style.display = 'block';
+        }
+        
+        function showCreateModal() {
+            const username = sessionStorage.getItem('username');
+            const userCommunities = JSON.parse(localStorage.getItem(`communities_${username}`) || '[]');
+            
+            if (userCommunities.length >= 3) {
+                alert('You can only create a maximum of 3 communities!');
+                return;
+            }
+            
+            // Pre-fill owner field with current username
+            document.getElementById('communityOwnerInput').value = username;
+            document.getElementById('createModal').style.display = 'block';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            // Clear form inputs
+            if (modalId === 'joinModal') {
+                document.getElementById('joinCodeInput').value = '';
+            } else if (modalId === 'createModal') {
+                document.getElementById('communityNameInput').value = '';
+                document.getElementById('communityOwnerInput').value = '';
+            }
+        }
+        
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const joinModal = document.getElementById('joinModal');
+            const createModal = document.getElementById('createModal');
+            
+            if (event.target == joinModal) {
+                closeModal('joinModal');
+            }
+            if (event.target == createModal) {
+                closeModal('createModal');
+            }
+        }
+
+        // Community functions
+        function joinCommunity() {
+            const joinCode = document.getElementById('joinCodeInput').value.trim().toUpperCase();
+            if (!joinCode) {
+                alert('Please enter a join code!');
+                return;
+            }
+            
+            const username = sessionStorage.getItem('username');
+            
+            // Search for community with this join code across all users
+            let foundCommunity = null;
+            let communityOwner = null;
+            
+            // Get all users' communities from localStorage
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('communities_')) {
+                    const ownerUsername = key.replace('communities_', '');
+                    const communities = JSON.parse(localStorage.getItem(key) || '[]');
+                    
+                    const community = communities.find(c => c.joinCode === joinCode);
+                    if (community) {
+                        foundCommunity = community;
+                        communityOwner = ownerUsername;
+                        break;
+                    }
+                }
+            }
+            
+            if (!foundCommunity) {
+                alert('Invalid join code! Please check and try again.');
+                return;
+            }
+            
+            // Add to user's joined communities
+            const joinedCommunities = JSON.parse(localStorage.getItem(`joined_communities_${username}`) || '[]');
+            
+            // Check if already joined
+            if (joinedCommunities.some(c => c.id === foundCommunity.id)) {
+                alert('You have already joined this community!');
+                closeModal('joinModal');
+                return;
+            }
+            
+            // Add community info with owner reference
+            const joinedCommunity = {
+                ...foundCommunity,
+                originalOwner: communityOwner,
+                joinedAt: new Date().toISOString()
+            };
+            
+            joinedCommunities.push(joinedCommunity);
+            localStorage.setItem(`joined_communities_${username}`, JSON.stringify(joinedCommunities));
+            
+            // Refresh the communities list
+            loadUserCommunities();
+            
+            alert(`Successfully joined "${foundCommunity.name}"!`);
+            closeModal('joinModal');
+        }
+        
+        function createCommunity() {
+            console.log('createCommunity function called'); // Debug log
+            const communityName = document.getElementById('communityNameInput').value.trim();
+            const communityOwner = document.getElementById('communityOwnerInput').value.trim();
+            const username = sessionStorage.getItem('username');
+            
+            console.log('Form data:', { communityName, communityOwner, username }); // Debug log
+            
+            if (!communityName || !communityOwner) {
+                alert('Please fill in all fields!');
+                return;
+            }
+            
+            // Get user's existing communities
+            const userCommunities = JSON.parse(localStorage.getItem(`communities_${username}`) || '[]');
+            console.log('Existing communities:', userCommunities); // Debug log
+            
+            if (userCommunities.length >= 3) {
+                alert('You can only create a maximum of 3 communities!');
+                return;
+            }
+            
+            // Create new community object
+            const newCommunity = {
+                id: Date.now(),
+                name: communityName,
+                owner: communityOwner,
+                createdAt: new Date().toISOString(),
+                joinCode: generateJoinCode()
+            };
+            
+            console.log('New community created:', newCommunity); // Debug log
+            
+            // Add to user's communities
+            userCommunities.push(newCommunity);
+            localStorage.setItem(`communities_${username}`, JSON.stringify(userCommunities));
+            
+            console.log('Communities after save:', JSON.parse(localStorage.getItem(`communities_${username}`))); // Debug log
+            
+            // Refresh the communities list
+            loadUserCommunities();
+            
+            alert(`Community "${communityName}" created successfully!`);
+            closeModal('createModal');
+        }
+        
+        function generateJoinCode() {
+            return Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+        
+        function loadUserCommunities() {
+            console.log('loadUserCommunities called'); // Debug log
+            const username = sessionStorage.getItem('username');
+            console.log('Username:', username); // Debug log
+            
+            const userCommunities = JSON.parse(localStorage.getItem(`communities_${username}`) || '[]');
+            const joinedCommunities = JSON.parse(localStorage.getItem(`joined_communities_${username}`) || '[]');
+            const communitiesList = document.getElementById('communitiesList');
+            
+            console.log('User communities:', userCommunities); // Debug log
+            console.log('Joined communities:', joinedCommunities); // Debug log
+            console.log('Communities list element:', communitiesList); // Debug log
+            
+            if (!communitiesList) {
+                console.error('communitiesList element not found!');
+                return;
+            }
+            
+            communitiesList.innerHTML = '';
+            
+            // Display owned communities
+            userCommunities.forEach(community => {
+                console.log('Adding owned community:', community.name); // Debug log
+                const communityItem = document.createElement('div');
+                communityItem.className = 'community-item';
+                communityItem.innerHTML = `
+                    <span class="community-name">${community.name} <small>(Owner)</small></span>
+                    <button class="community-btn-small" onclick="viewCommunity(${community.id}, 'owned')">View</button>
+                `;
+                communitiesList.appendChild(communityItem);
+            });
+            
+            // Display joined communities
+            joinedCommunities.forEach(community => {
+                console.log('Adding joined community:', community.name); // Debug log
+                const communityItem = document.createElement('div');
+                communityItem.className = 'community-item';
+                communityItem.innerHTML = `
+                    <span class="community-name">${community.name} <small>(Joined)</small></span>
+                    <button class="community-btn-small" onclick="viewCommunity(${community.id}, 'joined')">View</button>
+                `;
+                communitiesList.appendChild(communityItem);
+            });
+            
+            if (userCommunities.length === 0 && joinedCommunities.length === 0) {
+                console.log('No communities found, showing placeholder message'); // Debug log
+                communitiesList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">No communities yet. Create one or join an existing community!</p>';
+            }
+        }
+        
+        function viewCommunity(communityId, type = 'owned') {
+            // Redirect to full page community view
+            window.location.href = `community-view.html?id=${communityId}&type=${type}`;
+        }
+        
+        let currentCommunityId = null;
+
+        // Logout function
+        function logout() {
+            // Clear session storage
+            sessionStorage.removeItem('isLoggedIn');
+            sessionStorage.removeItem('username');
+            
+            // Redirect to login page
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dispatch Interface</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: white;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title {
+            color: #333;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .back-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+        
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .dispatch-section {
+            background: #fffef8;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .dispatch-title {
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 0 1rem 0;
+            border-bottom: 2px solid #ffc107;
+            padding-bottom: 0.5rem;
+        }
+        
+        .dispatch-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #ffc107;
+        }
+        
+        .dispatch-btn {
+            background: #ffc107;
+            color: #333;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-right: 1rem;
+        }
+        
+        .dispatch-btn:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+        
+        .tone-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .tone-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .calls-section {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 1.5rem;
+            flex: 1;
+        }
+        
+        .calls-title {
+            color: #333;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+        
+        .call-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .call-item h4 {
+            color: #ffc107;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .call-detail {
+            margin: 0.25rem 0;
+            color: #333;
+        }
+        
+        .call-time {
+            color: #666;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+        
+        .no-calls {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+        
+        .context-menu {
+            position: fixed;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .context-menu-btn {
+            width: 100%;
+            padding: 10px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .context-menu-btn:hover {
+            background: #218838;
+        }
+        
+        @media (max-width: 768px) {
+            .dispatch-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="page-title" id="pageTitle">Dispatch Interface</h1>
+        <button class="back-btn" onclick="goBack()">← Back to Community</button>
+    </div>
+    
+    <div class="main-container">
+        <div class="content">
+            <!-- Dispatch Section -->
+            <div class="dispatch-section">
+                <h2 class="dispatch-title">Dispatch Center</h2>
+                <div class="dispatch-form">
+                    <div class="form-group">
+                        <label for="callLocation">Call Location</label>
+                        <input type="text" id="callLocation" class="form-input" placeholder="Enter call location">
+                    </div>
+                    <div class="form-group">
+                        <label for="callDescription">Call Description</label>
+                        <input type="text" id="callDescription" class="form-input" placeholder="Enter call description">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="dispatch-btn" onclick="createCall()">Create Call</button>
+                    <button class="tone-btn" onclick="sendTones()">🔔 Send Tones</button>
+                </div>
+            </div>
+            
+            <!-- Active Calls Section -->
+            <div class="calls-section">
+                <h3 class="calls-title">Active Calls</h3>
+                <div id="activeCalls">
+                    <div class="no-calls">No active calls</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Context Menu -->
+    <div id="contextMenu" class="context-menu">
+        <button class="context-menu-btn" onclick="sendTones()">🔔 Tones</button>
+    </div>
+    
+    <script>
+        let currentCommunity = null;
+        let activeCalls = [];
+        
+        // Load community information
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const communityId = urlParams.get('communityId');
+            
+            if (!communityId) {
+                alert('No community specified. Redirecting to dashboard.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            const username = sessionStorage.getItem('username');
+            
+            // Find the community
+            const userCommunities = JSON.parse(localStorage.getItem(`communities_${username}`) || '[]');
+            const joinedCommunities = JSON.parse(localStorage.getItem(`joined_communities_${username}`) || '[]');
+            
+            currentCommunity = userCommunities.find(c => c.id == communityId) || 
+                               joinedCommunities.find(c => c.id == communityId);
+            
+            if (!currentCommunity) {
+                alert('Community not found. Redirecting to dashboard.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            // Update page title
+            document.getElementById('pageTitle').textContent = `Dispatch Interface - ${currentCommunity.name}`;
+            
+            // Load active calls for this community
+            loadActiveCalls();
+        });
+        
+        function goBack() {
+            if (currentCommunity) {
+                const communityType = sessionStorage.getItem('communityType') || 'owned';
+                window.location.href = `community-view.html?id=${currentCommunity.id}&type=${communityType}`;
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        }
+        
+        function createCall() {
+            const callLocation = document.getElementById('callLocation').value.trim();
+            const callDescription = document.getElementById('callDescription').value.trim();
+            
+            if (!callLocation || !callDescription) {
+                alert('Please enter both call location and description.');
+                return;
+            }
+            
+            // Create new call
+            const newCall = {
+                id: Date.now(),
+                location: callLocation,
+                description: callDescription,
+                timestamp: new Date(),
+                communityId: currentCommunity.id,
+                status: 'Active'
+            };
+            
+            // Add to active calls
+            activeCalls.push(newCall);
+            
+            // Save to localStorage
+            saveActiveCalls();
+            
+            // Update display
+            displayActiveCalls();
+            
+            // Clear form
+            document.getElementById('callLocation').value = '';
+            document.getElementById('callDescription').value = '';
+            
+            alert('Call created successfully!');
+        }
+        
+        function sendTones() {
+            const callDescription = document.getElementById('callDescription').value.trim();
+            const callLocation = document.getElementById('callLocation').value.trim();
+            
+            // Hide context menu
+            document.getElementById('contextMenu').style.display = 'none';
+            
+            if (!callDescription && !callLocation) {
+                alert('Please enter call location and/or description before sending tones.');
+                return;
+            }
+            
+            // Create tone message
+            let toneMessage = "🚨 TONE ALERT 🚨\n\n";
+            if (callLocation) {
+                toneMessage += `Location: ${callLocation}\n`;
+            }
+            if (callDescription) {
+                toneMessage += `Description: ${callDescription}\n`;
+            }
+            toneMessage += "\nAll available units please respond.";
+            
+            // Use speech synthesis if available
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(
+                    `Tone alert. ${callLocation ? 'Location: ' + callLocation + '. ' : ''}${callDescription ? 'Description: ' + callDescription + '. ' : ''}All available units please respond.`
+                );
+                utterance.rate = 0.9;
+                utterance.pitch = 1.1;
+                speechSynthesis.speak(utterance);
+            }
+            
+            // Show alert with tone information
+            alert(toneMessage);
+            
+            // Log the tone
+            console.log('Tone sent:', { location: callLocation, description: callDescription, timestamp: new Date() });
+        }
+        
+        function loadActiveCalls() {
+            const communityId = currentCommunity.id;
+            const storedCalls = localStorage.getItem(`active_calls_${communityId}`);
+            
+            if (storedCalls) {
+                try {
+                    activeCalls = JSON.parse(storedCalls).map(call => ({
+                        ...call,
+                        timestamp: new Date(call.timestamp)
+                    }));
+                } catch (e) {
+                    activeCalls = [];
+                }
+            } else {
+                activeCalls = [];
+            }
+            
+            displayActiveCalls();
+        }
+        
+        function saveActiveCalls() {
+            const communityId = currentCommunity.id;
+            localStorage.setItem(`active_calls_${communityId}`, JSON.stringify(activeCalls));
+        }
+        
+        function displayActiveCalls() {
+            const callsContainer = document.getElementById('activeCalls');
+            
+            if (activeCalls.length === 0) {
+                callsContainer.innerHTML = '<div class="no-calls">No active calls</div>';
+                return;
+            }
+            
+            let callsHTML = '';
+            activeCalls.forEach(call => {
+                callsHTML += `
+                    <div class="call-item">
+                        <h4>Call #${call.id}</h4>
+                        <div class="call-detail"><strong>Location:</strong> ${call.location}</div>
+                        <div class="call-detail"><strong>Description:</strong> ${call.description}</div>
+                        <div class="call-detail"><strong>Status:</strong> ${call.status}</div>
+                        <div class="call-time">Created: ${call.timestamp.toLocaleString()}</div>
+                    </div>
+                `;
+            });
+            
+            callsContainer.innerHTML = callsHTML;
+        }
+        
+        // Context menu functionality
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            
+            const contextMenu = document.getElementById('contextMenu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = e.pageX + 'px';
+            contextMenu.style.top = e.pageY + 'px';
+        });
+        
+        // Hide context menu when clicking elsewhere
+        document.addEventListener('click', function(e) {
+            const contextMenu = document.getElementById('contextMenu');
+            if (!contextMenu.contains(e.target)) {
+                contextMenu.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

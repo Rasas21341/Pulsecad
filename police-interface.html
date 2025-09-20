@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Interface</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: white;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title {
+            color: #333;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .back-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+        
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .bottom-nav {
+            display: flex;
+            gap: 1rem;
+            background: #f8f9fa;
+            border-top: 2px solid #dee2e6;
+            padding: 1rem 2rem;
+        }
+        
+        .bottom-btn {
+            flex: 1;
+            padding: 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .bottom-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+        
+        .bottom-btn.active {
+            background: #0056b3;
+        }
+        
+        .context-menu {
+            position: fixed;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .context-menu-btn {
+            width: 100%;
+            padding: 10px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .context-menu-btn:hover {
+            background: #218838;
+        }
+        
+        .dispatch-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .dispatch-title {
+            grid-column: 1 / -1;
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 0 1rem 0;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+        
+        .lookup-section {
+            display: none;
+        }
+        
+        .lookup-section.active {
+            display: block;
+        }
+        
+        .lookup-form {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .search-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .results-section {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 1.5rem;
+            min-height: 200px;
+        }
+        
+        .results-title {
+            color: #333;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+        
+        .result-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .result-item h4 {
+            color: #007bff;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .result-detail {
+            margin: 0.25rem 0;
+            color: #333;
+        }
+        
+        .no-results {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .dispatch-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .bottom-nav {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="page-title" id="pageTitle">Police Interface</h1>
+        <button class="back-btn" onclick="goBack()">← Back to Community</button>
+    </div>
+    
+    <div class="main-container">
+        <div class="content">
+            <!-- Dispatch Section -->
+            <div id="dispatchSection" class="lookup-section active">
+                <h2>Dispatch Center</h2>
+                <div class="lookup-form">
+                    <div class="dispatch-form">
+                        <div class="form-group">
+                            <label for="callLocation">Call Location</label>
+                            <input type="text" id="callLocation" class="form-input" placeholder="Enter call location">
+                        </div>
+                        <div class="form-group">
+                            <label for="callDescription">Call Description</label>
+                            <input type="text" id="callDescription" class="form-input" placeholder="Enter call description">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Plate Lookup Section -->
+            <div id="plateSection" class="lookup-section">
+                <h2>Plate Lookup</h2>
+                <div class="lookup-form">
+                    <div class="form-group">
+                        <label for="plateNumber">License Plate Number</label>
+                        <input type="text" id="plateNumber" class="form-input" placeholder="Enter plate number (e.g., ABC123)" maxlength="10">
+                    </div>
+                    <button class="search-btn" onclick="lookupPlate()">Search Plate</button>
+                </div>
+                
+                <div class="results-section">
+                    <h3 class="results-title">Plate Search Results</h3>
+                    <div id="plateResults">
+                        <div class="no-results">Enter a plate number to search</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Civilian Lookup Section -->
+            <div id="civilianSection" class="lookup-section">
+                <h2>Civilian Lookup</h2>
+                <div class="lookup-form">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" class="form-input" placeholder="Enter first name">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" class="form-input" placeholder="Enter last name">
+                    </div>
+                    <button class="search-btn" onclick="lookupCivilian()">Search Civilian</button>
+                </div>
+                
+                <div class="results-section">
+                    <h3 class="results-title">Civilian Search Results</h3>
+                    <div id="civilianResults">
+                        <div class="no-results">Enter a name to search</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="bottom-btn active" onclick="showSection('dispatch')">Dispatch</button>
+            <button class="bottom-btn" onclick="showSection('plate')">Plate Lookup</button>
+            <button class="bottom-btn" onclick="showSection('civilian')">Civilian Lookup</button>
+        </div>
+    </div>
+    
+    <!-- Context Menu -->
+    <div id="contextMenu" class="context-menu">
+        <button class="context-menu-btn" onclick="sendTones()">🔔 Tones</button>
+    </div>
+    
+    <script>
+        let currentCommunity = null;
+        
+        // Load community information
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const communityId = urlParams.get('communityId');
+            
+            if (!communityId) {
+                alert('No community specified. Redirecting to dashboard.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            const username = sessionStorage.getItem('username');
+            
+            // Find the community
+            const userCommunities = JSON.parse(localStorage.getItem(`communities_${username}`) || '[]');
+            const joinedCommunities = JSON.parse(localStorage.getItem(`joined_communities_${username}`) || '[]');
+            
+            currentCommunity = userCommunities.find(c => c.id == communityId) || 
+                               joinedCommunities.find(c => c.id == communityId);
+            
+            if (!currentCommunity) {
+                alert('Community not found. Redirecting to dashboard.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            // Update page title
+            document.getElementById('pageTitle').textContent = `Police Interface - ${currentCommunity.name}`;
+        });
+        
+        function goBack() {
+            if (currentCommunity) {
+                const communityType = sessionStorage.getItem('communityType') || 'owned';
+                window.location.href = `community-view.html?id=${currentCommunity.id}&type=${communityType}`;
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        }
+        
+        function showSection(section) {
+            // Hide all sections
+            document.getElementById('dispatchSection').classList.remove('active');
+            document.getElementById('plateSection').classList.remove('active');
+            document.getElementById('civilianSection').classList.remove('active');
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.bottom-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected section and activate button
+            if (section === 'dispatch') {
+                document.getElementById('dispatchSection').classList.add('active');
+                document.querySelectorAll('.bottom-btn')[0].classList.add('active');
+            } else if (section === 'plate') {
+                document.getElementById('plateSection').classList.add('active');
+                document.querySelectorAll('.bottom-btn')[1].classList.add('active');
+            } else if (section === 'civilian') {
+                document.getElementById('civilianSection').classList.add('active');
+                document.querySelectorAll('.bottom-btn')[2].classList.add('active');
+            }
+        }
+        
+        function lookupPlate() {
+            const plateNumber = document.getElementById('plateNumber').value.trim().toUpperCase();
+            const resultsDiv = document.getElementById('plateResults');
+            
+            if (!plateNumber) {
+                resultsDiv.innerHTML = '<div class="no-results">Please enter a plate number</div>';
+                return;
+            }
+            
+            // For now, show placeholder results
+            // In a real system, this would query a vehicle database
+            resultsDiv.innerHTML = `
+                <div class="result-item">
+                    <h4>Plate: ${plateNumber}</h4>
+                    <div class="result-detail"><strong>Status:</strong> Plate lookup feature coming soon</div>
+                    <div class="result-detail"><strong>Note:</strong> This would normally search vehicle registration database</div>
+                </div>
+            `;
+        }
+        
+        function lookupCivilian() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const resultsDiv = document.getElementById('civilianResults');
+            
+            if (!firstName || !lastName) {
+                resultsDiv.innerHTML = '<div class="no-results">Please enter both first and last name</div>';
+                return;
+            }
+            
+            // Search for civilian data in this specific community
+            const communityId = currentCommunity.id;
+            const searchResults = [];
+            
+            // Get all users who might have civilian data for this community
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('civilian_') && key.includes(`_${communityId}`)) {
+                    try {
+                        const civilianData = JSON.parse(localStorage.getItem(key));
+                        
+                        // Check if name matches (case insensitive)
+                        if (civilianData.firstName && civilianData.lastName &&
+                            civilianData.firstName.toLowerCase() === firstName.toLowerCase() &&
+                            civilianData.lastName.toLowerCase() === lastName.toLowerCase()) {
+                            
+                            searchResults.push(civilianData);
+                        }
+                    } catch (e) {
+                        // Skip invalid data
+                        continue;
+                    }
+                }
+            }
+            
+            // Display results
+            if (searchResults.length === 0) {
+                resultsDiv.innerHTML = `<div class="no-results">No civilian found with name "${firstName} ${lastName}" in this community</div>`;
+            } else {
+                let resultsHTML = '';
+                searchResults.forEach(civilian => {
+                    resultsHTML += `
+                        <div class="result-item">
+                            <h4>${civilian.firstName} ${civilian.lastName}</h4>
+                            <div class="result-detail"><strong>Age:</strong> ${civilian.age || 'N/A'}</div>
+                            <div class="result-detail"><strong>Gender:</strong> ${civilian.gender || 'N/A'}</div>
+                            <div class="result-detail"><strong>Phone:</strong> ${civilian.phoneNumber || 'N/A'}</div>
+                            <div class="result-detail"><strong>Email:</strong> ${civilian.email || 'N/A'}</div>
+                            <div class="result-detail"><strong>Address:</strong> ${civilian.address || 'N/A'}</div>
+                            <div class="result-detail"><strong>City:</strong> ${civilian.city || 'N/A'}, ${civilian.state || 'N/A'} ${civilian.zipCode || ''}</div>
+                            <div class="result-detail"><strong>Occupation:</strong> ${civilian.occupation || 'N/A'}</div>
+                            ${civilian.backstory ? `<div class="result-detail"><strong>Background:</strong> ${civilian.backstory}</div>` : ''}
+                            <div class="result-detail"><strong>Last Updated:</strong> ${civilian.lastUpdated ? new Date(civilian.lastUpdated).toLocaleDateString() : 'N/A'}</div>
+                        </div>
+                    `;
+                });
+                resultsDiv.innerHTML = resultsHTML;
+            }
+        }
+        
+        // Context menu functionality
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            
+            const contextMenu = document.getElementById('contextMenu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = e.pageX + 'px';
+            contextMenu.style.top = e.pageY + 'px';
+        });
+        
+        // Hide context menu when clicking elsewhere
+        document.addEventListener('click', function(e) {
+            const contextMenu = document.getElementById('contextMenu');
+            if (!contextMenu.contains(e.target)) {
+                contextMenu.style.display = 'none';
+            }
+        });
+        
+        // Send tones function
+        function sendTones() {
+            const callDescription = document.getElementById('callDescription').value.trim();
+            const callLocation = document.getElementById('callLocation').value.trim();
+            
+            // Hide context menu
+            document.getElementById('contextMenu').style.display = 'none';
+            
+            if (!callDescription && !callLocation) {
+                alert('Please enter call location and/or description before sending tones.');
+                return;
+            }
+            
+            // Create tone message
+            let toneMessage = "🚨 TONE ALERT 🚨\n\n";
+            if (callLocation) {
+                toneMessage += `Location: ${callLocation}\n`;
+            }
+            if (callDescription) {
+                toneMessage += `Description: ${callDescription}\n`;
+            }
+            toneMessage += "\nAll available units please respond.";
+            
+            // Use speech synthesis if available
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(
+                    `Tone alert. ${callLocation ? 'Location: ' + callLocation + '. ' : ''}${callDescription ? 'Description: ' + callDescription + '. ' : ''}All available units please respond.`
+                );
+                utterance.rate = 0.9;
+                utterance.pitch = 1.1;
+                speechSynthesis.speak(utterance);
+            }
+            
+            // Show alert with tone information
+            alert(toneMessage);
+            
+            // Optional: Log the tone to console for debugging
+            console.log('Tone sent:', { location: callLocation, description: callDescription, timestamp: new Date() });
+        }
+        
+        // Initialize page with dispatch section visible
+        window.addEventListener('load', function() {
+            // ... existing load code ...
+            
+            // Set dispatch as default active section
+            setTimeout(() => {
+                showSection('dispatch');
+            }, 100);
+        });
+    </script>
+</body>
+</html>
