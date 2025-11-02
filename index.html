@@ -3,97 +3,298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pulsecad Login Portal</title>
+    <title>PulseCad</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Pricing Button -->
-    <div class="pricing-header">
-        <button class="pricing-btn" onclick="showPricing()">View Pricing</button>
-    </div>
-    
-    <!-- Pricing Modal -->
-    <div id="pricingModal" class="pricing-modal" style="display: none;">
-        <div class="pricing-modal-content">
-            <span class="close-btn" onclick="closePricing()">&times;</span>
-            <h2>Choose Your Plan</h2>
-            
-            <div class="pricing-plans">
-                <div class="pricing-card beginner">
-                    <h3>Beginner</h3>
-                    <div class="price">FREE</div>
-                    <ul>
-                        <li>Basic features</li>
-                        <li>Limited access</li>
-                        <li>Community support</li>
-                    </ul>
-                    <button class="select-plan-btn" onclick="selectPlan('Beginner')">Get Started</button>
-                </div>
-                
-                <div class="pricing-card premium">
-                    <h3>Premium</h3>
-                    <div class="price">$12.99<span>/month</span></div>
-                    <ul>
-                        <li>All basic features</li>
-                        <li>Advanced tools</li>
-                        <li>Priority support</li>
-                        <li>Analytics dashboard</li>
-                    </ul>
-                    <button class="select-plan-btn" onclick="selectPlan('Premium')">Choose Premium</button>
-                </div>
-                
-                <div class="pricing-card super-premium">
-                    <h3>Super Premium</h3>
-                    <div class="price">$20.00<span>/month</span></div>
-                    <ul>
-                        <li>Everything in Premium</li>
-                        <li>Unlimited access</li>
-                        <li>24/7 dedicated support</li>
-                        <li>Custom integrations</li>
-                        <li>Priority updates</li>
-                    </ul>
-                    <button class="select-plan-btn" onclick="selectPlan('Super Premium')">Go Super</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="login-container">
-        <div class="login-form">
-            <div class="login-header">
-                <h1>Pulsecad Login</h1>
-                <p>Please enter your credentials</p>
-              
-                 
-                </div>
-            </div>
-            
-            <form id="loginForm">
-                <div class="input-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
-                </div>
-                
-                <div class="input-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                
-                <div class="input-group">
-                    <button type="submit" class="login-btn">Login</button>
-                </div>
-            </form>
-            
-            <div class="input-group">
-                <button type="button" class="create-login-btn" onclick="createLogin()">Create Login</button>
-            </div>
-            
-            <div id="error-message" class="error-message" style="display: none;"></div>
-        </div>
-    </div>
-    
-    <script src="script.js"></script>
-</body>
-</html>Pulsecad Login
-Please enter your credentials
+    <nav class="top-nav">
+        <button class="login-button" onclick="toggleLogin()" id="loginBtn">Login</button>
+        <button class="logout-button" onclick="handleLogout()" id="logoutBtn" style="display: none;">Logout</button>
+    </nav>
 
+    <div class="community-info" id="communityInfo" style="display: none;">
+        <h3>Your Communities</h3>
+        <div id="communityList"></div>
+    </div>
+
+    <div class="login-modal" id="loginModal">
+        <div class="login-content">
+            <span class="close-button" onclick="toggleLogin()">&times;</span>
+            <h2>Login</h2>
+            <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit" class="login-submit">Sign In</button>
+                <button type="button" class="create-account-btn" onclick="toggleRegister()">Create an Account</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="login-modal" id="registerModal">
+        <div class="login-content">
+            <span class="close-button" onclick="toggleRegister()">&times;</span>
+            <h2>Create Account</h2>
+            <form class="login-form" id="registerForm" onsubmit="handleRegister(event)">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit" class="login-submit">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="dashboard" id="dashboard" style="display: none;">
+        <div class="dashboard-content">
+            <h2>Dashboard</h2>
+            <div class="dashboard-buttons">
+                <button onclick="showCreateCommunity()" class="dashboard-btn">Create</button>
+                <button onclick="showJoinCommunity()" class="dashboard-btn">Join Community</button>
+                <button onclick="showAdminPanel()" class="dashboard-btn admin-btn" id="adminButton" style="display: none;">Admin Panel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="adminModal">
+        <div class="modal-content admin-panel">
+            <span class="close-button" onclick="toggleModal('adminModal')">&times;</span>
+            <h2>Admin Panel</h2>
+            <div class="admin-actions">
+                <div class="data-section">
+                    <h3>Data Management</h3>
+                    <div class="data-buttons">
+                        <button onclick="downloadData()" class="admin-action-btn">Download Data</button>
+                        <input type="file" id="uploadFile" style="display: none;" onchange="handleFileUpload(event)">
+                        <button onclick="document.getElementById('uploadFile').click()" class="admin-action-btn">Upload Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="createCommunityModal">
+        <div class="modal-content">
+            <span class="close-button" onclick="toggleModal('createCommunityModal')">&times;</span>
+            <h2>Create Community</h2>
+            <form id="createCommunityForm" onsubmit="handleCreateCommunity(event)">
+                <input type="text" name="serverName" placeholder="Server Name" required>
+                <button type="submit">Create</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="joinCommunityModal">
+        <div class="modal-content">
+            <span class="close-button" onclick="toggleModal('joinCommunityModal')">&times;</span>
+            <h2>Join Community</h2>
+            <form id="joinCommunityForm" onsubmit="handleJoinCommunity(event)">
+                <input type="text" name="communityCode" placeholder="Community Code" required>
+                <button type="submit">Join</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <img src="https://cdn.discordapp.com/attachments/1406741009399939165/1434348504548901015/image.png?ex=690800a4&is=6906af24&hm=01c8cba5b25bb9e98df3ad2c31b033a07b5abbc155d1ed1e4189fc48d2560de4&" alt="PulseCad logo featuring a geometric minimalist pulse wave design in white against a transparent background" class="logo">
+        <h1 class="welcome-text">Welcome to PulseCad</h1>
+        <a href="#" class="team-button">Team</a>
+    </div>
+
+    <script>
+        // Store for users and communities
+        let users = JSON.parse(localStorage.getItem('users')) || {};
+        let communities = JSON.parse(localStorage.getItem('communities')) || [];
+        let currentUser = null;
+
+        function toggleLogin() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.toggle('show');
+        }
+
+        function toggleRegister() {
+            const loginModal = document.getElementById('loginModal');
+            const registerModal = document.getElementById('registerModal');
+            loginModal.classList.toggle('show');
+            registerModal.classList.toggle('show');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const form = event.target;
+            const username = form.username.value;
+            const password = form.password.value;
+
+            if (users[username] && users[username].password === password) {
+                currentUser = username;
+                toggleLogin();
+                showDashboard();
+                
+                // Show admin button for Ryan/STAFF account
+                const adminButton = document.getElementById('adminButton');
+                if (username === 'Ryan' && password === 'STAFF') {
+                    adminButton.style.display = 'inline-block';
+                } else {
+                    adminButton.style.display = 'none';
+                }
+            } else {
+                alert('Invalid username or password');
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const form = event.target;
+            const username = form.username.value;
+            const password = form.password.value;
+
+            if (users[username]) {
+                alert('Username already exists');
+                return;
+            }
+
+            users[username] = { password };
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('Account created successfully!');
+            toggleRegister();
+        }
+
+        function showDashboard() {
+            document.querySelector('.container').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('loginBtn').style.display = 'none';
+            document.getElementById('logoutBtn').style.display = 'block';
+            document.getElementById('communityInfo').style.display = 'block';
+            updateCommunityList();
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            document.querySelector('.container').style.display = 'flex';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginBtn').style.display = 'block';
+            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('communityInfo').style.display = 'none';
+        }
+
+        function updateCommunityList() {
+            const communityList = document.getElementById('communityList');
+            communityList.innerHTML = '';
+
+            const userCommunities = communities.filter(c => c.members.includes(currentUser));
+            
+            if (userCommunities.length === 0) {
+                communityList.innerHTML = '<p class="no-communities">No communities joined yet</p>';
+                return;
+            }
+
+            userCommunities.forEach(community => {
+                const communityCard = document.createElement('div');
+                communityCard.className = 'community-card';
+                communityCard.innerHTML = `
+                    <h4>${community.name}</h4>
+                    <p>Owner: ${community.owner}</p>
+                    <p>Code: ${community.code}</p>
+                    <p>Members: ${community.members.length}</p>
+                `;
+                communityList.appendChild(communityCard);
+            });
+        }
+
+        function toggleModal(modalId) {
+            document.getElementById(modalId).classList.toggle('show');
+        }
+
+        function showCreateCommunity() {
+            toggleModal('createCommunityModal');
+        }
+
+        function showJoinCommunity() {
+            toggleModal('joinCommunityModal');
+        }
+
+        function handleCreateCommunity(event) {
+            event.preventDefault();
+            const serverName = event.target.serverName.value;
+            const communityCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+            
+            const community = {
+                name: serverName,
+                owner: currentUser,
+                code: communityCode,
+                members: [currentUser]
+            };
+
+            communities.push(community);
+            localStorage.setItem('communities', JSON.stringify(communities));
+            updateCommunityList(); // Update the community list immediately
+            alert(`Community created! Share this code with others: ${communityCode}`);
+            toggleModal('createCommunityModal');
+        }
+
+        function showAdminPanel() {
+            if (currentUser === 'Ryan') {
+                toggleModal('adminModal');
+            }
+        }
+
+        function downloadData() {
+            const data = {
+                users: users,
+                communities: communities
+            };
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'pulsecad_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if (data.users && data.communities) {
+                            users = data.users;
+                            communities = data.communities;
+                            localStorage.setItem('users', JSON.stringify(users));
+                            localStorage.setItem('communities', JSON.stringify(communities));
+                            updateCommunityList();
+                            alert('Data uploaded successfully!');
+                        } else {
+                            alert('Invalid data format');
+                        }
+                    } catch (error) {
+                        alert('Error reading file: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function handleJoinCommunity(event) {
+            event.preventDefault();
+            const code = event.target.communityCode.value;
+            const community = communities.find(c => c.code === code);
+
+            if (community) {
+                if (!community.members.includes(currentUser)) {
+                    community.members.push(currentUser);
+                    localStorage.setItem('communities', JSON.stringify(communities));
+                    alert('Joined community successfully!');
+                } else {
+                    alert('You are already a member of this community');
+                }
+            } else {
+                alert('Invalid community code');
+            }
+            toggleModal('joinCommunityModal');
+        }
+    </script>
+</body>
+</html>
