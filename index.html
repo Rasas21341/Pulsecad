@@ -92,6 +92,14 @@
         </div>
     </div>
 
+    <div class="modal" id="viewCommunityModal">
+        <div class="modal-content">
+            <span class="close-button" onclick="toggleModal('viewCommunityModal')">&times;</span>
+            <h2 id="communityModalName">Community Details</h2>
+            <div id="communityModalDetails"></div>
+        </div>
+    </div>
+
     <div class="container">
         <img src="https://cdn.discordapp.com/attachments/1406741009399939165/1434348504548901015/image.png?ex=690800a4&is=6906af24&hm=01c8cba5b25bb9e98df3ad2c31b033a07b5abbc155d1ed1e4189fc48d2560de4&" alt="PulseCad logo featuring a geometric minimalist pulse wave design in white against a transparent background" class="logo">
         <h1 class="welcome-text">Welcome to PulseCad</h1>
@@ -253,6 +261,7 @@
                     <p>Owner: ${community.owner}</p>
                     <p>Code: ${community.code}</p>
                     <p>Members: ${community.members.length}</p>
+                    <button class='view-community-btn' onclick='viewCommunity("${community.code}")'>View</button>
                 `;
                 communityList.appendChild(communityCard);
             });
@@ -339,6 +348,18 @@
 
         function showTeam() {
             toggleModal('teamModal');
+        }
+
+        function viewCommunity(code) {
+            const community = communities.find(c => c.code === code);
+            if (!community) return;
+            document.getElementById('communityModalName').textContent = community.name;
+            document.getElementById('communityModalDetails').innerHTML = `
+                <p><strong>Owner:</strong> ${community.owner}</p>
+                <p><strong>Code:</strong> ${community.code}</p>
+                <p><strong>Members:</strong> ${community.members.join(', ')}</p>
+            `;
+            toggleModal('viewCommunityModal');
         }
 
         function handleJoinCommunity(event) {
