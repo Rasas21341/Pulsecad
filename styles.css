@@ -127,10 +127,12 @@ body {
     background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
     color: white;
     text-decoration: none;
+    border: none;
     border-radius: 30px;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
+    cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -409,4 +411,92 @@ body {
 .admin-action-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+/* Team Modal Styles */
+.team-modal .modal-content {
+    max-width: 800px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.team-section {
+    margin: 2rem 0;
+}
+
+.role-title {
+    color: #4a90e2;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    justify-items: center;
+}
+
+.team-member {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-member:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(74, 144, 226, 0.2);
+}
+
+.member-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    background: linear-gradient(45deg, #4a90e2, #5ca0ea);
+    position: relative;
+    overflow: hidden;
+}
+
+.member-avatar::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.9);
+    mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-6.627 0-12 3.373-12 7.5v1.5a1 1 0 0 0 1 1h22a1 1 0 0 0 1-1v-1.5c0-4.127-5.373-7.5-12-7.5z"/></svg>') center/contain no-repeat;
+    -webkit-mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-6.627 0-12 3.373-12 7.5v1.5a1 1 0 0 0 1 1h22a1 1 0 0 0 1-1v-1.5c0-4.127-5.373-7.5-12-7.5z"/></svg>') center/contain no-repeat;
+}
+
+.member-avatar.founder {
+    background: linear-gradient(45deg, #ffd700, #ffa500);
+}
+
+.member-avatar.manager {
+    background: linear-gradient(45deg, #4a90e2, #5ca0ea);
+}
+
+.member-avatar.support {
+    background: linear-gradient(45deg, #50c878, #3cb371);
+}
+
+.team-member h4 {
+    color: white;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.team-member p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
 }

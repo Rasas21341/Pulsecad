@@ -95,7 +95,67 @@
     <div class="container">
         <img src="https://cdn.discordapp.com/attachments/1406741009399939165/1434348504548901015/image.png?ex=690800a4&is=6906af24&hm=01c8cba5b25bb9e98df3ad2c31b033a07b5abbc155d1ed1e4189fc48d2560de4&" alt="PulseCad logo featuring a geometric minimalist pulse wave design in white against a transparent background" class="logo">
         <h1 class="welcome-text">Welcome to PulseCad</h1>
-        <a href="#" class="team-button">Team</a>
+        <button onclick="showTeam()" class="team-button">Team</button>
+    </div>
+
+    <div class="modal team-modal" id="teamModal">
+        <div class="modal-content team-content">
+            <span class="close-button" onclick="toggleModal('teamModal')">&times;</span>
+            <h2>Our Team</h2>
+            
+            <div class="team-section">
+                <h3 class="role-title">Founders</h3>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar founder"></div>
+                        <h4>Ryan</h4>
+                        <p>Lead Developer</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar founder"></div>
+                        <h4>Hunter</h4>
+                        <p>Lead Developer/Overseer</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-section">
+                <h3 class="role-title">Managers</h3>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar manager"></div>
+                        <h4>Devin</h4>
+                        <p>Community Manager</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar manager"></div>
+                        <h4>Open</h4>
+                        <p>Project Manager</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-section">
+                <h3 class="role-title">Support Team</h3>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar support"></div>
+                        <h4>Open</h4>
+                        <p>Technical Support</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar support"></div>
+                        <h4>Open</h4>
+                        <p>Community Support</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar support"></div>
+                        <h4>Open</h4>
+                        <p>Help Desk</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -275,6 +335,10 @@
                 };
                 reader.readAsText(file);
             }
+        }
+
+        function showTeam() {
+            toggleModal('teamModal');
         }
 
         function handleJoinCommunity(event) {
