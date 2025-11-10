@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="police-dashboard">
+        <h1>Police Dashboard</h1>
+        <div id="callsignPopup" class="modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeCallsignSetup()">&times;</span>
+                <h3>Callsign Setup</h3>
+                <form id="callsignForm" onsubmit="saveCallsign(event)">
+                    <input type="text" name="name" placeholder="Name" required><br>
+                    <input type="text" name="callsign" placeholder="Callsign" required><br>
+                    <input type="text" name="department" placeholder="Department" required><br>
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+        <div id="nameLookupPopup" class="modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeNameLookupPopup()">&times;</span>
+                <h3>Name Lookup</h3>
+                <form id="nameLookupForm" onsubmit="lookupCivilian(event)">
+                    <input type="text" name="firstName" placeholder="First Name" required><br>
+                    <input type="text" name="lastName" placeholder="Last Name" required><br>
+                    <button type="submit">Lookup</button>
+                </form>
+                <div id="civilianInfo"></div>
+            </div>
+        </div>
+        <div id="civilianPopup" class="modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeCivilianPopup()">&times;</span>
+                <h3>Create Civilian</h3>
+                <form id="civilianForm" onsubmit="saveCivilian(event)">
+                    <input type="text" name="firstName" placeholder="First Name" required><br>
+                    <input type="text" name="lastName" placeholder="Last Name" required><br>
+                    <input type="date" name="dob" placeholder="Date of Birth" required><br>
+                    <div class="id-type-area">
+                        <label for="idType">ID Type:</label>
+                        <select name="idType" id="idType" required>
+                            <option value="Driver's License">Driver's License</option>
+                            <option value="State ID">State ID</option>
+                            <option value="Passport">Passport</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" name="customIdType" id="customIdType" placeholder="Custom ID Type" style="display:none;margin-top:0.5rem;">
+                    </div>
+                    <button type="submit">Save</button>
+                </form>
+                <div id="civilianSaveMsg"></div>
+            </div>
+        </div>
+        <div id="citationPopup" class="modal">
+            <div class="modal-content citation-content">
+                <span class="close-button" onclick="closeCitationPopup()">&times;</span>
+                <h3>Citation</h3>
+                <form id="citationForm" onsubmit="saveCitation(event)">
+                    <div class="citation-fields">
+                        <label for="officer">Officer's Name</label><br>
+                        <input type="text" name="officer" id="officer" placeholder="Officer's Name" required><br>
+                        <label for="violator">Violator Name</label><br>
+                        <input type="text" name="violator" id="violator" placeholder="Violator Name" required><br>
+                        <label for="violation">Violation</label><br>
+                        <input type="text" name="violation" id="violation" placeholder="Violation" required><br>
+                        <label for="location">Location</label><br>
+                        <input type="text" name="location" id="location" placeholder="Location" required><br>
+                        <label for="date">Date</label><br>
+                        <input type="date" name="date" id="date" required><br>
+                        <label for="notes">Notes</label><br>
+                        <textarea name="notes" id="notes" placeholder="Notes" rows="3"></textarea><br>
+                    </div>
+                    <button type="submit">Save Citation</button>
+                </form>
+                <div id="citationSaveMsg"></div>
+                <div id="citationSummary"></div>
+            </div>
+        </div>
+        <div id="lookupArea" style="display:none;">
+            <div class="button-column">
+                <button onclick="showCivilianPopup()" class="lookup-btn">Civilian</button>
+            </div>
+            <div style="flex:1;">
+                <!-- Only civilian creation remains -->
+            </div>
+        </div>
+    </div>
+    <script>
+        function showCallsignSetup() {
+            document.getElementById('callsignPopup').classList.add('show');
+        }
+        function closeCallsignSetup() {
+            document.getElementById('callsignPopup').classList.remove('show');
+        }
+        // Show Callsign Setup only if not done before
+        window.onload = function() {
+            if (!localStorage.getItem('callsignSetupDone')) {
+                showCallsignSetup();
+            } else {
+                document.getElementById('lookupArea').style.display = 'flex';
+                
+                // Load saved callsign data
+                const savedCallsign = JSON.parse(localStorage.getItem('officerCallsign') || '{}');
+                if (savedCallsign.name) {
+                    document.querySelector('#callsignForm [name="name"]').value = savedCallsign.name;
+                    document.querySelector('#callsignForm [name="callsign"]').value = savedCallsign.callsign;
+                    document.querySelector('#callsignForm [name="department"]').value = savedCallsign.department;
+                }
+            }
+        }
+        function saveCallsign(event) {
+            event.preventDefault();
+            const form = event.target;
+            const callsignData = {
+                name: form.name.value,
+                callsign: form.callsign.value,
+                department: form.department.value
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('officerCallsign', JSON.stringify(callsignData));
+            localStorage.setItem('callsignSetupDone', 'true');
+            
+            document.getElementById('callsignPopup').classList.remove('show');
+            document.getElementById('lookupArea').style.display = 'flex';
+        }
+        function showNameLookup() {
+            document.getElementById('nameLookupPopup').classList.add('show');
+        }
+        function closeNameLookupPopup() {
+            document.getElementById('nameLookupPopup').classList.remove('show');
+            document.getElementById('civilianInfo').innerHTML = '';
+        }
+        function showCivilianPopup() {
+            document.getElementById('civilianPopup').classList.add('show');
+        }
+        function closeCivilianPopup() {
+            document.getElementById('civilianPopup').classList.remove('show');
+            document.getElementById('civilianSaveMsg').innerHTML = '';
+        }
+        document.getElementById('idType').addEventListener('change', function() {
+            const customIdInput = document.getElementById('customIdType');
+            if (this.value === 'Other') {
+                customIdInput.style.display = 'block';
+                customIdInput.required = true;
+            } else {
+                customIdInput.style.display = 'none';
+                customIdInput.required = false;
+            }
+        });
+        function saveCivilian(event) {
+            event.preventDefault();
+            const form = event.target;
+            const firstName = form.firstName.value.trim();
+            const lastName = form.lastName.value.trim();
+            const dob = form.dob.value;
+            let idType = form.idType.value;
+            if (idType === 'Other') {
+                idType = form.customIdType.value.trim();
+            }
+            let civilians = JSON.parse(localStorage.getItem('civilians') || '[]');
+            civilians.push({ firstName, lastName, dob, idType });
+            localStorage.setItem('civilians', JSON.stringify(civilians));
+            document.getElementById('civilianSaveMsg').innerHTML = `<p style='color:green;'>Civilian saved!</p>`;
+            setTimeout(closeCivilianPopup, 1200);
+        }
+        function lookupCivilian(event) {
+            event.preventDefault();
+            const form = event.target;
+            const firstName = form.firstName.value.trim();
+            const lastName = form.lastName.value.trim();
+            let civilians = JSON.parse(localStorage.getItem('civilians') || '[]');
+            const found = civilians.find(civ => civ.firstName.toLowerCase() === firstName.toLowerCase() && civ.lastName.toLowerCase() === lastName.toLowerCase());
+            if (found) {
+                document.getElementById('civilianInfo').innerHTML = `<p><strong>Name:</strong> ${found.firstName} ${found.lastName}<br><strong>DOB:</strong> ${found.dob}<br><strong>ID Type:</strong> ${found.idType}</p>`;
+            } else {
+                document.getElementById('civilianInfo').innerHTML = `<p style='color:red;'>Civilian not found.</p>`;
+            }
+        }
+        function showCitationPopup() {
+            document.getElementById('citationPopup').classList.add('show');
+        }
+        function closeCitationPopup() {
+            document.getElementById('citationPopup').classList.remove('show');
+            document.getElementById('citationSaveMsg').innerHTML = '';
+        }
+        function saveCitation(event) {
+            event.preventDefault();
+            const form = event.target;
+            const citation = {
+                officer: form.officer.value,
+                violator: form.violator.value,
+                violation: form.violation.value,
+                location: form.location.value,
+                date: form.date.value,
+                notes: form.notes.value
+            };
+            
+            // Save to localStorage
+            let citations = JSON.parse(localStorage.getItem('citations') || '[]');
+            citations.push(citation);
+            localStorage.setItem('citations', JSON.stringify(citations));
+
+            document.getElementById('citationSaveMsg').innerHTML = `<p style='color:green;'>Citation saved!</p>`;
+            document.getElementById('citationSummary').innerHTML = `
+                <div style='margin-top:1rem;padding:1rem;border:1px solid #2196f3;border-radius:10px;background:#f5faff;'>
+                    <strong>Officer's Name:</strong> ${citation.officer}<br>
+                    <strong>Violator Name:</strong> ${citation.violator}<br>
+                    <strong>Violation:</strong> ${citation.violation}<br>
+                    <strong>Location:</strong> ${citation.location}<br>
+                    <strong>Date:</strong> ${citation.date}<br>
+                    <strong>Notes:</strong> ${citation.notes}
+                </div>
+            `;
+            setTimeout(() => {
+                document.getElementById('citationSaveMsg').innerHTML = '';
+            }, 1200);
+        }
+    </script>
+    <style>
+        .lookup-area {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+        }
+        .button-column {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-right: 2rem;
+        }
+        .lookup-btn {
+            border: none;
+            border-radius: 20px;
+            background: linear-gradient(45deg, #2196f3, #21cbf3);
+            color: white;
+            font-size: 0.95rem;
+            font-weight: bold;
+            padding: 0.5rem 1.2rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.15);
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 140px;
+            text-align: left;
+        }
+        .lookup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+        }
+        .citation-content {
+            background: #fffbe6;
+            color: #222;
+            border: 2px solid #2196f3;
+            border-radius: 15px;
+            max-width: 400px;
+            margin: auto;
+            box-shadow: 0 8px 32px rgba(33,150,243,0.2);
+        }
+        .citation-fields input, .citation-fields textarea {
+            width: 95%;
+            margin: 0.5rem 0;
+            padding: 0.7rem;
+            border-radius: 8px;
+            border: 1px solid #2196f3;
+            font-size: 1rem;
+            color: #000;
+            background: #fff;
+        }
+        .citation-fields textarea {
+            resize: vertical;
+        }
+        .citation-content h3 {
+            color: #2196f3;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .citation-content button {
+            background: linear-gradient(45deg, #2196f3, #21cbf3);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            padding: 0.8rem 2rem;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+        .citation-content button:hover {
+            box-shadow: 0 8px 24px rgba(33,150,243,0.3);
+            transform: translateY(-2px);
+        }
+        .id-type-area {
+            margin: 1rem 0;
+        }
+        .id-type-area label {
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        .id-type-area select, .id-type-area input {
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #2196f3;
+            margin-top: 0.3rem;
+            font-size: 1rem;
+        }
+    </style>
+</body>
+</html>
