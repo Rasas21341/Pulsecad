@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FlapThing — Offline</title>
+  <style>
+  :root{--bg:#70c5ce;--ground:#ded895;--pipe:#2ecc71;--bird:#ffd633}
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+  body{display:flex;align-items:center;justify-content:center;background:linear-gradient(#9ee6f0,var(--bg));}
+  .wrap{width:420px;text-align:center}
+  h1{margin:12px 0 6px;font-size:20px;color:#064;letter-spacing:1px}
+  canvas{display:block;margin:0 auto;border-radius:8px;background:linear-gradient(#87e0ff,#bfefff);box-shadow:0 6px 18px rgba(0,0,0,0.15)}
+  .hud{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+  #score{font-weight:700;font-size:20px;color:#024}
+  #msg{font-size:13px;color:#045}
+  footer{font-size:12px;color:#034;margin-top:6px}
+  @media (max-width:480px){.wrap{width:92vw}canvas{width:100%;height:auto}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>FlapThing (Offline)</h1>
+    <canvas id="game" width="400" height="600"></canvas>
+    <div class="hud">
+      <div id="score">0</div>
+      <div id="msg">Press Space / Click / Tap to start</div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-top:6px">
+      <div class="diff-controls" id="diffControls">
+        <button class="diff-btn" data-mode="easy">Easy</button>
+        <button class="diff-btn active" data-mode="normal">Normal</button>
+        <button class="diff-btn" data-mode="hard">Hard</button>
+      </div>
+    </div>
+    <footer>Controls: Space / Click / Tap — Works offline</footer>
+  </div>
+  <button class="admin-btn" id="adminBtn" onclick="window.location='admin.html'">admin login</button>
+
+  <!-- Bottom score badge -->
+  <div id="bottomScore" class="bottom-score">0</div>
+  <!-- Mobile flap button -->
+  <button id="touchFlap" class="mobile-flap" aria-label="Flap">FLAP</button>
+
+  <!-- offline sign-in (simple) -->
+  <div id="signinOverlay" class="overlay" style="display:flex">
+    <div class="modal">
+      <h3>Offline Sign-in</h3>
+      <p class="small-muted">Enter your email to continue (used for local high-score and demo live count).</p>
+      <label for="emailInput">Email</label>
+      <input id="emailInput" type="email" placeholder="you@example.com">
+      <div class="actions">
+        <button id="emailSubmit" class="link-like">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin modal -->
+  <div id="adminModal" class="overlay" style="display:none">
+    <div class="modal">
+      <h3>Admin Login</h3>
+      <label for="adminUser">Username</label>
+      <input id="adminUser" value="admin">
+      <label for="adminPass">Password</label>
+      <input id="adminPass" type="password" placeholder="password">
+      <div class="actions">
+        <button id="adminCancel" class="link-like">Cancel</button>
+        <button id="adminSubmit" class="link-like">Login</button>
+      </div>
+      <div id="adminPanel" style="display:none;margin-top:12px">
+        <div class="small-muted">High score: <span id="adminBest">0</span></div>
+        <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end">
+          <button id="resetBest" class="link-like">Reset Best</button>
+          <button id="closeAdmin" class="link-like">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const msgEl = document.getElementById('msg');
+
+    // base logical size and devicePixelRatio scaling for crisp mobile rendering
+    const BASE_W = canvas.width; const BASE_H = canvas.height;
+    const W = BASE_W; const H = BASE_H;
+    (function setupDPR(){ const dpr = window.devicePixelRatio || 1; canvas.style.width = BASE_W + 'px'; canvas.style.height = BASE_H + 'px'; canvas.width = Math.floor(BASE_W * dpr); canvas.height = Math.floor(BASE_H * dpr); ctx.setTransform(dpr,0,0,dpr,0,0); })();
+
+    // Game objects (easier defaults)
+    // Difficulty config (defaults for offline build)
+    const PRESETS = {
+      easy: {grav:0.30, jump:-11, spawnRate:160, speed:1.2, gap:220},
+      normal: {grav:0.45, jump:-9, spawnRate:120, speed:1.8, gap:170},
+      hard: {grav:0.65, jump:-7, spawnRate:90, speed:2.6, gap:130}
+    };
+    const savedMode = (localStorage.getItem('flapthing_difficulty')||'normal');
+    let currentMode = savedMode in PRESETS ? savedMode : 'normal';
+    let cfg = PRESETS[currentMode];
+
+    let GRAV = cfg.grav; let JUMP = cfg.jump;
+    const pipes = [];
+    let frame = 0; let spawnRate = cfg.spawnRate; let speed = cfg.speed; const GAP = cfg.gap;
+
+    let score = 0; let state = 'menu';
+    let best = parseInt((localStorage && localStorage.getItem('flapthing_best')) || '0', 10) || 0;
+
+    // Audio (small synthesized effects)
+    let audioCtx = null;
+    function ensureAudio(){ if(!audioCtx){ try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){ audioCtx = null; } } }
+    function playBeep(freq, length, type='sine'){ ensureAudio(); if(!audioCtx) return; const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.type = type; o.frequency.value = freq; o.connect(g); g.connect(audioCtx.destination); g.gain.value = 0.001; const now = audioCtx.currentTime; g.gain.exponentialRampToValueAtTime(0.08, now + 0.01); o.start(now); o.stop(now + length); g.gain.exponentialRampToValueAtTime(0.001, now + length); }
+    function playFlap(){ playBeep(700, 0.08, 'triangle'); }
+    function playHit(){ playBeep(120, 0.25, 'sawtooth'); }
+    function playPoint(){ playBeep(1100, 0.06, 'sine'); }
+
+    function reset(){
+      bird.y = H/2; bird.vel = 0; bird.frame = 0; pipes.length = 0; frame = 0; score = 0; speed = 2.2; state='menu';
+      updateHUD('Press Space / Click / Tap to start');
+      scoreEl.innerText = score;
+      draw();
+    }
+
+    function spawnPipe(){
+      const gap = GAP; const minTop = 40; const maxTop = H - gap - 80;
+      const top = Math.floor(minTop + Math.random()*(maxTop - minTop));
+      pipes.push({x:W, top:top, bottom: top + gap, w:60, passed:false});
+    }
+
+    function update(){
+      frame++;
+      if(state==='playing'){
+        bird.vel += GRAV; bird.y += bird.vel; bird.frame++;
+
+        if(frame % spawnRate === 0) spawnPipe();
+
+        for(let i = pipes.length-1;i>=0;i--){
+          const p = pipes[i]; p.x -= speed;
+          if(!p.passed && p.x + p.w < bird.x){ p.passed = true; score++; updateHUD(); playPoint(); speed = Math.min(3.5, speed + 0.02); }
+          if(p.x + p.w < -10) pipes.splice(i,1);
+          if(collides(bird, {x:p.x, y:0, w:p.w, h:p.top}) || collides(bird, {x:p.x, y:p.bottom, w:p.w, h:H - p.bottom})){
+            if(state!=='dead'){ state = 'dead'; playHit(); updateHUD('Game over — Click / Space to restart'); saveBest(); }
+          }
+        }
+
+        if(bird.y + bird.h > H - 10 || bird.y < 0){ if(state!=='dead'){ state='dead'; playHit(); updateHUD('Game over — Click / Space to restart'); saveBest(); } }
+      }
+    }
+
+    function saveBest(){ if(score > best){ best = score; try{ localStorage.setItem('flapthing_best', String(best)); }catch(e){} } }
+
+    function collides(a,b){
+      return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+
+      const g = ctx.createLinearGradient(0,0,0,H);
+      g.addColorStop(0,'#87e0ff'); g.addColorStop(1,'#bfefff');
+      ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+
+      pipes.forEach(p=>{
+        ctx.fillStyle = '#2ecc71'; ctx.fillRect(p.x, 0, p.w, p.top);
+        ctx.fillRect(p.x, p.bottom, p.w, H - p.bottom);
+        ctx.fillStyle = 'rgba(0,0,0,0.06)'; ctx.fillRect(p.x, p.top - 6, p.w, 6);
+      });
+
+      ctx.fillStyle = '#ded895'; ctx.fillRect(0, H-14, W, 14);
+
+      const cx = bird.x + bird.w/2; const cy = bird.y + bird.h/2;
+      const angle = Math.max(Math.min(bird.vel / 10, 1), -1);
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(angle);
+      ctx.fillStyle = '#ffd633'; ctx.beginPath(); ctx.ellipse(0,0,bird.w/2,bird.h/2,0,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#ffbf33'; ctx.beginPath(); ctx.ellipse(-4,0,8,4,0,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#222'; ctx.beginPath(); ctx.arc(8, -4, 3, 0, Math.PI*2); ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = '#024'; ctx.font = 'bold 40px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(score, W/2, 60);
+
+      if(state==='menu'){
+        ctx.fillStyle = 'rgba(0,0,0,0.28)'; ctx.fillRect(20, 160, W-40, 90);
+        ctx.fillStyle = '#fff'; ctx.font = '18px sans-serif'; ctx.textAlign='center'; ctx.fillText('Click / Tap / Space to start', W/2, 210);
+      }
+
+      if(state==='dead'){
+        ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fillRect(20, 170, W-40, 120);
+        ctx.fillStyle = '#fff'; ctx.font = '20px sans-serif'; ctx.textAlign='center';
+        ctx.fillText('Game Over', W/2, 210);
+        ctx.fillStyle = '#ffd633'; ctx.font = '16px sans-serif'; ctx.fillText('Score: ' + score, W/2, 240);
+        ctx.fillStyle = '#fff'; ctx.font = '14px sans-serif'; ctx.fillText('Best: ' + best, W/2, 265);
+        ctx.fillStyle = '#ddd'; ctx.font = '13px sans-serif'; ctx.fillText('Click / Space to restart', W/2, 295);
+      }
+    }
+
+    function loop(){ update(); draw(); requestAnimationFrame(loop); }
+
+    function flap(){
+      ensureAudio(); if(audioCtx && audioCtx.state === 'suspended'){ audioCtx.resume(); }
+      if(state==='menu'){ state='playing'; updateHUD(''); bird.vel = JUMP; playFlap(); }
+      else if(state==='playing'){ bird.vel = JUMP; playFlap(); }
+      else if(state==='dead'){ reset(); }
+    }
+
+    function updateHUD(text){ msgEl.innerText = text || ''; scoreEl.innerText = score; const b = document.getElementById('bottomScore'); if(b) b.innerText = score; }
+
+    window.addEventListener('keydown', e=>{ if(e.code==='Space'){ e.preventDefault(); flap(); } });
+    canvas.addEventListener('click', e=>{ flap(); });
+    canvas.addEventListener('touchstart', e=>{ e.preventDefault(); flap(); });
+
+    scoreEl.innerText = score; msgEl.innerText = 'Press Space / Click / Tap to start';
+    // wire mobile flap button
+    const touchBtn = document.getElementById('touchFlap');
+    if(touchBtn){ touchBtn.addEventListener('touchstart', e=>{ e.preventDefault(); flap(); }); touchBtn.addEventListener('click', e=>{ e.preventDefault(); flap(); }); }
+    // ensure bottom badge initial value
+    const b = document.getElementById('bottomScore'); if(b) b.innerText = score;
+    draw(); loop();
+
+  })();
+  </script>
+</body>
+</html>

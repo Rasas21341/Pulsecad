@@ -1,0 +1,44 @@
+:root{--bg:#70c5ce;--ground:#ded895;--pipe:#2ecc71;--bird:#ffd633}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+body{display:flex;align-items:center;justify-content:center;background:linear-gradient(#9ee6f0,var(--bg));}
+.wrap{width:420px;text-align:center}
+h1{margin:12px 0 6px;font-size:20px;color:#064;letter-spacing:1px}
+canvas{display:block;margin:0 auto;border-radius:8px;background:linear-gradient(#87e0ff,#bfefff);box-shadow:0 6px 18px rgba(0,0,0,0.15)}
+.hud{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+#score{font-weight:700;font-size:20px;color:#024}
+#msg{font-size:13px;color:#045}
+footer{font-size:12px;color:#034;margin-top:6px}
+
+/* responsive */
+@media (max-width:480px){.wrap{width:92vw}canvas{width:100%;height:auto}}
+
+/* Admin/login UI */
+.admin-btn{position:fixed;right:16px;bottom:16px;background:transparent;border:0;color:#033;font-weight:700;cursor:pointer;font-size:14px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:40}
+.modal{background:#fff;padding:18px;border-radius:8px;min-width:280px;box-shadow:0 8px 30px rgba(0,0,0,0.25)}
+.modal h3{margin:0 0 8px;font-size:16px}
+.modal label{display:block;margin:8px 0 4px;font-size:13px}
+.modal input{width:100%;padding:8px;border-radius:6px;border:1px solid #ddd}
+.modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+.link-like{background:none;border:none;color:#0a66c2;cursor:pointer;padding:0;font-weight:700}
+.small-muted{font-size:12px;color:#666;margin-top:6px}
+/* Difficulty buttons */
+.diff-controls{display:flex;gap:8px;align-items:center}
+.diff-btn{padding:6px 10px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer}
+.diff-btn.active{background:#0a66c2;color:#fff;border-color:#095aa8}
+/* bottom score badge */
+.bottom-score{position:fixed;left:16px;bottom:16px;background:rgba(255,255,255,0.92);padding:8px 12px;border-radius:10px;font-weight:800;color:#024;box-shadow:0 6px 18px rgba(0,0,0,0.12);z-index:60}
+
+/* Mobile-friendly flap button (visible on small screens) */
+.mobile-flap{position:fixed;right:16px;bottom:16px;width:72px;height:72px;border-radius:50%;background:linear-gradient(#ffbf33,#ffd633);border:none;box-shadow:0 8px 20px rgba(0,0,0,0.18);font-size:18px;font-weight:800;color:#222;z-index:60;cursor:pointer}
+@media(min-width:481px){ .mobile-flap{display:none} }
+
+/* Make HUD and buttons larger on small screens */
+@media(max-width:480px){
+	.hud {margin-top:6px}
+	#score{font-size:18px}
+	#msg{font-size:14px}
+	.diff-btn{padding:8px 12px}
+	.admin-btn{right:10px;bottom:10px}
+}
