@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FlapThing</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <h1>FlapThing</h1>
+    <canvas id="game" width="400" height="600"></canvas>
+    <div class="hud">
+      <div id="score">0</div>
+      <div id="msg">Press Space / Click / Tap to start</div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-top:6px">
+      <div class="diff-controls" id="diffControls">
+        <button class="diff-btn" data-mode="easy">Easy</button>
+        <button class="diff-btn active" data-mode="normal">Normal</button>
+        <button class="diff-btn" data-mode="hard">Hard</button>
+      </div>
+    </div>
+    </div>
+    <footer>Controls: Space / Click / Tap — Avoid the pipes</footer>
+  </div>
+  <!-- Admin login button (opens full admin page) -->
+  <button class="admin-btn" id="adminBtn" onclick="window.location='admin.html'">admin login</button>
+
+  <!-- Bottom score badge -->
+  <div id="bottomScore" class="bottom-score">0</div>
+  <!-- Mobile flap button -->
+  <button id="touchFlap" class="mobile-flap" aria-label="Flap">FLAP</button>
+
+  <!-- Sign-in overlay (shown before play) -->
+  <div id="signinOverlay" class="overlay" style="display:none">
+    <div class="modal">
+      <h3>Sign in</h3>
+      <p class="small-muted">Sign in to enable live counting. For real Google sign-in add your Google client ID and backend.</p>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button id="googleBtn" class="link-like">Sign in with Google</button>
+        <button id="emailBtn" class="link-like">Continue with email</button>
+      </div>
+      <div id="emailForm" style="display:none;margin-top:10px">
+        <label for="emailInput">Email</label>
+        <input id="emailInput" type="email" placeholder="you@example.com">
+        <div class="actions">
+          <button id="emailSubmit" class="link-like">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin modal -->
+  <div id="adminModal" class="overlay" style="display:none">
+    <div class="modal">
+      <h3>Admin Login</h3>
+      <label for="adminUser">Username</label>
+      <input id="adminUser" value="admin">
+      <label for="adminPass">Password</label>
+      <input id="adminPass" type="password" placeholder="password">
+      <div class="actions">
+        <button id="adminCancel" class="link-like">Cancel</button>
+        <button id="adminSubmit" class="link-like">Login</button>
+      </div>
+      <div id="adminPanel" style="display:none;margin-top:12px">
+        <div class="small-muted">High score: <span id="adminBest">0</span></div>
+        <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end">
+          <button id="resetBest" class="link-like">Reset Best</button>
+          <button id="closeAdmin" class="link-like">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Firebase (optional) - include firebase-config.js (copy example) before game script -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script>
+    // If you create a file named `firebase-config.js` in this folder that sets
+    // `window.FIREBASE_CONFIG`, the app will initialize Firebase automatically.
+    // See `firebase-config.example.js` for the format.
+    try{ /* attempt to load firebase-config.js if present */
+      var s = document.createElement('script'); s.src = 'firebase-config.js'; document.head.appendChild(s);
+    }catch(e){console.warn('No firebase-config.js found');}
+  </script>
+  <script>
+    // Attempt to load an optional game config before the main script. Copy
+    // `game-config.example.js` to `game-config.js` to override defaults.
+    try{ var sc = document.createElement('script'); sc.src = 'game-config.js'; document.head.appendChild(sc); }catch(e){}
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>
+  
