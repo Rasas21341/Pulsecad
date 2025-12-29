@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Civilian Dashboard</title>
+    <style>
+        body {
+            background: #181c24;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            margin: 3rem auto;
+            background: #232a36;
+            border-radius: 16px;
+            box-shadow: 0 6px 32px rgba(0,0,0,0.45);
+            padding: 2.5rem 2rem 2rem 2rem;
+        }
+        h2 {
+            color: #3e8ef7;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            width: 100%;
+            max-width: 350px;
+            margin: 0 auto 1.5rem auto;
+        }
+        input {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            font-size: 1.1rem;
+        }
+        .btn {
+            background: #3e8ef7;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        .civilians-list {
+            margin-top: 1.5rem;
+            width: 100%;
+            color: #fff;
+        }
+        .civ-entry {
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 0.7rem;
+            background: #181c24;
+            border-radius: 6px;
+        }
+        .back-btn {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+        }
+        /* License Modal Styles */
+        #license-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        #license-modal > div {
+            background: #232a36;
+            padding: 2rem 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            min-width: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="back-btn" onclick="window.location.href='community-dashboard.html'">&larr; Back to CAD</button>
+        <h2>Civilian Dashboard</h2>
+        <form id="add-civilian-form">
+            <input id="civ-name" type="text" placeholder="Name" required />
+            <input id="civ-dob" type="text" placeholder="DOB (MM/DD/YYYY)" required />
+            <input id="civ-address" type="text" placeholder="Address" required />
+            <button type="submit" class="btn">Add Civilian</button>
+        </form>
+        <div class="civilians-list" id="civilians-list"></div>
+        <!-- License Modal -->
+        <div id="license-modal">
+            <div>
+                <h2 style="color:#3e8ef7;margin-bottom:1rem;">Add License</h2>
+                <input id="license-type" type="text" placeholder="License Type (e.g. Driver, Firearm)" style="padding:0.5rem 1rem;border-radius:6px;border:none;font-size:1.1rem;margin-bottom:1rem;width:100%;" />
+                <input id="license-status" type="text" placeholder="Status (e.g. Valid, Suspended)" style="padding:0.5rem 1rem;border-radius:6px;border:none;font-size:1.1rem;margin-bottom:1rem;width:100%;" />
+                <button id="save-license" class="btn green" style="margin-bottom:1rem;">Save License</button>
+                <button id="close-license-modal" class="btn red">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Civilian add/view logic
+        document.getElementById('add-civilian-form').onsubmit = function(e) {
+            e.preventDefault();
+            const name = document.getElementById('civ-name').value.trim();
+            const dob = document.getElementById('civ-dob').value.trim();
+            const address = document.getElementById('civ-address').value.trim();
+            if (!name || !dob || !address) return;
+            let civilians = JSON.parse(localStorage.getItem('civilians') || '[]');
+            civilians.push({ name, dob, address, licenses: [] });
+            localStorage.setItem('civilians', JSON.stringify(civilians));
+            renderCiviliansList();
+            this.reset();
+        };
+        // License modal logic
+        let currentCivIndex = null;
+        function openLicenseModal(civIndex) {
+            currentCivIndex = civIndex;
+            document.getElementById('license-type').value = '';
+            document.getElementById('license-status').value = '';
+            document.getElementById('license-modal').style.display = 'flex';
+        }
+        document.getElementById('close-license-modal').onclick = function() {
+            document.getElementById('license-modal').style.display = 'none';
+        };
+        document.getElementById('save-license').onclick = function() {
+            const type = document.getElementById('license-type').value.trim();
+            const status = document.getElementById('license-status').value.trim();
+            if (!type || !status || currentCivIndex === null) return;
+            let civilians = JSON.parse(localStorage.getItem('civilians') || '[]');
+            if (!civilians[currentCivIndex].licenses) civilians[currentCivIndex].licenses = [];
+            civilians[currentCivIndex].licenses.push({ type, status });
+            localStorage.setItem('civilians', JSON.stringify(civilians));
+            document.getElementById('license-modal').style.display = 'none';
+            renderCiviliansList();
+        };
+        function renderCiviliansList() {
+            const civilians = JSON.parse(localStorage.getItem('civilians') || '[]');
+            const listDiv = document.getElementById('civilians-list');
+            if (civilians.length === 0) {
+                listDiv.innerHTML = '<i>No civilians found.</i>';
+                return;
+            }
+            listDiv.innerHTML = '<b>All Civilians:</b><br>' + civilians.map((civ, idx) =>
+                `<div class='civ-entry'>
+                    <b>Name:</b> ${civ.name}<br>
+                    <b>DOB:</b> ${civ.dob}<br>
+                    <b>Address:</b> ${civ.address}<br>
+                    <b>Licenses:</b> ${civ.licenses && civ.licenses.length ? civ.licenses.map(l => `<div style='margin-left:1rem;'>${l.type}: ${l.status}</div>`).join('') : 'None'}<br>
+                    <button class='btn' style='margin-top:0.5rem;' onclick='openLicenseModal(${idx})'>Add License</button>
+                </div>`
+            ).join('');
+        }
+        window.openLicenseModal = openLicenseModal;
+        renderCiviliansList();
+    </script>
+</body>
+</html>
