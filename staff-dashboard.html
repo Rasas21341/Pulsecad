@@ -1,1 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Staff Dashboard</title>
+	<style>
+		body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+		.container { max-width: 700px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+		h1 { color: #333; font-size: 2rem; margin-bottom: 1.5rem; }
+		.server-list { margin: 30px 0; }
+		.server-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid #eee; flex-wrap: wrap; }
+		.server-name { font-weight: 500; font-size: 1.1rem; }
+		.suspend-btn { background: linear-gradient(90deg, #e74c3c 60%, #c0392b 100%); color: #fff; border: none; padding: 10px 22px; border-radius: 6px; cursor: pointer; transition: background 0.2s, transform 0.1s; font-size: 1rem; box-shadow: 0 2px 6px rgba(231,76,60,0.08); }
+		.suspend-btn:active { transform: scale(0.97); }
+		.suspend-btn:disabled { background: #aaa; cursor: not-allowed; }
+		.status { margin-left: 18px; font-size: 1em; color: #888; }
+		@media (max-width: 600px) {
+			.container { max-width: 98vw; padding: 10vw 2vw; margin: 0; border-radius: 0; box-shadow: none; }
+			h1 { font-size: 1.3rem; margin-bottom: 1rem; }
+			.server-item { flex-direction: column; align-items: flex-start; padding: 14px 0; }
+			.server-name { font-size: 1rem; margin-bottom: 8px; }
+			.suspend-btn { width: 100%; padding: 12px 0; font-size: 1rem; margin-bottom: 6px; }
+			.status { margin-left: 0; font-size: 0.98em; }
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Staff Dashboard</h1>
+		<div class="server-list" id="serverList">
+			<!-- Servers will be listed here -->
+		</div>
+	</div>
+	<script>
+		// Example server data
+		const servers = [
+			{ id: 1, name: 'PulseCAD Main', suspended: false },
+			{ id: 2, name: 'PulseCAD Backup', suspended: false },
+			{ id: 3, name: 'PulseCAD Test', suspended: false }
+		];
+
+		function renderServers() {
+			const list = document.getElementById('serverList');
+			list.innerHTML = '';
+			servers.forEach(server => {
+				const item = document.createElement('div');
+				item.className = 'server-item';
+				item.innerHTML = `
+					<span class="server-name">${server.name}</span>
+					<span>
+						<button class="suspend-btn" onclick="suspendServer(${server.id})" ${server.suspended ? 'disabled' : ''}>
+							${server.suspended ? 'Suspended' : 'Suspend'}
+						</button>
+						<span class="status">${server.suspended ? 'Suspended' : 'Active'}</span>
+					</span>
+				`;
+				list.appendChild(item);
+			});
+		}
+
+		function suspendServer(id) {
+			const server = servers.find(s => s.id === id);
+			if (server && !server.suspended) {
+				server.suspended = true;
+				renderServers();
+				alert(`${server.name} has been suspended.`);
+			}
+		}
+
+		renderServers();
+	</script>
+</body>
+</html>
 

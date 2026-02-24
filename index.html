@@ -1,1 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseCAD</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.12);
+      --text:#eaf0ff;
+      --muted: rgba(234,240,255,0.72);
+      --accent:#60a5fa;
+      --accent2:#a78bfa;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(96,165,250,0.22), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(167,139,250,0.22), transparent 55%),
+        linear-gradient(180deg, #070a14 0%, var(--bg) 100%);
+    }
+    .wrap{ max-width: 980px; margin: 0 auto; padding: 34px 18px; }
+    h1{ margin:0; font-size: 2rem; letter-spacing:-0.02em; }
+    p{ margin: 10px 0 0 0; color: var(--muted); }
+    .grid{ margin-top: 18px; display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    @media (max-width: 820px){ .grid{ grid-template-columns: 1fr; } }
+    .card{
+      background: linear-gradient(180deg, var(--panel) 0%, rgba(255,255,255,0.04) 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+    }
+    .card h2{ margin:0; font-size: 1.1rem; }
+    .card p{ margin-top: 8px; }
+    .actions{ margin-top: 12px; display:flex; gap: 10px; flex-wrap: wrap; }
+    a.btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 750;
+    }
+    a.btn.primary{
+      background: rgba(96,165,250,0.20);
+      border-color: rgba(96,165,250,0.32);
+    }
+    a.btn.purple{
+      background: rgba(167,139,250,0.20);
+      border-color: rgba(167,139,250,0.32);
+    }
+    .hint{ margin-top: 16px; font-size: 0.92rem; color: var(--muted); }
+    code{ background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 2px 6px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>PulseCAD</h1>
+    <p>Choose where you want to go.</p>
 
+    <div class="grid">
+      <div class="card">
+        <h2>Civilian Page</h2>
+        <p>Create characters and view tickets.</p>
+        <div class="actions">
+          <a class="btn primary" href="civilian-panel.html">Open Civilian Page</a>
+          <a class="btn" href="civilian-dashboard.html">Open Civilian Dashboard (direct)</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>New PulseCAD App</h2>
+        <p>The full app experience (includes an in-app Civilian portal button).</p>
+        <div class="actions">
+          <a class="btn purple" href="New-Pulsecad.html">Open New PulseCAD</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hint">
+      If you’re hosting this, your main entry should be <code>index.html</code>.
+    </div>
+  </div>
+</body>
+</html>

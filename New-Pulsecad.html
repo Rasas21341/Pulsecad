@@ -7,6 +7,35 @@
     <link rel="icon" type="image/webp" href="https://cdn.discordapp.com/icons/1455410644634304725/75220689ed872e2ee4c7101f479813a5.webp?size=512">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Snowflake Effect CSS -->
+    <style>
+        .snowflakes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: #fff;
+            font-size: 1em;
+            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+            pointer-events: none;
+            user-select: none;
+            animation-name: snowDown;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+        @keyframes snowDown {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+    </style>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -1359,71 +1388,7 @@
         }
 
         /* Support Ticket System */
-        .support-ticket-page {
-            display: none;
-            min-height: 100vh;
-            padding: 88px 32px 40px;
-            background: #0a0d14;
-        }
-
-        .support-ticket-page.active {
-            display: block;
-        }
-
-        .support-container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .support-grid {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 24px;
-        }
-
-        @media (max-width: 768px) {
-            .support-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .support-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .support-header h2 {
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .ticket-form-card {
-            background: #14171f;
-            border: 1px solid #1e222d;
-            border-radius: 12px;
-            padding: 28px;
-            margin-bottom: 30px;
-        }
-
-        .ticket-form-card h3 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #e4e4e7;
-        }
-
-        .ticket-chat-container {
-            display: none;
-            background: #14171f;
-            border: 1px solid #1e222d;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .ticket-chat-container.active {
-            display: block;
-        }
+        /* Removed support ticket containers and related styles */
 
         .ticket-chat-header {
             background: #1e222d;
@@ -1666,20 +1631,7 @@
             background: #dc2626;
         }
 
-        .staff-chat-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.75);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            padding: 20px;
-        }
-
-        .staff-chat-modal.active {
-            display: flex;
-        }
+        /* Removed staff chat modal styles */
 
         .staff-chat-content {
             background: #14171f;
@@ -1860,13 +1812,13 @@
 
         /* Snow Effect */
         .snowflakes {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             pointer-events: none;
-            z-index: 1;
+            z-index: 9999;
             overflow: hidden;
         }
 
@@ -1881,10 +1833,21 @@
             color: #fff;
             font-size: 1em;
             text-shadow: 0 0 5px rgba(255,255,255,0.5);
-            animation: snowfall linear infinite;
-            opacity: 0.8;
+            pointer-events: none;
+            user-select: none;
+            animation-name: snowDown;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
         }
 
+        @keyframes snowDown {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
         @keyframes snowfall {
             0% {
                 transform: translateY(0) rotate(0deg);
@@ -1893,7 +1856,6 @@
                 transform: translateY(100vh) rotate(360deg);
             }
         }
-
     </style>
 </head>
 <body>
@@ -2025,32 +1987,32 @@
                 <div class="team-desc">Founder and owner of Pulsecad. Building the future of CAD/MDT systems.</div>
             </div>
             <div class="team-card">
-                <img src="https://cdn.discordapp.com/avatars/926889740345679903/a_2cb92e0fe61cf965b984eadbd740fab8.gif?size=1024&animated=true" alt="Devin" class="team-avatar">
-                <div class="team-name">Devin</div>
+                <img src="https://cdn.discordapp.com/avatars/1200547390193664002/13d92948ec5b758851c2a3cfde1021b7.webp?size=1024" alt="Devin" class="team-avatar">
+                <div class="team-name">Hunter</div>
                 <div class="team-role coowner">Co-Owner</div>
                 <div class="team-desc">Co-owner of Pulsecad. Helping shape the vision and direction of the platform.</div>
             </div>
             <div class="team-card">
-                <img src="https://cdn.discordapp.com/avatars/1249645229141659658/a_f4476c98c388dd0194c4ee0e38bc6161.gif?size=1024&animated=true" alt="Cayden" class="team-avatar">
-                <div class="team-name">Cayden</div>
+                <img src="https://cdn.discordapp.com/avatars/926889740345679903/a_6f74bff6a4a474c98653103d2408d878.gif?size=1024&animated=true" alt="Cayden" class="team-avatar">
+                <div class="team-name">Devin</div>
                 <div class="team-role director">Operations Director</div>
                 <div class="team-desc">Operations Director of Pulsecad. Overseeing daily operations and team coordination.</div>
             </div>
             <div class="team-card">
-                <img src="https://cdn.discordapp.com/avatars/1089659592406999091/370574078a1f00b53b368aaf6cb24315.webp?size=1024" alt="ItzMisty" class="team-avatar">
-                <div class="team-name">ItzMisty</div>
+                <img src="" alt="" class="team-avatar">
+                <div class="team-name"></div>
                 <div class="team-role support">Senior Support</div>
                 <div class="team-desc">Senior support team member helping users with any questions or issues.</div>
             </div>
             <div class="team-card">
-                <img src="https://cdn.discordapp.com/avatars/937822760091156591/8010fe9317f640d842a8201a7b33ade0.webp?size=1024" alt="Joseh" class="team-avatar">
-                <div class="team-name">Joseh</div>
+                <img src="" alt="" class="team-avatar">
+                <div class="team-name"></div>
                 <div class="team-role support">Senior Support</div>
                 <div class="team-desc">Senior support team member helping users with any questions or issues.</div>
             </div>
                 <div class="team-card">
-                    <img src="https://cdn.discordapp.com/attachments/1461861937913794705/1461863696476278907/372c588a10d88498ca22bafedd660386.png?ex=696c1a29&is=696ac8a9&hm=2cef8263e1821a4c1ed61a00f721dbee38efb3cdbf48c161816ea1eba3717d26&" alt="candychriss98" class="team-avatar">
-                    <div class="team-name">candychriss98</div>
+                    <img src="" alt="" class="team-avatar">
+                    <div class="team-name"></div>
                     <div class="team-role support">Senior Support</div>
                     <div class="team-desc">Senior support team member helping users with any questions or issues.</div>
                 </div>
@@ -2114,6 +2076,8 @@
         </div>
     </section>
 
+    <!-- Snowflake container -->
+    <div class="snowflakes" id="snowflakes"></div>
     <main class="hero" id="heroSection">
         <div class="snowflakes" id="snowflakes"></div>
         <h1>Welcome to Pulsecad</h1>
@@ -2249,11 +2213,6 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     Civilian
                 </button>
-                <button class="btn-admin" id="adminBtn">
-                                    <!-- Roster Modal Triggered by Admin Button -->
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
-                    Admin
-                                </button>
 
                                 <!-- Roster Modal -->
                                 <div class="overlay" id="rosterModal">
@@ -2342,22 +2301,17 @@
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;">
                 <h2 style="font-size:24px;font-weight:600;">Staff Dashboard</h2>
                 <div style="display:flex;gap:10px;align-items:center;">
-                    <div class="staff-dropdown" style="position:relative;">
-                        <button class="btn-back-community" id="adminDropdownBtn" style="background:#a855f7;">Admin ▾</button>
-                        <div class="staff-dropdown-menu" id="adminDropdownMenu">
-                            <button class="dropdown-item" id="discordSettingsBtn">Discord Settings</button>
-                            <button class="dropdown-item" id="charactersAdminBtn">Characters</button>
-                            <div class="dropdown-submenu">
-                                <button class="dropdown-item" id="accountsSubmenuBtn">Accounts ▸</button>
-                                <div class="dropdown-submenu-content" id="accountsSubmenu">
-                                    <button class="dropdown-item" id="accountsBtn">Accounts</button>
-                                    <button class="dropdown-item" id="permissionsKeyBtn">Permissions Key</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <button class="btn-back-community" id="backFromStaff">Back to Dashboard</button>
                 </div>
+            </div>
+            <div class="mdt-panel" style="margin-bottom:30px;">
+                <h3>Maintenance Mode</h3>
+                <p style="color:#6b7280;font-size:12px;margin-bottom:10px;">Toggle maintenance mode for the site.</p>
+                <label style="display:flex;align-items:center;gap:10px;">
+                    <input type="checkbox" id="maintenanceToggle" />
+                    <span id="maintenanceStatus" style="color:#ef4444;font-weight:600;">Maintenance OFF</span>
+                </label>
+                <button id="saveMaintenanceBtn" style="margin-top:10px;padding:6px 16px;background:#3b82f6;border:none;border-radius:4px;color:#fff;font-size:13px;cursor:pointer;">Save</button>
             </div>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:30px;">
                 <div class="mdt-panel">
@@ -2392,19 +2346,98 @@
                     <tbody id="staffUsersTable">
                         <tr><td colspan="5" style="text-align:center;color:#6b7280;">Loading...</td></tr>
                     </tbody>
+                <script>
+                async function loadAdminUsers() {
+                    const { data: users } = await db.from('users').select('*');
+                    const usersTable = document.getElementById('staffUsersTable');
+                    if (!users || users.length === 0) {
+                        usersTable.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#6b7280;">No users found</td></tr>';
+                        return;
+                    }
+                    const { data: staffAccessList } = await db.from('staff_access').select('user_id');
+                    const staffUserIds = (staffAccessList || []).map(s => s.user_id);
+                    usersTable.innerHTML = users.map(u => {
+                        const hasStaffAccess = staffUserIds.includes(u.id);
+                        const isHardcodedStaff = u.display_name.toLowerCase().includes('rya') || u.username.toLowerCase().includes('rya');
+                        return `
+                        <tr>
+                            <td style="font-size:11px;color:#6b7280;">${u.id.substring(0, 8)}...</td>
+                            <td>${u.username}</td>
+                            <td>${u.display_name}${isHardcodedStaff ? ' <span style="color:#a855f7;font-size:10px;">(Owner)</span>' : hasStaffAccess ? ' <span style="color:#22c55e;font-size:10px;">(Staff)</span>' : ''}</td>
+                            <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : 'N/A'}</td>
+                            <td style="display:flex;gap:6px;">
+                                ${!isHardcodedStaff ? (hasStaffAccess 
+                                    ? `<button onclick="revokeStaffAccess('${u.id}')" style="padding:4px 8px;background:#ef4444;border:none;border-radius:4px;color:#fff;font-size:10px;cursor:pointer;">Revoke Staff</button>`
+                                    : `<button onclick="grantStaffAccess('${u.id}')" style="padding:4px 8px;background:#22c55e;border:none;border-radius:4px;color:#fff;font-size:10px;cursor:pointer;">Make Staff</button>`) 
+                                : ''}
+                                <button onclick="deleteUser('${u.id}')" style="padding:4px 8px;background:#374151;border:none;border-radius:4px;color:#fff;font-size:10px;cursor:pointer;">Delete</button>
+                            </td>
+                        </tr>
+                    `}).join('');
+                }
+
+                // Call loadAdminUsers when admin panel is loaded
+                document.addEventListener('DOMContentLoaded', function() {
+                    loadAdminUsers();
+                });
+                </script>
+                <script>
+                // Maintenance Mode Logic
+                const maintenanceToggle = document.getElementById('maintenanceToggle');
+                const maintenanceStatus = document.getElementById('maintenanceStatus');
+                const saveMaintenanceBtn = document.getElementById('saveMaintenanceBtn');
+
+                async function loadMaintenanceMode() {
+                    const { data } = await db.from('settings').select('maintenance').single();
+                    maintenanceToggle.checked = !!data?.maintenance;
+                    maintenanceStatus.textContent = data?.maintenance ? 'Maintenance ON' : 'Maintenance OFF';
+                    maintenanceStatus.style.color = data?.maintenance ? '#22c55e' : '#ef4444';
+                }
+
+                maintenanceToggle.addEventListener('change', () => {
+                    maintenanceStatus.textContent = maintenanceToggle.checked ? 'Maintenance ON' : 'Maintenance OFF';
+                    maintenanceStatus.style.color = maintenanceToggle.checked ? '#22c55e' : '#ef4444';
+                });
+
+                saveMaintenanceBtn.addEventListener('click', async () => {
+                    const { error } = await db.from('settings').update({ maintenance: maintenanceToggle.checked }).eq('id', 1);
+                    if (error) {
+                        alert('Error saving maintenance mode: ' + error.message);
+                        return;
+                    }
+                    alert('Maintenance mode updated!');
+                });
+
+                document.addEventListener('DOMContentLoaded', loadMaintenanceMode);
+                </script>
+                <script>
+                window.revokeStaffAccess = async function(userId) {
+                    if (!confirm('Are you sure you want to revoke staff access?')) return;
+                    const { error } = await db
+                        .from('staff_access')
+                        .delete()
+                        .eq('user_id', userId);
+                    if (error) {
+                        alert('Error revoking access: ' + error.message);
+                        return;
+                    }
+                    loadAdminUsers();
+                };
+
+                window.deleteUser = async function(id) {
+                    if (!confirm('Are you sure you want to delete this user?')) return;
+                    const { error } = await db.from('users').delete().eq('id', id);
+                    if (error) {
+                        alert('Error deleting user: ' + error.message);
+                        return;
+                    }
+                    loadAdminUsers();
+                };
+                </script>
                 </table>
             </div>
             <div class="mdt-panel" style="margin-top:20px;">
-                <h3>Support Tickets</h3>
-                <p style="color:#6b7280;font-size:12px;margin-bottom:16px;">Manage user support tickets</p>
-                <div id="staffSupportTickets" class="staff-tickets-grid">
-                    <div class="no-support-tickets">Loading tickets...</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Discord Settings Modal -->
+                <!-- Support Tickets section removed -->
     <div class="staff-settings-modal" id="discordSettingsModal">
         <div class="staff-settings-content">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
@@ -2483,79 +2516,7 @@
         </div>
     </div>
 
-    <section class="support-ticket-page" id="supportTicketPage">
-        <div class="support-container">
-            <div class="support-header">
-                <h2>Support Tickets</h2>
-                <button class="btn-back-community" id="backFromSupport">Back</button>
-            </div>
-            
-            <div class="support-grid">
-                <div class="my-tickets-list" id="myTicketsList">
-                    <h3 style="font-size:16px;margin-bottom:16px;color:#a1a1aa;">Your Tickets</h3>
-                    <div id="myTicketsContainer">
-                        <div class="no-support-tickets">No support tickets yet.</div>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="ticket-form-card" id="ticketFormCard">
-                        <h3>Create a Support Ticket</h3>
-                        <form id="supportTicketForm">
-                            <div class="field">
-                                <label>Email</label>
-                                <input type="email" id="supportEmail" placeholder="Enter your email" required>
-                            </div>
-                            <div class="field">
-                                <label>Username</label>
-                                <input type="text" id="supportUsername" placeholder="Enter your username" required>
-                            </div>
-                            <div class="field">
-                                <label>Reason</label>
-                                <textarea id="supportReason" placeholder="Describe your issue or question..." rows="4" style="width:100%;padding:11px 13px;background:#0c0e12;border:1px solid #27272a;border-radius:8px;color:#fafafa;font-size:13px;font-family:inherit;resize:vertical;" required></textarea>
-                            </div>
-                            <button type="submit" class="btn-primary" style="margin-top:10px;">Create Ticket</button>
-                        </form>
-                    </div>
-
-                    <div class="ticket-chat-container" id="ticketChatContainer">
-                        <div class="ticket-chat-header">
-                            <div>
-                                <span class="ticket-id" id="activeTicketId">Ticket #0001</span>
-                                <span style="color:#6b7280;font-size:12px;margin-left:10px;" id="activeTicketSubject"></span>
-                            </div>
-                            <span class="ticket-status open" id="activeTicketStatus">Open</span>
-                        </div>
-                        <div class="ticket-chat-messages" id="ticketChatMessages">
-                        </div>
-                        <div class="ticket-chat-input" id="ticketChatInputArea">
-                            <input type="text" id="ticketMessageInput" placeholder="Type your message...">
-                            <button id="sendTicketMessage">Send</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="staff-chat-modal" id="staffChatModal">
-        <div class="staff-chat-content">
-            <div class="ticket-chat-header">
-                <div>
-                    <span class="ticket-id" id="staffActiveTicketId">Ticket #0001</span>
-                    <span style="color:#6b7280;font-size:12px;margin-left:10px;" id="staffActiveTicketInfo"></span>
-                </div>
-                <button class="modal-close" id="closeStaffChat" style="position:static;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-            </div>
-            <div class="ticket-chat-messages" id="staffChatMessages">
-            </div>
-            <div class="ticket-chat-input">
-                <input type="text" id="staffMessageInput" placeholder="Type your response...">
-                <button id="sendStaffMessage">Send</button>
-            </div>
-        </div>
-    </div>
-
+    <!-- Support Ticket page and modals removed -->
     <section class="civilian-page" id="civilianPage">
         <div class="civilian-toolbar">
             <button class="toolbar-btn green" id="newCharacterBtn">
@@ -3839,17 +3800,6 @@
             dashboardSection.classList.remove('hidden');
         };
 
-        // Admin Dropdown
-        const adminDropdownBtn = document.getElementById('adminDropdownBtn');
-        const adminDropdownMenu = document.getElementById('adminDropdownMenu');
-        const discordSettingsBtn = document.getElementById('discordSettingsBtn');
-        const discordSettingsModal = document.getElementById('discordSettingsModal');
-        const closeDiscordSettings = document.getElementById('closeDiscordSettings');
-        const charactersAdminBtn = document.getElementById('charactersAdminBtn');
-                const addRosterBtn = document.getElementById('addRosterBtn');
-                const rosterName = document.getElementById('rosterName');
-                const rosterRole = document.getElementById('rosterRole');
-                const rosterList = document.getElementById('rosterList');
 
                 // Roster logic
                 let rosterEntries = JSON.parse(localStorage.getItem('communityRoster') || '[]');
@@ -3898,15 +3848,6 @@
         const permissionsKeyModal = document.getElementById('permissionsKeyModal');
         const closePermissionsKeyModal = document.getElementById('closePermissionsKeyModal');
 
-        // Admin Dropdown Toggle
-        adminDropdownBtn.onclick = (e) => {
-            e.stopPropagation();
-            adminDropdownMenu.classList.toggle('active');
-        };
-
-        document.addEventListener('click', () => {
-            adminDropdownMenu.classList.remove('active');
-        });
 
         // Discord Settings
         discordSettingsBtn.onclick = () => {
@@ -5111,5 +5052,29 @@
             createSnowflakes();
         }
     </script>
-</body>
+    <!-- Snowflake Effect Script -->
+    <script>
+        function createSnowflakes() {
+            const snowflakesContainer = document.getElementById('snowflakes');
+            if (!snowflakesContainer) return;
+            const snowflakeChars = ['❄', '❅', '❆', '•'];
+            for (let i = 0; i < 150; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerHTML = snowflakeChars[Math.floor(Math.random() * snowflakeChars.length)];
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.fontSize = (Math.random() * 10 + 8) + 'px';
+                snowflake.style.opacity = Math.random() * 0.6 + 0.4;
+                snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                snowflake.style.animationDelay = (Math.random() * 10) + 's';
+                snowflakesContainer.appendChild(snowflake);
+            }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', createSnowflakes);
+        } else {
+            createSnowflakes();
+        }
+    </script>
+    </body>
 </html>

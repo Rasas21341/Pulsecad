@@ -1,1 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Civilian Dashboard</title>
+	<style>
+		:root{
+			--bg: #0b1020;
+			--panel: rgba(255,255,255,0.06);
+			--panel2: rgba(255,255,255,0.09);
+			--border: rgba(255,255,255,0.12);
+			--text: #eaf0ff;
+			--muted: rgba(234,240,255,0.72);
+			--accent: #60a5fa;
+			--accent2: #a78bfa;
+			--danger: #fb7185;
+		}
+		*{ box-sizing: border-box; }
+		body {
+			font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+			background: radial-gradient(1200px 600px at 10% 10%, rgba(96,165,250,0.22), transparent 60%),
+						radial-gradient(900px 500px at 90% 20%, rgba(167,139,250,0.22), transparent 55%),
+						linear-gradient(180deg, #070a14 0%, var(--bg) 100%);
+			margin: 0;
+			padding: 0;
+			color: var(--text);
+			min-height: 100vh;
+		}
+		.container {
+			max-width: 980px;
+			margin: 34px auto;
+			padding: 0 18px;
+		}
+		.header {
+			display:flex;
+			align-items:flex-start;
+			justify-content:space-between;
+			gap: 16px;
+			padding: 18px 18px 0 18px;
+		}
+		.title-wrap h1 { margin: 0; font-size: 1.8rem; letter-spacing: -0.02em; }
+		.title-wrap p { margin: 8px 0 0 0; color: var(--muted); font-size: 0.95rem; }
+		.card {
+			margin-top: 14px;
+			background: linear-gradient(180deg, var(--panel) 0%, rgba(255,255,255,0.04) 100%);
+			border: 1px solid var(--border);
+			border-radius: 14px;
+			box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+			overflow: hidden;
+		}
+		.actions { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; padding: 18px; }
+		.action-btn {
+			display:flex; align-items:center; justify-content:center;
+			gap: 10px;
+			background: linear-gradient(90deg, rgba(96,165,250,0.24) 0%, rgba(167,139,250,0.24) 100%);
+			color: var(--text);
+			border: 1px solid rgba(255,255,255,0.14);
+			padding: 14px 12px;
+			border-radius: 12px;
+			font-size: 0.98rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: transform 0.08s ease, background 0.2s ease, border-color 0.2s ease;
+		}
+		.action-btn:hover { border-color: rgba(255,255,255,0.22); background: linear-gradient(90deg, rgba(96,165,250,0.30) 0%, rgba(167,139,250,0.30) 100%); }
+		.action-btn:active { transform: scale(0.98); }
+		.action-btn.secondary { background: rgba(255,255,255,0.06); }
+		.action-btn.danger { background: rgba(251,113,133,0.16); border-color: rgba(251,113,133,0.26); }
+
+		.tabs { display:flex; gap:10px; padding: 0 18px 18px 18px; flex-wrap: wrap; }
+		.tab-btn {
+			padding: 10px 12px;
+			border-radius: 999px;
+			border: 1px solid rgba(255,255,255,0.16);
+			background: rgba(255,255,255,0.06);
+			color: var(--text);
+			cursor: pointer;
+			font-weight: 650;
+			font-size: 0.92rem;
+		}
+		.tab-btn.active { background: rgba(96,165,250,0.18); border-color: rgba(96,165,250,0.30); }
+
+		.main { padding: 0 18px 18px 18px; }
+		.section { display:none; }
+		.section.active { display:block; }
+		.section-header { display:flex; justify-content: space-between; align-items:flex-end; gap: 12px; margin: 18px 0 12px 0; }
+		.section-header h2 { margin:0; font-size: 1.1rem; letter-spacing: -0.01em; }
+		.section-header p { margin: 4px 0 0 0; color: var(--muted); font-size: 0.9rem; }
+		.small-actions { display:flex; gap: 10px; flex-wrap: wrap; }
+		.small-btn {
+			padding: 10px 12px;
+			border-radius: 10px;
+			border: 1px solid rgba(255,255,255,0.16);
+			background: rgba(255,255,255,0.06);
+			color: var(--text);
+			cursor: pointer;
+			font-weight: 650;
+			font-size: 0.9rem;
+		}
+		.small-btn.primary { background: rgba(96,165,250,0.18); border-color: rgba(96,165,250,0.30); }
+
+		.grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+		@media (max-width: 780px){ .actions{ grid-template-columns: 1fr; } .grid{ grid-template-columns: 1fr; } }
+
+		.item {
+			background: rgba(255,255,255,0.06);
+			border: 1px solid rgba(255,255,255,0.12);
+			border-radius: 14px;
+			padding: 14px;
+		}
+		.item .top { display:flex; align-items:flex-start; justify-content: space-between; gap: 10px; }
+		.item h3 { margin:0; font-size: 1.02rem; }
+		.item .meta { margin-top: 6px; color: var(--muted); font-size: 0.9rem; line-height: 1.35; }
+		.pill {
+			display:inline-flex; align-items:center; gap: 6px;
+			padding: 6px 10px;
+			border-radius: 999px;
+			border: 1px solid rgba(255,255,255,0.14);
+			background: rgba(255,255,255,0.06);
+			color: var(--text);
+			font-weight: 700;
+			font-size: 0.78rem;
+			white-space: nowrap;
+		}
+		.pill.warn { border-color: rgba(251,146,60,0.28); background: rgba(251,146,60,0.14); }
+		.pill.good { border-color: rgba(34,197,94,0.28); background: rgba(34,197,94,0.14); }
+
+		.empty {
+			padding: 16px;
+			border-radius: 14px;
+			background: rgba(255,255,255,0.04);
+			border: 1px dashed rgba(255,255,255,0.16);
+			color: var(--muted);
+		}
+
+		/* Modal */
+		.overlay {
+			position: fixed; inset: 0;
+			display:none;
+			align-items:center;
+			justify-content:center;
+			padding: 18px;
+			background: rgba(0,0,0,0.55);
+			backdrop-filter: blur(6px);
+			z-index: 1000;
+		}
+		.overlay.show { display:flex; }
+		.modal {
+			width: 100%;
+			max-width: 560px;
+			background: linear-gradient(180deg, rgba(17,24,39,0.96) 0%, rgba(3,7,18,0.96) 100%);
+			border: 1px solid rgba(255,255,255,0.14);
+			border-radius: 16px;
+			box-shadow: 0 24px 80px rgba(0,0,0,0.55);
+			padding: 16px;
+		}
+		.modal-head { display:flex; align-items:flex-start; justify-content: space-between; gap: 12px; }
+		.modal-head h2 { margin:0; font-size: 1.1rem; }
+		.modal-head p { margin: 6px 0 0 0; color: var(--muted); font-size: 0.92rem; }
+		.modal-close {
+			border: 1px solid rgba(255,255,255,0.16);
+			background: rgba(255,255,255,0.06);
+			color: var(--text);
+			width: 38px;
+			height: 38px;
+			border-radius: 12px;
+			cursor: pointer;
+			font-size: 18px;
+			line-height: 1;
+		}
+		.form { margin-top: 14px; display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+		.form .full { grid-column: 1 / -1; }
+		label { display:block; color: var(--muted); font-size: 0.82rem; font-weight: 650; margin: 0 0 6px 0; }
+		input, select {
+			width: 100%;
+			border-radius: 12px;
+			border: 1px solid rgba(255,255,255,0.14);
+			background: rgba(255,255,255,0.06);
+			color: var(--text);
+			padding: 11px 12px;
+			outline: none;
+		}
+		input:focus, select:focus { border-color: rgba(96,165,250,0.45); box-shadow: 0 0 0 3px rgba(96,165,250,0.18); }
+		.form-actions { display:flex; justify-content:flex-end; gap: 10px; margin-top: 12px; }
+		.btn {
+			padding: 11px 12px;
+			border-radius: 12px;
+			border: 1px solid rgba(255,255,255,0.16);
+			background: rgba(255,255,255,0.06);
+			color: var(--text);
+			cursor:pointer;
+			font-weight: 750;
+		}
+		.btn.primary { background: rgba(96,165,250,0.22); border-color: rgba(96,165,250,0.34); }
+		.err {
+			display:none;
+			margin-top: 10px;
+			padding: 10px 12px;
+			border-radius: 12px;
+			background: rgba(251,113,133,0.16);
+			border: 1px solid rgba(251,113,133,0.26);
+			color: var(--text);
+		}
+		@media (max-width: 600px) {
+			.container { margin: 18px auto; padding: 0 12px; }
+			.header { padding: 14px 14px 0 14px; }
+			.title-wrap h1 { font-size: 1.35rem; }
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<div class="title-wrap">
+				<h1>Welcome, Civilian</h1>
+				<p>Manage your civilian characters and view tickets issued to them.</p>
+			</div>
+			<div class="small-actions">
+				<button class="small-btn primary" id="quickNewCharacterBtn">New Character</button>
+				<button class="small-btn" id="quickTicketsBtn">My Tickets</button>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="actions">
+				<button class="action-btn" id="createCharacterBtn">Create Character</button>
+				<button class="action-btn" id="seeTicketsBtn">See My Tickets</button>
+				<button class="action-btn secondary" id="submitReportBtn">Submit Report</button>
+				<button class="action-btn secondary" id="requestSupportBtn">Request Support</button>
+				<button class="action-btn secondary" id="announcementsBtn">View Announcements</button>
+				<button class="action-btn danger" id="resetLocalBtn" title="Clears local characters/tickets on this device">Reset Local Data</button>
+			</div>
+
+			<div class="tabs">
+				<button class="tab-btn active" data-tab="characters">My Characters</button>
+				<button class="tab-btn" data-tab="tickets">My Tickets</button>
+			</div>
+
+			<div class="main">
+				<div class="section active" id="charactersSection">
+					<div class="section-header">
+						<div>
+							<h2>My Characters</h2>
+							<p>Create, store, and manage your civilian identities on this device.</p>
+						</div>
+						<div class="small-actions">
+							<button class="small-btn primary" id="newCharacterBtn2">New Character</button>
+						</div>
+					</div>
+					<div class="grid" id="charactersGrid"></div>
+					<div class="empty" id="charactersEmpty" style="display:none;">No characters yet. Click <b>New Character</b> to create one.</div>
+				</div>
+
+				<div class="section" id="ticketsSection">
+					<div class="section-header">
+						<div>
+							<h2>My Tickets</h2>
+							<p>Tickets issued to your characters (loaded from local storage).</p>
+						</div>
+					</div>
+					<div class="grid" id="ticketsGrid"></div>
+					<div class="empty" id="ticketsEmpty" style="display:none;">No tickets found for your characters.</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="overlay" id="newCharacterOverlay" aria-hidden="true">
+		<div class="modal" role="dialog" aria-modal="true" aria-labelledby="newCharTitle">
+			<div class="modal-head">
+				<div>
+					<h2 id="newCharTitle">Create Character</h2>
+					<p>Fill out the details below. This saves locally on your device.</p>
+				</div>
+				<button class="modal-close" id="closeNewCharacter" aria-label="Close">×</button>
+			</div>
+
+			<div class="err" id="newCharError"></div>
+
+			<form class="form" id="newCharacterForm">
+				<div class="full">
+					<label for="charName">Full Name</label>
+					<input id="charName" autocomplete="name" placeholder="John Doe" required>
+				</div>
+				<div>
+					<label for="charDob">Date of Birth</label>
+					<input id="charDob" type="date" required>
+				</div>
+				<div>
+					<label for="charSex">Sex</label>
+					<select id="charSex" required>
+						<option value="M">M</option>
+						<option value="F">F</option>
+						<option value="X">X</option>
+					</select>
+				</div>
+				<div class="full">
+					<label for="charAddress">Address</label>
+					<input id="charAddress" autocomplete="street-address" placeholder="123 Paleto Blvd" required>
+				</div>
+				<div>
+					<label for="charPhone">Phone</label>
+					<input id="charPhone" autocomplete="tel" placeholder="555-0100">
+				</div>
+				<div>
+					<label for="charLicense">License #</label>
+					<input id="charLicense" placeholder="Optional">
+				</div>
+				<div class="form-actions full">
+					<button type="button" class="btn" id="cancelNewCharacter">Cancel</button>
+					<button type="submit" class="btn primary">Save Character</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script>
+		// Local-only demo storage. If you later add a real DB, swap these helpers.
+		const STORAGE = {
+			characters: 'civilian_characters_v1',
+			tickets: 'civilian_tickets_v1'
+		};
+
+		function safeJsonParse(value, fallback) {
+			try { return JSON.parse(value); } catch { return fallback; }
+		}
+
+		function loadCharacters() {
+			const raw = localStorage.getItem(STORAGE.characters);
+			const data = safeJsonParse(raw, []);
+			return Array.isArray(data) ? data : [];
+		}
+
+		function saveCharacters(chars) {
+			localStorage.setItem(STORAGE.characters, JSON.stringify(chars));
+		}
+
+		function loadTickets() {
+			const raw = localStorage.getItem(STORAGE.tickets);
+			const data = safeJsonParse(raw, []);
+			return Array.isArray(data) ? data : [];
+		}
+
+		function uuid() {
+			if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+			return 'id_' + Math.random().toString(16).slice(2) + '_' + Date.now().toString(16);
+		}
+
+		function escapeHtml(str) {
+			return String(str)
+				.replaceAll('&', '&amp;')
+				.replaceAll('<', '&lt;')
+				.replaceAll('>', '&gt;')
+				.replaceAll('"', '&quot;')
+				.replaceAll("'", '&#039;');
+		}
+
+		function formatMoney(amount) {
+			const n = Number(amount);
+			if (!Number.isFinite(n)) return '$0';
+			return '$' + Math.round(n).toLocaleString();
+		}
+
+		function setActiveTab(tab) {
+			document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+			document.getElementById('charactersSection').classList.toggle('active', tab === 'characters');
+			document.getElementById('ticketsSection').classList.toggle('active', tab === 'tickets');
+			if (tab === 'tickets') renderTickets();
+		}
+
+		function renderCharacters() {
+			const grid = document.getElementById('charactersGrid');
+			const empty = document.getElementById('charactersEmpty');
+			const characters = loadCharacters();
+
+			grid.innerHTML = '';
+			if (!characters.length) {
+				empty.style.display = 'block';
+				return;
+			}
+			empty.style.display = 'none';
+
+			for (const c of characters) {
+				const card = document.createElement('div');
+				card.className = 'item';
+				card.innerHTML = `
+					<div class="top">
+						<div>
+							<h3>${escapeHtml(c.name || 'Unknown')}</h3>
+							<div class="meta">
+								DOB: ${escapeHtml(c.dob || '—')} • Sex: ${escapeHtml(c.sex || '—')}<br>
+								${escapeHtml(c.address || '—')}<br>
+								Phone: ${escapeHtml(c.phone || '—')} • License: ${escapeHtml(c.license || '—')}
+							</div>
+						</div>
+						<div class="pill good">Character</div>
+					</div>
+				`;
+				grid.appendChild(card);
+			}
+		}
+
+		function renderTickets() {
+			const grid = document.getElementById('ticketsGrid');
+			const empty = document.getElementById('ticketsEmpty');
+
+			const characters = loadCharacters();
+			const characterById = Object.fromEntries(characters.map(c => [c.id, c]));
+			const tickets = loadTickets().filter(t => t && characterById[t.civilianId]);
+
+			grid.innerHTML = '';
+			if (!tickets.length) {
+				empty.style.display = 'block';
+				return;
+			}
+			empty.style.display = 'none';
+
+			// newest first
+			tickets.sort((a, b) => (new Date(b.date || 0).getTime()) - (new Date(a.date || 0).getTime()));
+
+			for (const t of tickets) {
+				const civ = characterById[t.civilianId];
+				const pill = t.status === 'paid' ? 'good' : 'warn';
+				const pillText = t.status === 'paid' ? 'Paid' : 'Open';
+				const card = document.createElement('div');
+				card.className = 'item';
+				card.innerHTML = `
+					<div class="top">
+						<div>
+							<h3>${escapeHtml(t.type || 'Ticket')} • ${formatMoney(t.fine)}</h3>
+							<div class="meta">
+								To: ${escapeHtml(civ?.name || 'Unknown')}<br>
+								Location: ${escapeHtml(t.location || '—')}<br>
+								Date: ${escapeHtml(t.date ? new Date(t.date).toLocaleString() : '—')}<br>
+								${t.notes ? `Notes: ${escapeHtml(t.notes)}` : ''}
+							</div>
+						</div>
+						<div class="pill ${pill}">${pillText}</div>
+					</div>
+				`;
+				grid.appendChild(card);
+			}
+		}
+
+		function openNewCharacter() {
+			document.getElementById('newCharError').style.display = 'none';
+			document.getElementById('newCharacterForm').reset();
+			const overlay = document.getElementById('newCharacterOverlay');
+			overlay.classList.add('show');
+			overlay.setAttribute('aria-hidden', 'false');
+			document.getElementById('charName').focus();
+		}
+
+		function closeNewCharacter() {
+			const overlay = document.getElementById('newCharacterOverlay');
+			overlay.classList.remove('show');
+			overlay.setAttribute('aria-hidden', 'true');
+		}
+
+		// Wire UI
+		document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => setActiveTab(btn.dataset.tab)));
+
+		document.getElementById('createCharacterBtn').addEventListener('click', openNewCharacter);
+		document.getElementById('quickNewCharacterBtn').addEventListener('click', openNewCharacter);
+		document.getElementById('newCharacterBtn2').addEventListener('click', openNewCharacter);
+
+		function goTickets() { setActiveTab('tickets'); document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+		document.getElementById('seeTicketsBtn').addEventListener('click', goTickets);
+		document.getElementById('quickTicketsBtn').addEventListener('click', goTickets);
+
+		document.getElementById('closeNewCharacter').addEventListener('click', closeNewCharacter);
+		document.getElementById('cancelNewCharacter').addEventListener('click', closeNewCharacter);
+		document.getElementById('newCharacterOverlay').addEventListener('click', (e) => { if (e.target.id === 'newCharacterOverlay') closeNewCharacter(); });
+		document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeNewCharacter(); });
+
+		document.getElementById('newCharacterForm').addEventListener('submit', (e) => {
+			e.preventDefault();
+			const err = document.getElementById('newCharError');
+			err.style.display = 'none';
+
+			const name = document.getElementById('charName').value.trim();
+			const dob = document.getElementById('charDob').value;
+			const sex = document.getElementById('charSex').value;
+			const address = document.getElementById('charAddress').value.trim();
+			const phone = document.getElementById('charPhone').value.trim();
+			const license = document.getElementById('charLicense').value.trim();
+
+			if (!name || !dob || !sex || !address) {
+				err.textContent = 'Please fill in Name, DOB, Sex, and Address.';
+				err.style.display = 'block';
+				return;
+			}
+
+			const characters = loadCharacters();
+			characters.push({ id: uuid(), name, dob, sex, address, phone, license, createdAt: new Date().toISOString() });
+			saveCharacters(characters);
+
+			closeNewCharacter();
+			renderCharacters();
+			// tickets depend on characters
+			if (document.getElementById('ticketsSection').classList.contains('active')) renderTickets();
+		});
+
+		document.getElementById('resetLocalBtn').addEventListener('click', () => {
+			if (!confirm('Reset local characters and tickets on this device?')) return;
+			localStorage.removeItem(STORAGE.characters);
+			localStorage.removeItem(STORAGE.tickets);
+			setActiveTab('characters');
+			renderCharacters();
+			renderTickets();
+		});
+
+		document.getElementById('submitReportBtn').addEventListener('click', () => alert('Submit Report is not wired yet.'));
+		document.getElementById('requestSupportBtn').addEventListener('click', () => alert('Request Support is not wired yet.'));
+		document.getElementById('announcementsBtn').addEventListener('click', () => alert('Announcements is not wired yet.'));
+
+		// Initial render
+		renderCharacters();
+		renderTickets();
+	</script>
+</body>
+</html>
 
