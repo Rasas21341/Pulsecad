@@ -3,39 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0c0e12">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Pulsecad">
     <title>Pulsecad</title>
     <link rel="icon" type="image/webp" href="https://cdn.discordapp.com/icons/1455410644634304725/75220689ed872e2ee4c7101f479813a5.webp?size=512">
+    <link rel="apple-touch-icon" href="https://cdn.discordapp.com/icons/1455410644634304725/75220689ed872e2ee4c7101f479813a5.webp?size=512">
+    <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Pulsecad%22%2C%22short_name%22%3A%22Pulsecad%22%2C%22description%22%3A%22Police%20CAD%20System%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230c0e12%22%2C%22theme_color%22%3A%22%230c0e12%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcdn.discordapp.com%2Ficons%2F1455410644634304725%2F75220689ed872e2ee4c7101f479813a5.webp%3Fsize%3D512%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fwebp%22%7D%5D%7D">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Snowflake Effect CSS -->
-    <style>
-        .snowflakes {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 9999;
-            overflow: hidden;
-        }
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            color: #fff;
-            font-size: 1em;
-            text-shadow: 0 0 5px rgba(255,255,255,0.5);
-            pointer-events: none;
-            user-select: none;
-            animation-name: snowDown;
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-        }
-        @keyframes snowDown {
-            0% { transform: translateY(0) rotate(0deg); }
-            100% { transform: translateY(100vh) rotate(360deg); }
-        }
-    </style>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -396,7 +373,7 @@
         .logged-in .hero { display: none !important; }
         .logged-in .pricing-section { display: none !important; }
         .logged-in .team-section { display: none !important; }
-        .logged-in .support-ticket-page { display: none !important; }
+        
         .logged-in .dashboard:not(.hidden) { display: block; }
         .logged-in .dashboard.hidden { display: none !important; }
         .logged-in .nav-btn { display: none; }
@@ -626,6 +603,169 @@
         }
 
         .btn-police:hover { background: #2563eb; }
+
+        .btn-dispatch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: #10b981;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .btn-dispatch:hover { background: #059669; }
+
+        .dispatch-mdt {
+            display: none;
+            min-height: 100vh;
+            padding: 30px;
+            background: #0a0d14;
+        }
+
+        .dispatch-mdt.active { display: block; }
+
+        .dispatch-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .dispatch-header .identifier {
+            font-size: 16px;
+            color: #e4e4e7;
+            margin-bottom: 8px;
+        }
+
+        .dispatch-header .identifier span {
+            color: #9ca3af;
+        }
+
+        .dispatch-header .status {
+            font-size: 15px;
+            color: #e4e4e7;
+        }
+
+        .dispatch-header .status span {
+            color: #9ca3af;
+        }
+
+        .dispatch-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .dispatch-btn {
+            padding: 10px 20px;
+            border: 2px solid;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            background: transparent;
+            transition: background 0.2s;
+        }
+
+        .dispatch-btn.green { border-color: #22c55e; color: #22c55e; }
+        .dispatch-btn.green:hover { background: rgba(34,197,94,.2); }
+        .dispatch-btn.orange { border-color: #f97316; color: #f97316; }
+        .dispatch-btn.orange:hover { background: rgba(249,115,22,.2); }
+        .dispatch-btn.cyan { border-color: #06b6d4; color: #06b6d4; }
+        .dispatch-btn.cyan:hover { background: rgba(6,182,212,.2); }
+        .dispatch-btn.red { border-color: #ef4444; color: #ef4444; }
+        .dispatch-btn.red:hover { background: rgba(239,68,68,.2); }
+        .dispatch-btn.blue { border-color: #3b82f6; color: #3b82f6; }
+        .dispatch-btn.blue:hover { background: rgba(59,130,246,.2); }
+
+        .dispatch-panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .dispatch-panel {
+            background: #111827;
+            border: 1px solid #1e293b;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .dispatch-panel h3 {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #e4e4e7;
+        }
+
+        .dispatch-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .dispatch-table th {
+            color: #6b7280;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .dispatch-table td {
+            color: #e4e4e7;
+            font-size: 13px;
+            padding: 12px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .dispatch-table .view-btn {
+            padding: 6px 14px;
+            border: 1px solid #06b6d4;
+            border-radius: 4px;
+            background: transparent;
+            color: #06b6d4;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .dispatch-table .view-btn:hover {
+            background: rgba(6,182,212,.15);
+        }
+
+        .no-bolos {
+            text-align: center;
+            color: #22c55e;
+            font-size: 14px;
+            padding: 20px;
+        }
+
+        .dispatch-off-duty {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            padding: 10px 20px;
+            background: #ef4444;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .dispatch-off-duty:hover { background: #dc2626; }
 
         .btn-admin {
             display: flex;
@@ -1387,275 +1527,6 @@
             line-height: 1.5;
         }
 
-        /* Support Ticket System */
-        /* Removed support ticket containers and related styles */
-
-        .ticket-chat-header {
-            background: #1e222d;
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .ticket-chat-header .ticket-id {
-            font-size: 14px;
-            color: #3b82f6;
-            font-weight: 600;
-        }
-
-        .ticket-chat-header .ticket-status {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .ticket-status.open {
-            background: rgba(34,197,94,.2);
-            color: #4ade80;
-        }
-
-        .ticket-status.claimed {
-            background: rgba(59,130,246,.2);
-            color: #60a5fa;
-        }
-
-        .ticket-status.closed {
-            background: rgba(107,114,128,.2);
-            color: #9ca3af;
-        }
-
-        .ticket-chat-messages {
-            height: 350px;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .ticket-message {
-            max-width: 75%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .ticket-message.user {
-            align-self: flex-end;
-            background: #3b82f6;
-            color: #fff;
-            border-bottom-right-radius: 4px;
-        }
-
-        .ticket-message.staff {
-            align-self: flex-start;
-            background: #1e293b;
-            color: #e4e4e7;
-            border-bottom-left-radius: 4px;
-        }
-
-        .ticket-message .sender {
-            font-size: 11px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            opacity: 0.8;
-        }
-
-        .ticket-message .time {
-            font-size: 10px;
-            opacity: 0.6;
-            margin-top: 6px;
-        }
-
-        .ticket-chat-input {
-            display: flex;
-            gap: 10px;
-            padding: 16px 20px;
-            background: #0c0e12;
-            border-top: 1px solid #1e222d;
-        }
-
-        .ticket-chat-input input {
-            flex: 1;
-            padding: 12px 16px;
-            background: #14171f;
-            border: 1px solid #27272a;
-            border-radius: 8px;
-            color: #fafafa;
-            font-size: 13px;
-            font-family: inherit;
-        }
-
-        .ticket-chat-input input:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-
-        .ticket-chat-input button {
-            padding: 12px 24px;
-            background: #3b82f6;
-            border: none;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .ticket-chat-input button:hover {
-            background: #2563eb;
-        }
-
-        .my-tickets-list {
-            margin-top: 0;
-        }
-
-        .my-ticket-item {
-            background: #14171f;
-            border: 1px solid #1e222d;
-            border-radius: 10px;
-            padding: 16px 20px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-
-        .my-ticket-item:hover {
-            border-color: #3b82f6;
-        }
-
-        .my-ticket-info h4 {
-            font-size: 14px;
-            color: #e4e4e7;
-            margin-bottom: 4px;
-        }
-
-        .my-ticket-info p {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        /* Staff Tickets Section */
-        .staff-tickets-grid {
-            display: grid;
-            gap: 16px;
-        }
-
-        .staff-ticket-card {
-            background: #111827;
-            border: 1px solid #1e293b;
-            border-radius: 10px;
-            padding: 20px;
-        }
-
-        .staff-ticket-card .ticket-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .staff-ticket-card .ticket-info h4 {
-            font-size: 15px;
-            color: #e4e4e7;
-            margin-bottom: 4px;
-        }
-
-        .staff-ticket-card .ticket-info p {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        .staff-ticket-card .ticket-reason {
-            background: #1e293b;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            color: #9ca3af;
-            margin-bottom: 16px;
-        }
-
-        .staff-ticket-card .ticket-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-claim {
-            padding: 8px 16px;
-            background: #22c55e;
-            border: none;
-            border-radius: 6px;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-claim:hover {
-            background: #16a34a;
-        }
-
-        .btn-respond {
-            padding: 8px 16px;
-            background: #3b82f6;
-            border: none;
-            border-radius: 6px;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-respond:hover {
-            background: #2563eb;
-        }
-
-        .btn-close-ticket {
-            padding: 8px 16px;
-            background: #ef4444;
-            border: none;
-            border-radius: 6px;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-close-ticket:hover {
-            background: #dc2626;
-        }
-
-        /* Removed staff chat modal styles */
-
-        .staff-chat-content {
-            background: #14171f;
-            border: 1px solid #1e222d;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 600px;
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .staff-chat-content .ticket-chat-messages {
-            flex: 1;
-            min-height: 300px;
-        }
-
-        .no-support-tickets {
-            text-align: center;
-            color: #6b7280;
-            padding: 40px 20px;
-            font-size: 14px;
-        }
-
         .tones-context-menu {
             position: fixed;
             background: #1f2937;
@@ -1812,13 +1683,13 @@
 
         /* Snow Effect */
         .snowflakes {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 1;
             overflow: hidden;
         }
 
@@ -1833,21 +1704,10 @@
             color: #fff;
             font-size: 1em;
             text-shadow: 0 0 5px rgba(255,255,255,0.5);
-            pointer-events: none;
-            user-select: none;
-            animation-name: snowDown;
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
+            animation: snowfall linear infinite;
+            opacity: 0.8;
         }
 
-        @keyframes snowDown {
-            0% {
-                transform: translateY(0) rotate(0deg);
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-            }
-        }
         @keyframes snowfall {
             0% {
                 transform: translateY(0) rotate(0deg);
@@ -1856,6 +1716,7 @@
                 transform: translateY(100vh) rotate(360deg);
             }
         }
+
     </style>
 </head>
 <body>
@@ -1886,7 +1747,6 @@
             <button class="nav-link" id="pricesBtn">Prices</button>
             <a class="nav-link" href="https://discord.gg/FXNTFaQWt9" target="_blank" style="text-decoration: none;">Discord</a>
             <button class="nav-link" id="teamBtn">Team</button>
-            <!-- Support button removed -->
         </nav>
         <button class="nav-btn" id="openLogin">Login</button>
         <div class="nav-user">
@@ -1923,6 +1783,7 @@
                     <li>∞ Webhooks</li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Permission Keys</li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Internal Messaging</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Department Rosters</li>
                 </ul>
             </div>
             <div class="price-card">
@@ -1943,6 +1804,7 @@
                     <li>∞ Webhooks</li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Permission Keys</li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Internal Messaging</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Department Rosters</li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>FiveM Integration (Basic)</li>
                 </ul>
             </div>
@@ -1964,6 +1826,7 @@
                     <li>∞ Webhooks</li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Permission Keys</li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Internal Messaging</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Department Rosters</li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>FiveM Integration (Advanced)</li>
                 </ul>
             </div>
@@ -1987,35 +1850,23 @@
                 <div class="team-desc">Founder and owner of Pulsecad. Building the future of CAD/MDT systems.</div>
             </div>
             <div class="team-card">
-                <img src="https://cdn.discordapp.com/avatars/1200547390193664002/13d92948ec5b758851c2a3cfde1021b7.webp?size=1024" alt="Devin" class="team-avatar">
-                <div class="team-name">Hunter</div>
+                <img src="https://cdn.discordapp.com/avatars/926889740345679903/a_2cb92e0fe61cf965b984eadbd740fab8.gif?size=1024&animated=true" alt="Devin" class="team-avatar">
+                <div class="team-name">Devin</div>
                 <div class="team-role coowner">Co-Owner</div>
                 <div class="team-desc">Co-owner of Pulsecad. Helping shape the vision and direction of the platform.</div>
             </div>
             <div class="team-card">
-                <img src="https://cdn.discordapp.com/avatars/926889740345679903/a_6f74bff6a4a474c98653103d2408d878.gif?size=1024&animated=true" alt="Cayden" class="team-avatar">
-                <div class="team-name">Devin</div>
+                <img src="https://cdn.discordapp.com/avatars/1249645229141659658/a_f4476c98c388dd0194c4ee0e38bc6161.gif?size=1024&animated=true" alt="Cayden" class="team-avatar">
+                <div class="team-name">Cayden</div>
                 <div class="team-role director">Operations Director</div>
                 <div class="team-desc">Operations Director of Pulsecad. Overseeing daily operations and team coordination.</div>
             </div>
             <div class="team-card">
-                <img src="" alt="" class="team-avatar">
-                <div class="team-name"></div>
+                <img src="https://cdn.discordapp.com/avatars/937822760091156591/8010fe9317f640d842a8201a7b33ade0.webp?size=1024" alt="Joseh" class="team-avatar">
+                <div class="team-name">Joseh</div>
                 <div class="team-role support">Senior Support</div>
                 <div class="team-desc">Senior support team member helping users with any questions or issues.</div>
             </div>
-            <div class="team-card">
-                <img src="" alt="" class="team-avatar">
-                <div class="team-name"></div>
-                <div class="team-role support">Senior Support</div>
-                <div class="team-desc">Senior support team member helping users with any questions or issues.</div>
-            </div>
-                <div class="team-card">
-                    <img src="" alt="" class="team-avatar">
-                    <div class="team-name"></div>
-                    <div class="team-role support">Senior Support</div>
-                    <div class="team-desc">Senior support team member helping users with any questions or issues.</div>
-                </div>
             <div class="team-card">
                 <div class="team-avatar vacant-avatar">?</div>
                 <div class="team-name">Vacant</div>
@@ -2076,8 +1927,6 @@
         </div>
     </section>
 
-    <!-- Snowflake container -->
-    <div class="snowflakes" id="snowflakes"></div>
     <main class="hero" id="heroSection">
         <div class="snowflakes" id="snowflakes"></div>
         <h1>Welcome to Pulsecad</h1>
@@ -2209,28 +2058,17 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     Police
                 </button>
+                <button class="btn-dispatch" id="dispatchBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    Dispatch
+                </button>
                 <button class="btn-civilian" id="civilianBtn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     Civilian
                 </button>
-
-                                <!-- Roster Modal -->
-                                <div class="overlay" id="rosterModal">
-                                    <div class="modal" style="max-width:400px;">
-                                        <button class="modal-close" id="closeRosterModal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-                                        <h2>Community Roster</h2>
-                                        <div class="field" style="margin-bottom:16px;">
-                                            <label style="display:block;color:#a1a1aa;font-size:12px;margin-bottom:6px;">Name</label>
-                                            <input type="text" id="rosterName" placeholder="Enter name" style="width:100%;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#fff;font-size:13px;">
-                                        </div>
-                                        <div class="field" style="margin-bottom:16px;">
-                                            <label style="display:block;color:#a1a1aa;font-size:12px;margin-bottom:6px;">Role</label>
-                                            <input type="text" id="rosterRole" placeholder="Enter role" style="width:100%;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#fff;font-size:13px;">
-                                        </div>
-                                        <button id="addRosterBtn" style="width:100%;padding:10px 0;background:#3b82f6;border:none;border-radius:6px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:16px;">Add to Roster</button>
-                                        <div id="rosterList" style="max-height:180px;overflow-y:auto;"></div>
-                                    </div>
-                                </div>
+                <button class="btn-admin" id="adminBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+                    Admin
                 </button>
             </div>
         </div>
@@ -2265,7 +2103,97 @@
                     </div>
                 </div>
             </div>
-            <!-- Departments section removed as requested -->
+            <div class="mdt-panel" style="margin-top:24px;" id="rosterSection">
+                <h3>Department Rosters</h3>
+                <p style="color:#6b7280;font-size:13px;margin-bottom:12px;">Create and manage multiple rosters for your community.</p>
+                
+                <!-- Upgrade Required Message -->
+                <div id="rosterUpgradeRequired" style="display:none;text-align:center;padding:30px 20px;background:#1e222d;border-radius:8px;margin-bottom:16px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" width="40" height="40" style="margin-bottom:12px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    <h4 style="color:#e4e4e7;font-size:16px;margin-bottom:8px;">Starter Plan Required</h4>
+                    <p style="color:#6b7280;font-size:13px;margin-bottom:8px;">Upgrade to the Starter plan or higher to access:</p>
+                    <p style="color:#a1a1aa;font-size:13px;margin:0;">Internal Messaging</p>
+                    <p style="color:#a1a1aa;font-size:13px;margin-bottom:16px;">Department Rosters</p>
+                    <a href="?prices" style="display:inline-block;padding:10px 24px;background:#f59e0b;border-radius:6px;color:#fff;font-size:13px;font-weight:600;text-decoration:none;">View Plans</a>
+                </div>
+                
+                <!-- Roster Content (hidden if no plan) -->
+                <div id="rosterContent">
+                <!-- Create New Roster -->
+                <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;">
+                    <input type="text" id="newRosterName" placeholder="New roster name (e.g., Police, Fire, EMS)" style="flex:1;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#fff;font-size:13px;">
+                    <button id="createRosterBtn" style="padding:10px 20px;background:#22c55e;border:none;border-radius:6px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;">Create Roster</button>
+                </div>
+                
+                <!-- Roster Selection -->
+                <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;">
+                    <select id="currentRosterSelect" style="flex:1;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#fff;font-size:13px;">
+                        <option value="">-- Select a Roster --</option>
+                    </select>
+                    <button id="deleteRosterBtn" style="padding:10px 16px;background:#ef4444;border:none;border-radius:6px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;">Delete Roster</button>
+                </div>
+                
+                <!-- Roster Link -->
+                <div id="rosterLinkSection" style="display:none;margin-bottom:16px;">
+                    <label style="display:block;color:#a1a1aa;font-size:12px;margin-bottom:6px;">Public Roster Link:</label>
+                    <div style="display:flex;gap:10px;align-items:center;">
+                        <input type="text" id="rosterPublicLink" readonly style="flex:1;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#a1a1aa;font-size:12px;">
+                        <button id="copyRosterLink" style="padding:10px 16px;background:#3b82f6;border:none;border-radius:6px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;">Copy Link</button>
+                    </div>
+                </div>
+                
+                <!-- Add Entry Form (hidden until roster selected) -->
+                <div id="rosterEntryForm" style="display:none;">
+                    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+                        <input type="text" id="rosterMemberName" placeholder="Name" style="flex:1;min-width:120px;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#fff;font-size:13px;">
+                        <input type="text" id="rosterRank" placeholder="Rank" style="flex:1;min-width:100px;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#fff;font-size:13px;">
+                        <input type="text" id="rosterCallsign" placeholder="Callsign" style="width:100px;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#fff;font-size:13px;">
+                        <input type="text" id="rosterBadge" placeholder="Badge #" style="width:80px;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#fff;font-size:13px;">
+                        <select id="rosterDepartment" style="min-width:120px;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#fff;font-size:13px;">
+                            <option value="">Department</option>
+                        </select>
+                        <select id="rosterStatus" style="min-width:100px;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#fff;font-size:13px;">
+                            <option value="Active">Active</option>
+                            <option value="LOA">LOA</option>
+                            <option value="Suspended">Suspended</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                        <button id="addRosterEntry" style="padding:10px 20px;background:#22c55e;border:none;border-radius:6px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;">Add</button>
+                    </div>
+                    <table id="rosterTable" style="width:100%;border-collapse:collapse;background:#14171f;border-radius:8px;">
+                        <thead>
+                            <tr style="background:#1e222d;">
+                                <th style="padding:12px;text-align:left;font-size:12px;color:#a1a1aa;">Name</th>
+                                <th style="padding:12px;text-align:left;font-size:12px;color:#a1a1aa;">Rank</th>
+                                <th style="padding:12px;text-align:left;font-size:12px;color:#a1a1aa;">Callsign</th>
+                                <th style="padding:12px;text-align:left;font-size:12px;color:#a1a1aa;">Badge</th>
+                                <th style="padding:12px;text-align:left;font-size:12px;color:#a1a1aa;">Department</th>
+                                <th style="padding:12px;text-align:left;font-size:12px;color:#a1a1aa;">Status</th>
+                                <th style="padding:12px;text-align:left;font-size:12px;color:#a1a1aa;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rosterTableBody">
+                            <tr><td colspan="7" style="text-align:center;color:#6b7280;padding:20px;">No roster entries yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+            <div class="mdt-panel" style="margin-top:24px;">
+                <h3>Departments</h3>
+                <table id="adminDepartmentsTable" style="width:100%;margin-top:10px;border-collapse:collapse;background:#14171f;border-radius:8px;">
+                    <thead>
+                        <tr>
+                            <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">Code</th>
+                            <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">Name</th>
+                            <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Departments will be rendered here by JS -->
+                    </tbody>
+                </table>
+            </div>
             <div class="mdt-panel" style="margin-top:24px;">
                 <!-- Discord Settings section removed as requested -->
             </div>
@@ -2296,22 +2224,31 @@
         </div>
     </div>
 
+    <div class="overlay dispatch-login-modal" id="dispatchLoginModal">
+        <div class="modal">
+            <button class="modal-close" id="closeDispatchLogin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            <img src="https://cdn.discordapp.com/icons/1455410644634304725/75220689ed872e2ee4c7101f479813a5.webp?size=512" alt="Pulsecad" class="modal-logo">
+            <h2>Dispatch Login</h2>
+            <p class="sub">Enter your dispatcher information</p>
+            <form id="dispatchLoginForm">
+                <div class="field">
+                    <label>Name</label>
+                    <input type="text" id="dispatcherName" placeholder="Enter your name" required>
+                </div>
+                <div class="field">
+                    <label>Callsign</label>
+                    <input type="text" id="dispatcherCallsign" placeholder="e.g. 1L-01" required>
+                </div>
+                <button type="submit" class="btn-primary" style="background:#10b981;margin-top:12px;">Go on Duty</button>
+            </form>
+        </div>
+    </div>
+
     <section class="staff-dashboard" id="staffDashboard" style="display:none;min-height:100vh;padding:30px;background:#0a0d14;">
         <div style="max-width:1200px;margin:0 auto;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;">
                 <h2 style="font-size:24px;font-weight:600;">Staff Dashboard</h2>
-                <div style="display:flex;gap:10px;align-items:center;">
-                    <button class="btn-back-community" id="backFromStaff">Back to Dashboard</button>
-                </div>
-            </div>
-            <div class="mdt-panel" style="margin-bottom:30px;">
-                <h3>Maintenance Mode</h3>
-                <p style="color:#6b7280;font-size:12px;margin-bottom:10px;">Toggle maintenance mode for the site.</p>
-                <label style="display:flex;align-items:center;gap:10px;">
-                    <input type="checkbox" id="maintenanceToggle" />
-                    <span id="maintenanceStatus" style="color:#ef4444;font-weight:600;">Maintenance OFF</span>
-                </label>
-                <button id="saveMaintenanceBtn" style="margin-top:10px;padding:6px 16px;background:#3b82f6;border:none;border-radius:4px;color:#fff;font-size:13px;cursor:pointer;">Save</button>
+                <button class="btn-back-community" id="backFromStaff">Back to Dashboard</button>
             </div>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:30px;">
                 <div class="mdt-panel">
@@ -2327,7 +2264,21 @@
                     <div id="totalCharacters" style="font-size:36px;font-weight:700;color:#a855f7;text-align:center;margin-top:10px;">0</div>
                 </div>
             </div>
-            <!-- Departments section removed as requested -->
+            <div class="mdt-panel" style="margin-bottom:20px;">
+                <h3>All Communities</h3>
+                <table class="calls-table" style="margin-top:16px;">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Owner</th>
+                            <th>Website</th>
+                            <th>Plan</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="staffCommunitiesTable">
+                        <tr><td colspan="5" style="text-align:center;color:#6b7280;">Loading...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -2346,98 +2297,12 @@
                     <tbody id="staffUsersTable">
                         <tr><td colspan="5" style="text-align:center;color:#6b7280;">Loading...</td></tr>
                     </tbody>
-                <script>
-                async function loadAdminUsers() {
-                    const { data: users } = await db.from('users').select('*');
-                    const usersTable = document.getElementById('staffUsersTable');
-                    if (!users || users.length === 0) {
-                        usersTable.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#6b7280;">No users found</td></tr>';
-                        return;
-                    }
-                    const { data: staffAccessList } = await db.from('staff_access').select('user_id');
-                    const staffUserIds = (staffAccessList || []).map(s => s.user_id);
-                    usersTable.innerHTML = users.map(u => {
-                        const hasStaffAccess = staffUserIds.includes(u.id);
-                        const isHardcodedStaff = u.display_name.toLowerCase().includes('rya') || u.username.toLowerCase().includes('rya');
-                        return `
-                        <tr>
-                            <td style="font-size:11px;color:#6b7280;">${u.id.substring(0, 8)}...</td>
-                            <td>${u.username}</td>
-                            <td>${u.display_name}${isHardcodedStaff ? ' <span style="color:#a855f7;font-size:10px;">(Owner)</span>' : hasStaffAccess ? ' <span style="color:#22c55e;font-size:10px;">(Staff)</span>' : ''}</td>
-                            <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : 'N/A'}</td>
-                            <td style="display:flex;gap:6px;">
-                                ${!isHardcodedStaff ? (hasStaffAccess 
-                                    ? `<button onclick="revokeStaffAccess('${u.id}')" style="padding:4px 8px;background:#ef4444;border:none;border-radius:4px;color:#fff;font-size:10px;cursor:pointer;">Revoke Staff</button>`
-                                    : `<button onclick="grantStaffAccess('${u.id}')" style="padding:4px 8px;background:#22c55e;border:none;border-radius:4px;color:#fff;font-size:10px;cursor:pointer;">Make Staff</button>`) 
-                                : ''}
-                                <button onclick="deleteUser('${u.id}')" style="padding:4px 8px;background:#374151;border:none;border-radius:4px;color:#fff;font-size:10px;cursor:pointer;">Delete</button>
-                            </td>
-                        </tr>
-                    `}).join('');
-                }
-
-                // Call loadAdminUsers when admin panel is loaded
-                document.addEventListener('DOMContentLoaded', function() {
-                    loadAdminUsers();
-                });
-                </script>
-                <script>
-                // Maintenance Mode Logic
-                const maintenanceToggle = document.getElementById('maintenanceToggle');
-                const maintenanceStatus = document.getElementById('maintenanceStatus');
-                const saveMaintenanceBtn = document.getElementById('saveMaintenanceBtn');
-
-                async function loadMaintenanceMode() {
-                    const { data } = await db.from('settings').select('maintenance').single();
-                    maintenanceToggle.checked = !!data?.maintenance;
-                    maintenanceStatus.textContent = data?.maintenance ? 'Maintenance ON' : 'Maintenance OFF';
-                    maintenanceStatus.style.color = data?.maintenance ? '#22c55e' : '#ef4444';
-                }
-
-                maintenanceToggle.addEventListener('change', () => {
-                    maintenanceStatus.textContent = maintenanceToggle.checked ? 'Maintenance ON' : 'Maintenance OFF';
-                    maintenanceStatus.style.color = maintenanceToggle.checked ? '#22c55e' : '#ef4444';
-                });
-
-                saveMaintenanceBtn.addEventListener('click', async () => {
-                    const { error } = await db.from('settings').update({ maintenance: maintenanceToggle.checked }).eq('id', 1);
-                    if (error) {
-                        alert('Error saving maintenance mode: ' + error.message);
-                        return;
-                    }
-                    alert('Maintenance mode updated!');
-                });
-
-                document.addEventListener('DOMContentLoaded', loadMaintenanceMode);
-                </script>
-                <script>
-                window.revokeStaffAccess = async function(userId) {
-                    if (!confirm('Are you sure you want to revoke staff access?')) return;
-                    const { error } = await db
-                        .from('staff_access')
-                        .delete()
-                        .eq('user_id', userId);
-                    if (error) {
-                        alert('Error revoking access: ' + error.message);
-                        return;
-                    }
-                    loadAdminUsers();
-                };
-
-                window.deleteUser = async function(id) {
-                    if (!confirm('Are you sure you want to delete this user?')) return;
-                    const { error } = await db.from('users').delete().eq('id', id);
-                    if (error) {
-                        alert('Error deleting user: ' + error.message);
-                        return;
-                    }
-                    loadAdminUsers();
-                };
-                </script>
                 </table>
             </div>
-            <div class="mdt-panel" style="margin-top:20px;">
-                <!-- Support Tickets section removed -->
+        </div>
+    </section>
+
+    <!-- Discord Settings Modal -->
     <div class="staff-settings-modal" id="discordSettingsModal">
         <div class="staff-settings-content">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
@@ -2508,6 +2373,37 @@
         </div>
     </div>
 
+    <!-- Public Roster Page -->
+    <section id="publicRosterPage" style="display:none;min-height:100vh;padding:40px 20px;background:#0a0d14;">
+        <div style="max-width:1000px;margin:0 auto;">
+            <div style="text-align:center;margin-bottom:40px;">
+                <img src="https://cdn.discordapp.com/icons/1455410644634304725/75220689ed872e2ee4c7101f479813a5.webp?size=512" alt="Pulsecad" style="width:64px;height:64px;border-radius:50%;margin-bottom:16px;">
+                <h1 id="publicRosterTitle" style="font-size:28px;font-weight:700;color:#e4e4e7;margin-bottom:8px;">Department Roster</h1>
+                <p id="publicRosterCommunity" style="color:#6b7280;font-size:14px;">Loading...</p>
+            </div>
+            <div style="background:#14171f;border:1px solid #1e222d;border-radius:12px;overflow:hidden;">
+                <table style="width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr style="background:#1e222d;">
+                            <th style="padding:14px 16px;text-align:left;font-size:12px;color:#a1a1aa;font-weight:600;">Name</th>
+                            <th style="padding:14px 16px;text-align:left;font-size:12px;color:#a1a1aa;font-weight:600;">Rank</th>
+                            <th style="padding:14px 16px;text-align:left;font-size:12px;color:#a1a1aa;font-weight:600;">Callsign</th>
+                            <th style="padding:14px 16px;text-align:left;font-size:12px;color:#a1a1aa;font-weight:600;">Badge</th>
+                            <th style="padding:14px 16px;text-align:left;font-size:12px;color:#a1a1aa;font-weight:600;">Department</th>
+                            <th style="padding:14px 16px;text-align:left;font-size:12px;color:#a1a1aa;font-weight:600;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="publicRosterBody">
+                        <tr><td colspan="6" style="text-align:center;color:#6b7280;padding:40px;">Loading roster...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align:center;margin-top:30px;">
+                <a href="?" style="color:#3b82f6;font-size:13px;text-decoration:none;">← Back to Pulsecad</a>
+            </div>
+        </div>
+    </section>
+
     <div id="maintenancePage" style="display:none;position:fixed;inset:0;background:#0c0e12;z-index:9999;align-items:center;justify-content:center;">
         <div style="text-align:center;padding:40px;">
             <img src="https://cdn.discordapp.com/icons/1455410644634304725/75220689ed872e2ee4c7101f479813a5.webp?size=512" alt="Pulsecad" style="width:80px;height:80px;border-radius:50%;margin-bottom:20px;">
@@ -2516,7 +2412,8 @@
         </div>
     </div>
 
-    <!-- Support Ticket page and modals removed -->
+
+
     <section class="civilian-page" id="civilianPage">
         <div class="civilian-toolbar">
             <button class="toolbar-btn green" id="newCharacterBtn">
@@ -2883,6 +2780,101 @@
                     </thead>
                     <tbody id="bolosTableBody">
                         
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="dispatch-mdt" id="dispatchMdt">
+        <button class="dispatch-off-duty" id="dispatchOffDutyBtn">Go Off Duty</button>
+        <div class="dispatch-header">
+            <div class="identifier"><span>Identifier:</span> <span id="dispatchIdentifier">[1L-01] Dispatcher</span></div>
+            <div class="status"><span>Status:</span> <span id="dispatchStatus">10-8</span></div>
+        </div>
+
+        <div class="dispatch-actions">
+            <button class="dispatch-btn green" id="dispatch10-8">10-8 | In Service</button>
+            <button class="dispatch-btn orange" id="dispatch10-7">10-7 | Out of Service</button>
+            <button class="dispatch-btn cyan" id="dispatchSignal100">Activate Signal 100</button>
+            <button class="dispatch-btn red" id="dispatchDisablePanics">Disable All Panics</button>
+        </div>
+
+        <div class="dispatch-actions">
+            <button class="dispatch-btn cyan" id="dispatchChangeStatus">Change Unit Status</button>
+            <button class="dispatch-btn green" id="dispatchCreateBolo">Create Bolo</button>
+            <button class="dispatch-btn blue" id="dispatchCreateCall">Create Call</button>
+            <button class="dispatch-btn orange" id="dispatchAssignUnits">Assign Units to Call</button>
+        </div>
+
+        <div class="dispatch-actions">
+            <button class="dispatch-btn blue" id="dispatchPenalCode">Penal Code</button>
+            <button class="dispatch-btn green" id="dispatchLiveMap">Live Map</button>
+            <button class="dispatch-btn orange" id="dispatchNotepad">Notepad</button>
+        </div>
+
+        <div class="dispatch-panels">
+            <div class="dispatch-panel">
+                <h3>Active LEO Units</h3>
+                <table class="dispatch-table">
+                    <thead>
+                        <tr>
+                            <th>Unit Identifier</th>
+                            <th>Current Status</th>
+                            <th>Current Division</th>
+                            <th>Assigned Call #</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dispatchLeoUnits">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="dispatch-panel">
+                <h3>Active Calls</h3>
+                <table class="dispatch-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Type</th>
+                            <th>Location & Postal</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="dispatchActiveCalls">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="dispatch-panel">
+                <h3>Active EMS/FIRE Units</h3>
+                <table class="dispatch-table">
+                    <thead>
+                        <tr>
+                            <th>Unit Identifier</th>
+                            <th>Current Status</th>
+                            <th>Current Division</th>
+                            <th>Assigned Call #</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dispatchEmsUnits">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="dispatch-panel">
+                <h3>Active Bolos</h3>
+                <div class="no-bolos" id="dispatchNoBolos">Great :) No Current Bolo's</div>
+                <table class="dispatch-table" id="dispatchBolosTable" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Details</th>
+                            <th>Issued By</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="dispatchBolos">
                     </tbody>
                 </table>
             </div>
@@ -3303,16 +3295,20 @@
         function renderActiveUnits() {
             if (activeUnits.length === 0) {
                 activeUnitsTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
-                return;
+            } else {
+                activeUnitsTableBody.innerHTML = activeUnits.map(u => `
+                    <tr>
+                        <td><span style="padding:4px 8px;background:#3b82f6;border-radius:4px;font-size:11px;color:#fff;">${u.callsign}</span></td>
+                        <td>${u.name}</td>
+                        <td><span class="status-badge status-${u.status.replace(/\s+/g, '-').toLowerCase()}">${u.status}</span></td>
+                        <td>${u.subdivision || 'None'}</td>
+                    </tr>
+                `).join('');
             }
-            activeUnitsTableBody.innerHTML = activeUnits.map(u => `
-                <tr>
-                    <td><span style="padding:4px 8px;background:#3b82f6;border-radius:4px;font-size:11px;color:#fff;">${u.callsign}</span></td>
-                    <td>${u.name}</td>
-                    <td><span class="status-badge status-${u.status.replace(/\s+/g, '-').toLowerCase()}">${u.status}</span></td>
-                    <td>${u.subdivision || 'None'}</td>
-                </tr>
-            `).join('');
+            // Also update dispatch view if it exists
+            if (typeof renderDispatchUnits === 'function') {
+                renderDispatchUnits();
+            }
         }
 
         policeBtn.onclick = () => policeLoginModal.classList.add('active');
@@ -3375,6 +3371,88 @@
             
             policeMdt.classList.remove('active');
             communityScreen.classList.add('active');
+        };
+
+        // Dispatch MDT
+        const dispatchBtn = document.getElementById('dispatchBtn');
+        const dispatchLoginModal = document.getElementById('dispatchLoginModal');
+        const closeDispatchLogin = document.getElementById('closeDispatchLogin');
+        const dispatchLoginForm = document.getElementById('dispatchLoginForm');
+        const dispatchMdt = document.getElementById('dispatchMdt');
+        const dispatchOffDutyBtn = document.getElementById('dispatchOffDutyBtn');
+        const dispatchIdentifier = document.getElementById('dispatchIdentifier');
+        const dispatchStatusEl = document.getElementById('dispatchStatus');
+
+        let currentDispatcher = null;
+        let dispatchLeoUnits = [];
+        let dispatchEmsCalls = [];
+        let dispatchActiveCalls = [];
+
+        dispatchBtn.onclick = () => dispatchLoginModal.classList.add('active');
+        closeDispatchLogin.onclick = () => { dispatchLoginModal.classList.remove('active'); dispatchLoginForm.reset(); };
+        dispatchLoginModal.onclick = e => { if (e.target === dispatchLoginModal) { dispatchLoginModal.classList.remove('active'); dispatchLoginForm.reset(); } };
+
+        dispatchLoginForm.onsubmit = e => {
+            e.preventDefault();
+            const name = document.getElementById('dispatcherName').value.trim();
+            const callsign = document.getElementById('dispatcherCallsign').value.trim();
+            
+            currentDispatcher = {
+                id: Date.now(),
+                name: name,
+                callsign: callsign,
+                status: '10-8'
+            };
+            
+            dispatchIdentifier.textContent = `[${callsign}] ${name}`;
+            dispatchStatusEl.textContent = '10-8';
+            
+            dispatchLoginModal.classList.remove('active');
+            dispatchLoginForm.reset();
+            communityScreen.classList.remove('active');
+            dispatchMdt.classList.add('active');
+            
+            renderDispatchUnits();
+        };
+
+        dispatchOffDutyBtn.onclick = () => {
+            currentDispatcher = null;
+            dispatchMdt.classList.remove('active');
+            communityScreen.classList.add('active');
+        };
+
+        function renderDispatchUnits() {
+            const leoBody = document.getElementById('dispatchLeoUnits');
+            const emsBody = document.getElementById('dispatchEmsUnits');
+            const callsBody = document.getElementById('dispatchActiveCalls');
+            
+            if (!leoBody) return;
+            
+            if (activeUnits.length === 0) {
+                leoBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
+            } else {
+                leoBody.innerHTML = activeUnits.map(u => `
+                    <tr>
+                        <td style="font-weight:500;">[${u.callsign}] ${u.name}</td>
+                        <td>${u.status}</td>
+                        <td>${u.subdivision || 'None'}</td>
+                        <td>None</td>
+                    </tr>
+                `).join('');
+            }
+            
+            if (emsBody) emsBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
+            if (callsBody) callsBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active calls</td></tr>';
+        }
+
+        document.getElementById('dispatch10-8').onclick = () => {
+            dispatchStatusEl.textContent = '10-8';
+            if (currentDispatcher) currentDispatcher.status = '10-8';
+        };
+
+        document.getElementById('dispatch10-7').onclick = () => {
+            dispatchStatusEl.textContent = '10-7';
+            if (currentDispatcher) currentDispatcher.status = '10-7';
         };
 
         // Tones Context Menu
@@ -3801,139 +3879,6 @@
         };
 
 
-                // Roster logic
-                let rosterEntries = JSON.parse(localStorage.getItem('communityRoster') || '[]');
-
-                function renderRoster() {
-                    rosterList.innerHTML = '';
-                    if (rosterEntries.length === 0) {
-                        rosterList.innerHTML = '<div style="color:#a1a1aa;text-align:center;">No roster entries yet.</div>';
-                        return;
-                    }
-                    rosterEntries.forEach((entry, idx) => {
-                        const div = document.createElement('div');
-                        div.style = 'padding:8px 0;border-bottom:1px solid #23232b;display:flex;justify-content:space-between;align-items:center;';
-                        div.innerHTML = `<span><b>${entry.name}</b> - ${entry.role}</span><button style="background:#ef4444;color:#fff;border:none;border-radius:4px;padding:2px 8px;font-size:12px;cursor:pointer;" data-idx="${idx}">Remove</button>`;
-                        div.querySelector('button').onclick = function() {
-                            rosterEntries.splice(idx, 1);
-                            localStorage.setItem('communityRoster', JSON.stringify(rosterEntries));
-                            renderRoster();
-                        };
-                        rosterList.appendChild(div);
-                    });
-                }
-
-                addRosterBtn.onclick = () => {
-                    const name = rosterName.value.trim();
-                    const role = rosterRole.value.trim();
-                    if (!name || !role) return;
-                    rosterEntries.push({ name, role });
-                    localStorage.setItem('communityRoster', JSON.stringify(rosterEntries));
-                    renderRoster();
-                    rosterName.value = '';
-                    rosterRole.value = '';
-                };
-
-                // Render roster on page load
-                renderRoster();
-        const discordSettingsTabBtn = document.getElementById('discordSettingsTabBtn');
-        const charactersSettingsTabBtn = document.getElementById('charactersSettingsTabBtn');
-        const discordSettingsPanel = document.getElementById('discordSettingsPanel');
-        const charactersSettingsPanel = document.getElementById('charactersSettingsPanel');
-        const adminCharactersGrid = document.getElementById('adminCharactersGrid');
-        const accountsBtn = document.getElementById('accountsBtn');
-        const accountsModal = document.getElementById('accountsModal');
-        const closeAccountsModal = document.getElementById('closeAccountsModal');
-        const permissionsKeyBtn = document.getElementById('permissionsKeyBtn');
-        const permissionsKeyModal = document.getElementById('permissionsKeyModal');
-        const closePermissionsKeyModal = document.getElementById('closePermissionsKeyModal');
-
-
-        // Discord Settings
-        discordSettingsBtn.onclick = () => {
-            adminDropdownMenu.classList.remove('active');
-            discordSettingsModal.classList.add('active');
-            discordSettingsTabBtn.classList.add('active');
-            charactersSettingsTabBtn.classList.remove('active');
-            discordSettingsPanel.style.display = '';
-            charactersSettingsPanel.style.display = 'none';
-        };
-        closeDiscordSettings.onclick = () => discordSettingsModal.classList.remove('active');
-        discordSettingsModal.onclick = e => { if (e.target === discordSettingsModal) discordSettingsModal.classList.remove('active'); };
-
-        // Tab switching for Discord Settings modal
-        discordSettingsTabBtn.onclick = () => {
-            discordSettingsTabBtn.classList.add('active');
-            charactersSettingsTabBtn.classList.remove('active');
-            discordSettingsPanel.style.display = '';
-            charactersSettingsPanel.style.display = 'none';
-        };
-        charactersSettingsTabBtn.onclick = async () => {
-            discordSettingsTabBtn.classList.remove('active');
-            charactersSettingsTabBtn.classList.add('active');
-            discordSettingsPanel.style.display = 'none';
-            charactersSettingsPanel.style.display = '';
-            await loadAdminCharacters();
-        };
-
-        // Open Discord Settings modal directly to Characters tab
-        charactersAdminBtn.onclick = async () => {
-            adminDropdownMenu.classList.remove('active');
-            discordSettingsModal.classList.add('active');
-            discordSettingsTabBtn.classList.remove('active');
-            charactersSettingsTabBtn.classList.add('active');
-            discordSettingsPanel.style.display = 'none';
-            charactersSettingsPanel.style.display = '';
-            await loadAdminCharacters();
-        };
-
-        // Render all characters for admin
-        async function loadAdminCharacters() {
-            if (!currentCommunityId) return;
-            const { data, error } = await db
-                .from('characters')
-                .select('*')
-                .eq('community_id', currentCommunityId);
-            if (error) {
-                adminCharactersGrid.innerHTML = '<div class="no-characters">Error loading characters.</div>';
-                return;
-            }
-            if (!data || data.length === 0) {
-                adminCharactersGrid.innerHTML = '<div class="no-characters">No characters found in this community.</div>';
-                return;
-            }
-            adminCharactersGrid.innerHTML = data.map(c => `
-                <div class="character-card" data-id="${c.id}">
-                    <div class="name">${c.first_name} ${c.last_name}</div>
-                    <div class="info">
-                        <span><strong>DOB:</strong> ${c.date_of_birth}</span>
-                        <span><strong>Gender:</strong> ${c.gender}</span>
-                        <span><strong>Phone:</strong> ${c.phone || 'N/A'}</span>
-                        <span><strong>User ID:</strong> ${c.user_id}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Accounts Modal
-        accountsBtn.onclick = (e) => {
-            e.stopPropagation();
-            adminDropdownMenu.classList.remove('active');
-            accountsModal.classList.add('active');
-        };
-        closeAccountsModal.onclick = () => accountsModal.classList.remove('active');
-        accountsModal.onclick = e => { if (e.target === accountsModal) accountsModal.classList.remove('active'); };
-
-        // Permissions Key Modal
-        permissionsKeyBtn.onclick = (e) => {
-            e.stopPropagation();
-            adminDropdownMenu.classList.remove('active');
-            const key = localStorage.getItem('permissionsKey') || generatePermissionsKey();
-            document.getElementById('permissionsKeyDisplay').value = key;
-            permissionsKeyModal.classList.add('active');
-        };
-        closePermissionsKeyModal.onclick = () => permissionsKeyModal.classList.remove('active');
-        permissionsKeyModal.onclick = e => { if (e.target === permissionsKeyModal) permissionsKeyModal.classList.remove('active'); };
 
         function generatePermissionsKey() {
             const key = 'PK-' + Math.random().toString(36).substr(2, 16).toUpperCase();
@@ -3978,11 +3923,13 @@
                         standard: '#a855f7',
                         advanced: '#f59e0b'
                     };
+                    const owner = users?.find(u => u.id === c.owner_id);
+                    const ownerName = owner?.username || 'Unknown';
                     return `
                     <tr>
                         <td>${c.name}</td>
                         <td><span style="padding:4px 8px;background:#3b82f6;border-radius:4px;font-size:11px;color:#fff;">${c.code}</span></td>
-                        <td style="font-size:11px;color:#6b7280;">${c.owner_id ? c.owner_id.substring(0, 8) + '...' : 'N/A'}</td>
+                        <td style="font-size:11px;color:#a1a1aa;">${ownerName}</td>
                         <td>${c.website || 'N/A'}</td>
                         <td>
                             <select onchange="updateCommunityPlan('${c.id}', this.value)" style="padding:4px 8px;background:#1f2937;border:1px solid #374151;border-radius:4px;color:#fff;font-size:11px;cursor:pointer;">
@@ -4407,6 +4354,9 @@
                     }
                     const characterWebhook = document.getElementById('webhookCharacterCreated').value.trim();
                     const ticketWebhook = document.getElementById('webhookTicketCreated').value.trim();
+                    console.log('Saving webhooks for community:', currentCommunityId);
+                    console.log('Character webhook:', characterWebhook);
+                    console.log('Ticket webhook:', ticketWebhook);
                     try {
                         const { data, error } = await db
                             .from('community_webhooks')
@@ -4414,16 +4364,12 @@
                                 community_id: currentCommunityId,
                                 character_created_webhook: characterWebhook,
                                 ticket_created_webhook: ticketWebhook
-                            }, { onConflict: ['community_id'] });
+                            }, { onConflict: 'community_id' })
+                            .select();
+                        console.log('Upsert result:', { data, error });
                         if (error) {
                             console.error('Supabase upsert error:', error);
                             alert('Error saving webhooks: ' + error.message);
-                            webhooksModal.classList.remove('active');
-                            return;
-                        }
-                        if (!data) {
-                            console.error('Supabase upsert returned no data.');
-                            alert('Error: No data returned from Supabase.');
                             webhooksModal.classList.remove('active');
                             return;
                         }
@@ -4436,34 +4382,6 @@
                     }
                 };
         const adminBtn = document.getElementById('adminBtn');
-                const rosterModal = document.getElementById('rosterModal');
-                const closeRosterModal = document.getElementById('closeRosterModal');
-                // The following variables are already declared above, so do not redeclare:
-                // const addRosterBtn = document.getElementById('addRosterBtn');
-                // const rosterName = document.getElementById('rosterName');
-                // const rosterRole = document.getElementById('rosterRole');
-                // const rosterList = document.getElementById('rosterList');
-
-                // Roster Modal logic
-                // let rosterEntries = JSON.parse(localStorage.getItem('communityRoster') || '[]');
-                // function renderRoster() { ... } // Already declared above
-
-                adminBtn.onclick = () => {
-                    renderRoster();
-                    rosterModal.classList.add('active');
-                };
-                closeRosterModal.onclick = () => rosterModal.classList.remove('active');
-                rosterModal.onclick = e => { if (e.target === rosterModal) rosterModal.classList.remove('active'); };
-                addRosterBtn.onclick = () => {
-                    const name = rosterName.value.trim();
-                    const role = rosterRole.value.trim();
-                    if (!name || !role) return;
-                    rosterEntries.push({ name, role });
-                    localStorage.setItem('communityRoster', JSON.stringify(rosterEntries));
-                    renderRoster();
-                    rosterName.value = '';
-                    rosterRole.value = '';
-                };
         const adminPage = document.getElementById('adminPage');
         const backFromAdmin = document.getElementById('backFromAdmin');
         const openDiscordSettingsFromAdmin = document.getElementById('openDiscordSettingsFromAdmin');
@@ -4471,7 +4389,10 @@
         adminBtn.onclick = () => {
             communityScreen.classList.remove('active');
             adminPage.style.display = 'block';
+            loadAdminDepartments();
             loadWebhooks();
+            loadRosters();
+            loadRosterDepartments();
         };
 
         backFromAdmin.onclick = () => {
@@ -4480,8 +4401,440 @@
         };
         // Discord Settings button and logic removed as requested
 
-        // Departments System
+        // Roster System
+        const rosterTableBody = document.getElementById('rosterTableBody');
+        const rosterPublicLink = document.getElementById('rosterPublicLink');
+        const copyRosterLink = document.getElementById('copyRosterLink');
+        const addRosterEntry = document.getElementById('addRosterEntry');
+        const rosterDepartmentSelect = document.getElementById('rosterDepartment');
+        const currentRosterSelect = document.getElementById('currentRosterSelect');
+        const createRosterBtn = document.getElementById('createRosterBtn');
+        const deleteRosterBtn = document.getElementById('deleteRosterBtn');
+        const rosterEntryForm = document.getElementById('rosterEntryForm');
+        const rosterLinkSection = document.getElementById('rosterLinkSection');
 
+        let currentRosterId = null;
+        const rosterUpgradeRequired = document.getElementById('rosterUpgradeRequired');
+        const rosterContent = document.getElementById('rosterContent');
+
+        async function checkRosterPlanAccess() {
+            if (!currentCommunityId) return false;
+            
+            const { data: community } = await db
+                .from('communities')
+                .select('plan')
+                .eq('id', currentCommunityId)
+                .single();
+            
+            const plan = community?.plan || 'free';
+            const allowedPlans = ['starter', 'standard', 'advanced'];
+            
+            return allowedPlans.includes(plan);
+        }
+
+        async function loadRosters() {
+            if (!currentCommunityId || !currentRosterSelect) return;
+            
+            // Check if community has required plan
+            const hasAccess = await checkRosterPlanAccess();
+            
+            if (!hasAccess) {
+                if (rosterUpgradeRequired) rosterUpgradeRequired.style.display = 'block';
+                if (rosterContent) rosterContent.style.display = 'none';
+                return;
+            }
+            
+            if (rosterUpgradeRequired) rosterUpgradeRequired.style.display = 'none';
+            if (rosterContent) rosterContent.style.display = 'block';
+            
+            const { data: rosters, error } = await db
+                .from('rosters')
+                .select('*')
+                .eq('community_id', currentCommunityId)
+                .order('name', { ascending: true });
+
+            if (error) {
+                console.error('Error loading rosters:', error);
+                return;
+            }
+
+            currentRosterSelect.innerHTML = '<option value="">-- Select a Roster --</option>';
+            if (rosters && rosters.length > 0) {
+                currentRosterSelect.innerHTML += rosters.map(r => 
+                    `<option value="${r.id}">${r.name}</option>`
+                ).join('');
+            }
+            
+            // Reset form visibility
+            if (rosterEntryForm) rosterEntryForm.style.display = 'none';
+            if (rosterLinkSection) rosterLinkSection.style.display = 'none';
+            currentRosterId = null;
+        }
+
+        if (currentRosterSelect) {
+            currentRosterSelect.onchange = async () => {
+                currentRosterId = currentRosterSelect.value;
+                if (currentRosterId) {
+                    rosterEntryForm.style.display = 'block';
+                    rosterLinkSection.style.display = 'block';
+                    updateRosterLink();
+                    loadRosterEntries();
+                } else {
+                    rosterEntryForm.style.display = 'none';
+                    rosterLinkSection.style.display = 'none';
+                }
+            };
+        }
+
+        if (createRosterBtn) {
+            createRosterBtn.onclick = async () => {
+                const name = document.getElementById('newRosterName').value.trim();
+                if (!name) {
+                    alert('Please enter a roster name');
+                    return;
+                }
+
+                const { error } = await db
+                    .from('rosters')
+                    .insert([{ community_id: currentCommunityId, name: name }]);
+
+                if (error) {
+                    alert('Error creating roster: ' + error.message);
+                    return;
+                }
+
+                document.getElementById('newRosterName').value = '';
+                loadRosters();
+            };
+        }
+
+        if (deleteRosterBtn) {
+            deleteRosterBtn.onclick = async () => {
+                if (!currentRosterId) {
+                    alert('Please select a roster first');
+                    return;
+                }
+                if (!confirm('Are you sure you want to delete this roster and all its entries?')) return;
+
+                // Delete all entries first
+                await db.from('roster_entries').delete().eq('roster_id', currentRosterId);
+                // Then delete the roster
+                const { error } = await db.from('rosters').delete().eq('id', currentRosterId);
+
+                if (error) {
+                    alert('Error deleting roster: ' + error.message);
+                    return;
+                }
+
+                loadRosters();
+            };
+        }
+
+        async function loadRosterEntries() {
+            if (!currentRosterId || !rosterTableBody) return;
+            
+            const { data: entries, error } = await db
+                .from('roster_entries')
+                .select('*')
+                .eq('roster_id', currentRosterId)
+                .order('name', { ascending: true });
+
+            if (error) {
+                console.error('Error loading roster entries:', error);
+                rosterTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#ef4444;padding:20px;">Error loading roster</td></tr>';
+                return;
+            }
+
+            if (!entries || entries.length === 0) {
+                rosterTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#6b7280;padding:20px;">No roster entries yet</td></tr>';
+                return;
+            }
+
+            const statusColors = {
+                'Active': '#22c55e',
+                'LOA': '#f59e0b',
+                'Suspended': '#ef4444',
+                'Inactive': '#6b7280'
+            };
+
+            rosterTableBody.innerHTML = entries.map(e => `
+                <tr style="border-bottom:1px solid #1e222d;">
+                    <td style="padding:12px;color:#e4e4e7;font-size:13px;">${e.name}</td>
+                    <td style="padding:12px;color:#a1a1aa;font-size:13px;">${e.rank || 'N/A'}</td>
+                    <td style="padding:12px;color:#a1a1aa;font-size:13px;">${e.callsign || 'N/A'}</td>
+                    <td style="padding:12px;color:#a1a1aa;font-size:13px;">${e.badge || 'N/A'}</td>
+                    <td style="padding:12px;color:#a1a1aa;font-size:13px;">${e.department || 'N/A'}</td>
+                    <td style="padding:12px;"><span style="padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:${statusColors[e.status] || '#6b7280'}20;color:${statusColors[e.status] || '#6b7280'};">${e.status}</span></td>
+                    <td style="padding:12px;"><button onclick="deleteRosterEntry('${e.id}')" style="padding:6px 12px;background:#ef4444;border:none;border-radius:4px;color:#fff;font-size:11px;cursor:pointer;">Delete</button></td>
+                </tr>
+            `).join('');
+        }
+
+        async function loadRosterDepartments() {
+            if (!currentCommunityId || !rosterDepartmentSelect) return;
+            
+            const { data: depts } = await db
+                .from('departments')
+                .select('*')
+                .eq('community_id', currentCommunityId)
+                .order('code', { ascending: true });
+
+            if (depts && depts.length > 0) {
+                rosterDepartmentSelect.innerHTML = '<option value="">Department</option>' + 
+                    depts.map(d => `<option value="${d.code}">${d.code} - ${d.name}</option>`).join('');
+            }
+        }
+
+        async function updateRosterLink() {
+            if (!rosterPublicLink || !currentRosterId) return;
+            
+            const { data: roster } = await db.from('rosters').select('id').eq('id', currentRosterId).single();
+            const { data: community } = await db.from('communities').select('code').eq('id', currentCommunityId).single();
+            
+            if (roster && community) {
+                const baseUrl = window.location.origin + window.location.pathname;
+                rosterPublicLink.value = `${baseUrl}?roster=${community.code}&id=${currentRosterId}`;
+            }
+        }
+
+        if (copyRosterLink) {
+            copyRosterLink.onclick = () => {
+                rosterPublicLink.select();
+                document.execCommand('copy');
+                copyRosterLink.textContent = 'Copied!';
+                setTimeout(() => { copyRosterLink.textContent = 'Copy Link'; }, 2000);
+            };
+        }
+
+        if (addRosterEntry) {
+            addRosterEntry.onclick = async () => {
+                if (!currentRosterId) {
+                    alert('Please select a roster first');
+                    return;
+                }
+
+                const name = document.getElementById('rosterMemberName').value.trim();
+                const rank = document.getElementById('rosterRank').value.trim();
+                const callsign = document.getElementById('rosterCallsign').value.trim();
+                const badge = document.getElementById('rosterBadge').value.trim();
+                const department = document.getElementById('rosterDepartment').value;
+                const status = document.getElementById('rosterStatus').value;
+
+                if (!name) {
+                    alert('Please enter a name');
+                    return;
+                }
+
+                const { error } = await db
+                    .from('roster_entries')
+                    .insert([{
+                        roster_id: currentRosterId,
+                        name: name,
+                        rank: rank,
+                        callsign: callsign,
+                        badge: badge,
+                        department: department,
+                        status: status
+                    }]);
+
+                if (error) {
+                    alert('Error adding roster entry: ' + error.message);
+                    return;
+                }
+
+                document.getElementById('rosterMemberName').value = '';
+                document.getElementById('rosterRank').value = '';
+                document.getElementById('rosterCallsign').value = '';
+                document.getElementById('rosterBadge').value = '';
+                document.getElementById('rosterDepartment').value = '';
+                document.getElementById('rosterStatus').value = 'Active';
+                loadRosterEntries();
+            };
+        }
+
+        window.deleteRosterEntry = async function(id) {
+            if (!confirm('Are you sure you want to remove this roster entry?')) return;
+            
+            const { error } = await db.from('roster_entries').delete().eq('id', id);
+            if (error) {
+                alert('Error deleting entry: ' + error.message);
+                return;
+            }
+            loadRosterEntries();
+        };
+
+        // Public Roster Page
+        async function checkPublicRoster() {
+            const params = new URLSearchParams(window.location.search);
+            const rosterCode = params.get('roster');
+            const rosterId = params.get('id');
+            
+            if (rosterCode && rosterId) {
+                // Hide everything else, show roster page
+                document.querySelectorAll('header, .hero, .dashboard, .pricing-section, .team-section').forEach(el => {
+                    if (el) el.style.display = 'none';
+                });
+                document.getElementById('publicRosterPage').style.display = 'block';
+                
+                // Get roster info
+                const { data: roster, error: rosterError } = await db
+                    .from('rosters')
+                    .select('id, name, community_id')
+                    .eq('id', rosterId)
+                    .single();
+
+                if (rosterError || !roster) {
+                    document.getElementById('publicRosterCommunity').textContent = 'Roster not found';
+                    document.getElementById('publicRosterBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#ef4444;padding:40px;">Invalid roster link</td></tr>';
+                    return;
+                }
+
+                // Get community info
+                const { data: community } = await db
+                    .from('communities')
+                    .select('name')
+                    .eq('id', roster.community_id)
+                    .single();
+
+                document.getElementById('publicRosterTitle').textContent = roster.name;
+                document.getElementById('publicRosterCommunity').textContent = community ? community.name : 'Department Roster';
+
+                // Get roster entries
+                const { data: entries } = await db
+                    .from('roster_entries')
+                    .select('*')
+                    .eq('roster_id', rosterId)
+                    .order('name', { ascending: true });
+
+                if (!entries || entries.length === 0) {
+                    document.getElementById('publicRosterBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#6b7280;padding:40px;">No roster entries</td></tr>';
+                    return;
+                }
+
+                const statusColors = {
+                    'Active': '#22c55e',
+                    'LOA': '#f59e0b',
+                    'Suspended': '#ef4444',
+                    'Inactive': '#6b7280'
+                };
+
+                document.getElementById('publicRosterBody').innerHTML = entries.map(e => `
+                    <tr style="border-bottom:1px solid #1e222d;">
+                        <td style="padding:14px 16px;color:#e4e4e7;font-size:13px;">${e.name}</td>
+                        <td style="padding:14px 16px;color:#a1a1aa;font-size:13px;">${e.rank || 'N/A'}</td>
+                        <td style="padding:14px 16px;color:#a1a1aa;font-size:13px;">${e.callsign || 'N/A'}</td>
+                        <td style="padding:14px 16px;color:#a1a1aa;font-size:13px;">${e.badge || 'N/A'}</td>
+                        <td style="padding:14px 16px;color:#a1a1aa;font-size:13px;">${e.department || 'N/A'}</td>
+                        <td style="padding:14px 16px;"><span style="padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:${statusColors[e.status] || '#6b7280'}20;color:${statusColors[e.status] || '#6b7280'};">${e.status}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // Check for roster URL on page load
+        checkPublicRoster();
+
+        // Departments System
+        const officerDepartmentSelect = document.getElementById('officerDepartment');
+        const adminDepartmentsTable = document.getElementById('adminDepartmentsTable');
+        const adminAddDeptBtn = document.getElementById('adminAddDeptBtn');
+        const adminDeptCode = document.getElementById('adminDeptCode');
+        const adminDeptName = document.getElementById('adminDeptName');
+
+        async function loadDepartments() {
+            if (!officerDepartmentSelect) return;
+            
+            const { data: depts, error } = await db
+                .from('departments')
+                .select('*')
+                .order('code', { ascending: true });
+
+            if (error) {
+                console.error('Error loading departments:', error);
+                return;
+            }
+
+            if (!depts || depts.length === 0) {
+                officerDepartmentSelect.innerHTML = '<option value="">No departments available</option>';
+                return;
+            }
+
+            officerDepartmentSelect.innerHTML = depts.map(d => 
+                `<option value="${d.code}">${d.code} - ${d.name}</option>`
+            ).join('');
+        }
+
+        async function loadAdminDepartments() {
+            const { data: depts, error } = await db
+                .from('departments')
+                .select('*')
+                .order('code', { ascending: true });
+
+            if (error) {
+                console.error('Error loading departments:', error);
+                adminDepartmentsTable.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#6b7280;">Error loading</td></tr>';
+                return;
+            }
+
+            if (!depts || depts.length === 0) {
+                adminDepartmentsTable.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#6b7280;">No departments yet</td></tr>';
+                return;
+            }
+
+            adminDepartmentsTable.innerHTML = depts.map(d => `
+                <tr>
+                    <td>${d.code}</td>
+                    <td>${d.name}</td>
+                    <td>
+                        <button onclick="deleteDepartment('${d.id}')" style="padding:4px 10px;background:#ef4444;border:none;border-radius:4px;color:#fff;font-size:11px;cursor:pointer;">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        if (adminAddDeptBtn) {
+            adminAddDeptBtn.onclick = async () => {
+                const code = adminDeptCode.value.trim().toUpperCase();
+                const name = adminDeptName.value.trim();
+
+                if (!code || !name) {
+                    alert('Please enter both code and name');
+                    return;
+                }
+
+                const { error } = await db
+                    .from('departments')
+                    .insert([{ code, name }]);
+
+                if (error) {
+                    alert('Error adding department: ' + error.message);
+                    return;
+                }
+
+                adminDeptCode.value = '';
+                adminDeptName.value = '';
+                loadAdminDepartments();
+                loadDepartments();
+            };
+        }
+
+        window.deleteDepartment = async function(id) {
+            if (!confirm('Delete this department?')) return;
+            
+            const { error } = await db
+                .from('departments')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                alert('Error deleting department: ' + error.message);
+                return;
+            }
+            loadAdminDepartments();
+            loadDepartments();
+        };
+
+        loadDepartments();
 
         // Webhooks System
         const webhookCharacterCreated = document.getElementById('webhookCharacterCreated');
@@ -4568,6 +4921,7 @@
 
         // Send Discord webhook for ticket creation
         async function sendTicketWebhook(ticket) {
+            console.log('sendTicketWebhook called with:', ticket);
             if (!ticket || !ticket.community_id) {
                 console.log('sendTicketWebhook: No ticket or community_id', ticket);
                 return;
@@ -4577,13 +4931,14 @@
                 .from('community_webhooks')
                 .select('ticket_created_webhook')
                 .eq('community_id', ticket.community_id)
-                .single();
+                .maybeSingle();
+            console.log('Webhook lookup result:', { data, error });
             if (error) {
                 console.error('Error fetching ticket webhook:', error);
                 return;
             }
             if (!data || !data.ticket_created_webhook) {
-                console.log('sendTicketWebhook: No webhook URL configured');
+                console.log('sendTicketWebhook: No webhook URL configured for community:', ticket.community_id);
                 return;
             }
             console.log('Sending ticket webhook to:', data.ticket_created_webhook);
@@ -4616,384 +4971,6 @@
         }
 
         loadWebhooks();
-
-        // =====================
-        // SUPPORT TICKET SYSTEM
-        // =====================
-        const supportBtn = document.getElementById('supportBtn');
-        const supportTicketPage = document.getElementById('supportTicketPage');
-        const backFromSupport = document.getElementById('backFromSupport');
-        const supportTicketForm = document.getElementById('supportTicketForm');
-        const ticketFormCard = document.getElementById('ticketFormCard');
-        const ticketChatContainer = document.getElementById('ticketChatContainer');
-        const ticketChatMessages = document.getElementById('ticketChatMessages');
-        const ticketMessageInput = document.getElementById('ticketMessageInput');
-        const sendTicketMessage = document.getElementById('sendTicketMessage');
-        const myTicketsList = document.getElementById('myTicketsList');
-        const myTicketsContainer = document.getElementById('myTicketsContainer');
-        const activeTicketId = document.getElementById('activeTicketId');
-        const activeTicketSubject = document.getElementById('activeTicketSubject');
-        const activeTicketStatus = document.getElementById('activeTicketStatus');
-        const ticketChatInputArea = document.getElementById('ticketChatInputArea');
-        
-        const staffChatModal = document.getElementById('staffChatModal');
-        const closeStaffChat = document.getElementById('closeStaffChat');
-        const staffChatMessages = document.getElementById('staffChatMessages');
-        const staffMessageInput = document.getElementById('staffMessageInput');
-        const sendStaffMessage = document.getElementById('sendStaffMessage');
-        const staffActiveTicketId = document.getElementById('staffActiveTicketId');
-        const staffActiveTicketInfo = document.getElementById('staffActiveTicketInfo');
-        const staffSupportTickets = document.getElementById('staffSupportTickets');
-
-        let currentSupportTicketId = null;
-        let currentStaffTicketId = null;
-
-        supportBtn.onclick = () => {
-            heroSection.style.display = 'none';
-            pricingSection.classList.remove('active');
-            teamSection.classList.remove('active');
-            supportTicketPage.classList.add('active');
-            loadMyTickets();
-        };
-
-        backFromSupport.onclick = () => {
-            supportTicketPage.classList.remove('active');
-            ticketChatContainer.classList.remove('active');
-            ticketFormCard.style.display = 'block';
-            currentSupportTicketId = null;
-            heroSection.style.display = 'flex';
-        };
-
-        function generateTicketNumber() {
-            return 'TKT-' + Math.random().toString(36).substr(2, 8).toUpperCase();
-        }
-
-        supportTicketForm.onsubmit = async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('supportEmail').value.trim();
-            const username = document.getElementById('supportUsername').value.trim();
-            const reason = document.getElementById('supportReason').value.trim();
-            const ticketNumber = generateTicketNumber();
-
-            const { data: ticket, error } = await db
-                .from('support_tickets')
-                .insert([{
-                    ticket_number: ticketNumber,
-                    email: email,
-                    username: username,
-                    reason: reason,
-                    status: 'open',
-                    user_id: currentUser ? currentUser.id : null
-                }])
-                .select()
-                .single();
-
-            if (error) {
-                alert('Error creating ticket: ' + error.message);
-                return;
-            }
-
-            const { error: msgError } = await db
-                .from('support_messages')
-                .insert([{
-                    ticket_id: ticket.id,
-                    sender_type: 'user',
-                    sender_name: username,
-                    message: reason
-                }]);
-
-            if (msgError) {
-                console.error('Error adding initial message:', msgError);
-            }
-
-            supportTicketForm.reset();
-            currentSupportTicketId = ticket.id;
-            openTicketChat(ticket);
-            loadMyTickets();
-        };
-
-        function openTicketChat(ticket) {
-            ticketFormCard.style.display = 'none';
-            ticketChatContainer.classList.add('active');
-            currentSupportTicketId = ticket.id;
-            
-            activeTicketId.textContent = ticket.ticket_number;
-            activeTicketSubject.textContent = ticket.reason.substring(0, 50) + (ticket.reason.length > 50 ? '...' : '');
-            
-            activeTicketStatus.textContent = ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1);
-            activeTicketStatus.className = 'ticket-status ' + ticket.status;
-            
-            if (ticket.status === 'closed') {
-                ticketChatInputArea.style.display = 'none';
-            } else {
-                ticketChatInputArea.style.display = 'flex';
-            }
-            
-            loadTicketMessages(ticket.id, false);
-        }
-
-        async function loadTicketMessages(ticketId, isStaff = false) {
-            const container = isStaff ? staffChatMessages : ticketChatMessages;
-            
-            const { data: messages, error } = await db
-                .from('support_messages')
-                .select('*')
-                .eq('ticket_id', ticketId)
-                .order('created_at', { ascending: true });
-
-            if (error) {
-                console.error('Error loading messages:', error);
-                container.innerHTML = '<div style="text-align:center;color:#ef4444;padding:20px;">Error loading messages</div>';
-                return;
-            }
-
-            if (!messages || messages.length === 0) {
-                container.innerHTML = '<div style="text-align:center;color:#6b7280;padding:20px;">No messages yet</div>';
-                return;
-            }
-
-            container.innerHTML = messages.map(m => `
-                <div class="ticket-message ${m.sender_type}">
-                    <div class="sender">${m.sender_name}${m.sender_type === 'staff' ? ' (Staff)' : ''}</div>
-                    <div>${m.message}</div>
-                    <div class="time">${new Date(m.created_at).toLocaleString()}</div>
-                </div>
-            `).join('');
-
-            container.scrollTop = container.scrollHeight;
-        }
-
-        sendTicketMessage.onclick = async () => {
-            const message = ticketMessageInput.value.trim();
-            if (!message || !currentSupportTicketId) return;
-
-            const senderName = currentUser ? currentUser.display_name : 'User';
-
-            const { error } = await db
-                .from('support_messages')
-                .insert([{
-                    ticket_id: currentSupportTicketId,
-                    sender_type: 'user',
-                    sender_name: senderName,
-                    message: message
-                }]);
-
-            if (error) {
-                alert('Error sending message: ' + error.message);
-                return;
-            }
-
-            ticketMessageInput.value = '';
-            loadTicketMessages(currentSupportTicketId, false);
-        };
-
-        ticketMessageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendTicketMessage.onclick();
-        });
-
-        async function loadMyTickets() {
-            if (!currentUser) {
-                myTicketsContainer.innerHTML = '<div class="no-support-tickets">Login to see your tickets.</div>';
-                return;
-            }
-
-            const { data: tickets, error } = await db
-                .from('support_tickets')
-                .select('*')
-                .eq('user_id', currentUser.id)
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                console.error('Error loading tickets:', error);
-                myTicketsContainer.innerHTML = '<div class="no-support-tickets">Error loading tickets.</div>';
-                return;
-            }
-
-            if (!tickets || tickets.length === 0) {
-                myTicketsContainer.innerHTML = '<div class="no-support-tickets">No support tickets yet.</div>';
-                return;
-            }
-
-            myTicketsContainer.innerHTML = tickets.map(t => `
-                <div class="my-ticket-item" onclick="openExistingTicket('${t.id}')">
-                    <div class="my-ticket-info">
-                        <h4>${t.ticket_number}</h4>
-                        <p>${t.reason.substring(0, 60)}${t.reason.length > 60 ? '...' : ''}</p>
-                    </div>
-                    <span class="ticket-status ${t.status}">${t.status.charAt(0).toUpperCase() + t.status.slice(1)}</span>
-                </div>
-            `).join('');
-        }
-
-        window.openExistingTicket = async function(ticketId) {
-            const { data: ticket, error } = await db
-                .from('support_tickets')
-                .select('*')
-                .eq('id', ticketId)
-                .single();
-
-            if (error || !ticket) {
-                alert('Error loading ticket');
-                return;
-            }
-
-            openTicketChat(ticket);
-        };
-
-        // Staff Ticket Functions
-        async function loadStaffSupportTickets() {
-            const ticketsContainer = document.getElementById('staffSupportTickets');
-            if (!ticketsContainer) return;
-            
-            const { data: tickets, error } = await db
-                .from('support_tickets')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                console.error('Error loading support tickets:', error);
-                ticketsContainer.innerHTML = '<div class="no-support-tickets">Error loading tickets.</div>';
-                return;
-            }
-
-            if (!tickets || tickets.length === 0) {
-                ticketsContainer.innerHTML = '<div class="no-support-tickets">No support tickets.</div>';
-                return;
-            }
-
-            ticketsContainer.innerHTML = tickets.map(t => `
-                <div class="staff-ticket-card">
-                    <div class="ticket-header">
-                        <div class="ticket-info">
-                            <h4>${t.ticket_number}</h4>
-                            <p>From: ${t.username} (${t.email})</p>
-                            <p>Created: ${new Date(t.created_at).toLocaleString()}</p>
-                            ${t.claimed_by ? `<p style="color:#3b82f6;">Claimed by: ${t.claimed_by}</p>` : ''}
-                        </div>
-                        <span class="ticket-status ${t.status}">${t.status.charAt(0).toUpperCase() + t.status.slice(1)}</span>
-                    </div>
-                    <div class="ticket-reason">${t.reason}</div>
-                    <div class="ticket-actions">
-                        ${t.status === 'open' ? `<button class="btn-claim" onclick="claimTicket('${t.id}')">Claim</button>` : ''}
-                        ${t.status !== 'closed' ? `<button class="btn-close-ticket" onclick="closeTicket('${t.id}')">Close</button>` : ''}
-                        <!-- Respond/View Chat button removed -->
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        window.claimTicket = async function(ticketId) {
-            const claimedBy = currentUser ? currentUser.display_name : 'Staff';
-            
-            const { error } = await db
-                .from('support_tickets')
-                .update({ status: 'claimed', claimed_by: claimedBy })
-                .eq('id', ticketId);
-
-            if (error) {
-                alert('Error claiming ticket: ' + error.message);
-                return;
-            }
-
-            loadStaffSupportTickets();
-        };
-
-        window.closeTicket = async function(ticketId) {
-            if (!confirm('Are you sure you want to close this ticket?')) return;
-
-            const { error } = await db
-                .from('support_tickets')
-                .update({ status: 'closed' })
-                .eq('id', ticketId);
-
-            if (error) {
-                alert('Error closing ticket: ' + error.message);
-                return;
-            }
-
-            loadStaffSupportTickets();
-        };
-
-        window.openStaffChat = async function(ticketId) {
-            const { data: ticket, error } = await db
-                .from('support_tickets')
-                .select('*')
-                .eq('id', ticketId)
-                .single();
-
-            if (error || !ticket) {
-                alert('Error loading ticket');
-                return;
-            }
-
-            currentStaffTicketId = ticketId;
-            staffActiveTicketId.textContent = ticket.ticket_number;
-            staffActiveTicketInfo.textContent = `${ticket.username} - ${ticket.email}`;
-            
-            staffChatModal.classList.add('active');
-            loadTicketMessages(ticketId, true);
-
-            if (ticket.status === 'closed') {
-                document.querySelector('#staffChatModal .ticket-chat-input').style.display = 'none';
-            } else {
-                document.querySelector('#staffChatModal .ticket-chat-input').style.display = 'flex';
-            }
-        };
-
-        closeStaffChat.onclick = () => {
-            staffChatModal.classList.remove('active');
-            currentStaffTicketId = null;
-        };
-
-        staffChatModal.onclick = (e) => {
-            if (e.target === staffChatModal) {
-                staffChatModal.classList.remove('active');
-                currentStaffTicketId = null;
-            }
-        };
-
-        sendStaffMessage.onclick = async () => {
-            const message = staffMessageInput.value.trim();
-            if (!message || !currentStaffTicketId) return;
-
-            const senderName = currentUser ? currentUser.display_name : 'Staff';
-
-            const { error } = await db
-                .from('support_messages')
-                .insert([{
-                    ticket_id: currentStaffTicketId,
-                    sender_type: 'staff',
-                    sender_name: senderName,
-                    message: message
-                }]);
-
-            if (error) {
-                alert('Error sending message: ' + error.message);
-                return;
-            }
-
-            staffMessageInput.value = '';
-            loadTicketMessages(currentStaffTicketId, true);
-        };
-
-        staffMessageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendStaffMessage.onclick();
-        });
-
-        // Override staff dashboard load to include tickets
-        const originalLoadStaffDashboard = window.loadStaffDashboard || function(){};
-        window.loadStaffDashboard = function() {
-            originalLoadStaffDashboard();
-            loadStaffSupportTickets();
-        };
-
-        // Load staff tickets when entering staff dashboard
-        const backFromStaffOriginal = document.getElementById('backFromStaff').onclick;
-        document.getElementById('backFromStaff').onclick = function() {
-            if (backFromStaffOriginal) backFromStaffOriginal();
-            staffDashboard.style.display = 'none';
-            dashboardSection.classList.remove('hidden');
-        };
 
         // =====================
         // STAFF ACCESS MANAGEMENT
@@ -5052,29 +5029,5 @@
             createSnowflakes();
         }
     </script>
-    <!-- Snowflake Effect Script -->
-    <script>
-        function createSnowflakes() {
-            const snowflakesContainer = document.getElementById('snowflakes');
-            if (!snowflakesContainer) return;
-            const snowflakeChars = ['❄', '❅', '❆', '•'];
-            for (let i = 0; i < 150; i++) {
-                const snowflake = document.createElement('div');
-                snowflake.className = 'snowflake';
-                snowflake.innerHTML = snowflakeChars[Math.floor(Math.random() * snowflakeChars.length)];
-                snowflake.style.left = Math.random() * 100 + '%';
-                snowflake.style.fontSize = (Math.random() * 10 + 8) + 'px';
-                snowflake.style.opacity = Math.random() * 0.6 + 0.4;
-                snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's';
-                snowflake.style.animationDelay = (Math.random() * 10) + 's';
-                snowflakesContainer.appendChild(snowflake);
-            }
-        }
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', createSnowflakes);
-        } else {
-            createSnowflakes();
-        }
-    </script>
-    </body>
+</body>
 </html>
