@@ -3481,6 +3481,29 @@
         </div>
     </section>
 
+    <!-- Assign Units to Call Modal -->
+    <div class="overlay" id="assignUnitsModal">
+        <div class="modal modal-sm">
+            <button class="modal-close" id="closeAssignUnits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            <h2>Assign Units to Call</h2>
+            <p class="sub">Select a call and units to assign</p>
+            <div class="field">
+                <label>Select Call</label>
+                <select id="assignCallSelect" style="width:100%;padding:11px 13px;background:#0c0e12;border:1px solid #27272a;border-radius:8px;color:#fafafa;font-size:13px;font-family:inherit;">
+                    <option value="">-- Select a Call --</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Select Units</label>
+                <div id="assignUnitsCheckboxes" style="max-height:200px;overflow-y:auto;background:#0c0e12;border:1px solid #27272a;border-radius:8px;padding:10px;"></div>
+            </div>
+            <div class="modal-btns">
+                <button type="button" class="btn-cancel" id="cancelAssignUnits">Cancel</button>
+                <button type="button" class="btn-confirm" id="confirmAssignUnits">Assign</button>
+            </div>
+        </div>
+    </div>
+
     <section class="dispatch-mdt" id="dispatchMdt">
         <button class="dispatch-off-duty" id="dispatchOffDutyBtn">Go Off Duty</button>
         <div class="dispatch-header">
@@ -4176,6 +4199,8 @@
             communityScreen.classList.add('active');
         };
 
+        let dispatchCallCounter = 1;
+
         function renderDispatchUnits() {
             const leoBody = document.getElementById('dispatchLeoUnits');
             const emsBody = document.getElementById('dispatchEmsUnits');
@@ -4186,18 +4211,41 @@
             if (activeUnits.length === 0) {
                 leoBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
             } else {
-                leoBody.innerHTML = activeUnits.map(u => `
+                leoBody.innerHTML = activeUnits.map(u => {
+                    const assignedCall = dispatchActiveCalls.find(c => c.assignedUnits && c.assignedUnits.includes(u.callsign));
+                    return `
                     <tr>
                         <td style="font-weight:500;">[${u.callsign}] ${u.name}</td>
                         <td>${u.status}</td>
                         <td>${u.subdivision || 'None'}</td>
-                        <td>None</td>
+                        <td>${assignedCall ? '#' + assignedCall.number : 'None'}</td>
                     </tr>
-                `).join('');
+                `;}).join('');
             }
             
             if (emsBody) emsBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
-            if (callsBody) callsBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active calls</td></tr>';
+            
+            if (callsBody) {
+                if (dispatchActiveCalls.length === 0) {
+                    callsBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active calls</td></tr>';
+                } else {
+                    callsBody.innerHTML = dispatchActiveCalls.map(c => `
+                        <tr>
+                            <td>${c.number}</td>
+                            <td>${c.type}</td>
+                            <td>${c.location} (${c.postal})</td>
+                            <td>
+                                <button class="btn-delete" style="background:#ef4444;border:none;color:#fff;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;" onclick="deleteDispatchCall(${c.id})">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            }
+        }
+
+        function deleteDispatchCall(callId) {
+            dispatchActiveCalls = dispatchActiveCalls.filter(c => c.id !== callId);
+            renderDispatchUnits();
         }
 
         document.getElementById('dispatch10-8').onclick = () => {
@@ -4297,6 +4345,7 @@
 
         createCallBtn.onclick = () => {
             callNumberInput.value = generateCallNumber();
+            createCallModal._fromDispatch = false;
             createCallModal.classList.add('active');
         };
 
@@ -4304,38 +4353,108 @@
         cancelCreateCall.onclick = () => { createCallModal.classList.remove('active'); createCallForm.reset(); };
         createCallModal.onclick = e => { if (e.target === createCallModal) { createCallModal.classList.remove('active'); createCallForm.reset(); } };
 
+        // Dispatch Create Call
+        document.getElementById('dispatchCreateCall').onclick = () => {
+            callNumberInput.value = generateCallNumber();
+            createCallModal.classList.add('active');
+            createCallModal._fromDispatch = true;
+        };
+
+        // Handle call form submit for both police & dispatch
         createCallForm.onsubmit = e => {
             e.preventDefault();
-            const callNum = callNumberInput.value;
             const type = document.getElementById('callType').value.trim();
             const location = document.getElementById('callLocation').value.trim();
             const postal = document.getElementById('callPostal').value.trim();
 
-            const existingEmpty = callsTableBody.querySelector('td');
-            if (existingEmpty && existingEmpty.textContent === '1') {
-                callsTableBody.innerHTML = '';
+            if (createCallModal._fromDispatch) {
+                const newCall = {
+                    id: Date.now(),
+                    number: callCounter,
+                    type: type,
+                    location: location,
+                    postal: postal,
+                    assignedUnits: []
+                };
+                dispatchActiveCalls.push(newCall);
+                callCounter++;
+                renderDispatchUnits();
+                createCallModal._fromDispatch = false;
+            } else {
+                const existingEmpty = callsTableBody.querySelector('td');
+                if (existingEmpty && existingEmpty.textContent === '1') {
+                    callsTableBody.innerHTML = '';
+                }
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${callCounter}</td>
+                    <td>${type}</td>
+                    <td>${location}</td>
+                    <td>${postal}</td>
+                    <td>
+                        <button class="btn-details">View Details</button>
+                        <button class="btn-delete" style="margin-left:8px;background:#ef4444;border:none;color:#fff;padding:6px 14px;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;">Delete</button>
+                    </td>
+                `;
+                row.querySelector('.btn-delete').onclick = function() { row.remove(); };
+                callsTableBody.appendChild(row);
+                callCounter++;
             }
-
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${callCounter}</td>
-                <td>${type}</td>
-                <td>${location}</td>
-                <td>${postal}</td>
-                <td>
-                    <button class="btn-details">View Details</button>
-                    <button class="btn-delete" style="margin-left:8px;background:#ef4444;border:none;color:#fff;padding:6px 14px;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;">Delete</button>
-                </td>
-            `;
-            // Add delete functionality
-            row.querySelector('.btn-delete').onclick = function() {
-                row.remove();
-            };
-            callsTableBody.appendChild(row);
-            callCounter++;
-
             createCallModal.classList.remove('active');
             createCallForm.reset();
+        };
+
+        // Assign Units to Call
+        const assignUnitsModal = document.getElementById('assignUnitsModal');
+        const assignCallSelect = document.getElementById('assignCallSelect');
+        const assignUnitsCheckboxes = document.getElementById('assignUnitsCheckboxes');
+
+        document.getElementById('dispatchAssignUnits').onclick = () => {
+            assignCallSelect.innerHTML = '<option value="">-- Select a Call --</option>';
+            dispatchActiveCalls.forEach(c => {
+                assignCallSelect.innerHTML += `<option value="${c.id}">#${c.number} - ${c.type} (${c.location})</option>`;
+            });
+            if (activeUnits.length === 0) {
+                assignUnitsCheckboxes.innerHTML = '<div style="color:#6b7280;font-size:13px;">No active units</div>';
+            } else {
+                assignUnitsCheckboxes.innerHTML = activeUnits.map(u => `
+                    <label style="display:flex;align-items:center;gap:8px;padding:6px 0;color:#e4e4e7;font-size:13px;cursor:pointer;">
+                        <input type="checkbox" value="${u.callsign}" style="accent-color:#3b82f6;">
+                        [${u.callsign}] ${u.name}
+                    </label>
+                `).join('');
+            }
+            assignUnitsModal.classList.add('active');
+        };
+
+        document.getElementById('closeAssignUnits').onclick = () => assignUnitsModal.classList.remove('active');
+        document.getElementById('cancelAssignUnits').onclick = () => assignUnitsModal.classList.remove('active');
+        assignUnitsModal.onclick = e => { if (e.target === assignUnitsModal) assignUnitsModal.classList.remove('active'); };
+
+        document.getElementById('confirmAssignUnits').onclick = () => {
+            const selectedCallId = parseInt(assignCallSelect.value);
+            if (!selectedCallId) { alert('Please select a call.'); return; }
+            const selectedUnits = [...assignUnitsCheckboxes.querySelectorAll('input[type="checkbox"]:checked')].map(cb => cb.value);
+            if (selectedUnits.length === 0) { alert('Please select at least one unit.'); return; }
+
+            const call = dispatchActiveCalls.find(c => c.id === selectedCallId);
+            if (!call) return;
+
+            call.assignedUnits = [...new Set([...(call.assignedUnits || []), ...selectedUnits])];
+            renderDispatchUnits();
+            assignUnitsModal.classList.remove('active');
+
+            // Text-to-speech announcement
+            if ('speechSynthesis' in window) {
+                const unitNames = selectedUnits.join(', ');
+                const text = `New assignment. ${unitNames}, respond to a ${call.type} at ${call.location}, postal ${call.postal}.`;
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.95;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.speak(utterance);
+            }
         };
 
         const lookupBtn = document.getElementById('lookupBtn');
