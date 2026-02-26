@@ -4191,10 +4191,16 @@
             dispatchMdt.classList.add('active');
             
             renderDispatchUnits();
+            // Auto-refresh dispatch units every 2 seconds to pick up new police units
+            if (dispatchRefreshInterval) clearInterval(dispatchRefreshInterval);
+            dispatchRefreshInterval = setInterval(renderDispatchUnits, 2000);
         };
+
+        let dispatchRefreshInterval = null;
 
         dispatchOffDutyBtn.onclick = () => {
             currentDispatcher = null;
+            if (dispatchRefreshInterval) { clearInterval(dispatchRefreshInterval); dispatchRefreshInterval = null; }
             dispatchMdt.classList.remove('active');
             communityScreen.classList.add('active');
         };
