@@ -4070,7 +4070,45 @@
         let activeUnits = [];
         const activeUnitsTableBody = document.getElementById('activeUnitsTableBody');
 
-        function renderActiveUnits() {
+        // Save officer to Supabase active_units table
+        async function saveActiveUnit(officer) {
+            if (!currentCommunityId) return;
+            await db.from('active_units').upsert({
+                id: String(officer.id),
+                community_id: currentCommunityId,
+                name: officer.name,
+                callsign: officer.callsign,
+                rank: officer.rank || '',
+                status: officer.status,
+                subdivision: officer.subdivision || 'None',
+                user_id: currentUser?.id || null
+            });
+        }
+
+        // Remove officer from Supabase active_units table
+        async function removeActiveUnit(officerId) {
+            if (!currentCommunityId) return;
+            await db.from('active_units').delete().eq('id', String(officerId));
+        }
+
+        // Update officer status in Supabase
+        async function updateActiveUnitStatus(officerId, status) {
+            await db.from('active_units').update({ status: status }).eq('id', String(officerId));
+        }
+
+        // Fetch active units from Supabase for the current community
+        async function fetchActiveUnits() {
+            if (!currentCommunityId) return [];
+            const { data } = await db.from('active_units').select('*').eq('community_id', currentCommunityId);
+            return data || [];
+        }
+
+        async function renderActiveUnits() {
+            // Fetch from Supabase so all sessions see all units
+            const dbUnits = await fetchActiveUnits();
+            // Merge: keep local unit in sync, but show all from DB
+            activeUnits = dbUnits;
+
             if (activeUnits.length === 0) {
                 activeUnitsTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
             } else {
@@ -4097,7 +4135,7 @@
 
         let currentOfficer = null;
 
-        policeLoginForm.onsubmit = e => {
+        policeLoginForm.onsubmit = async e => {
             e.preventDefault();
             const name = document.getElementById('officerName').value.trim();
             const callsign = document.getElementById('officerCallsign').value.trim();
@@ -4114,8 +4152,8 @@
                 subdivision: 'None'
             };
             
-            activeUnits.push(currentOfficer);
-            renderActiveUnits();
+            await saveActiveUnit(currentOfficer);
+            await renderActiveUnits();
             
             policeLoginModal.classList.remove('active');
             policeLoginForm.reset();
@@ -4135,15 +4173,15 @@
             dutyTimer.textContent = `${hours}:${minutes}:${seconds}`;
         }
 
-        offDutyBtn.onclick = () => {
+        offDutyBtn.onclick = async () => {
             clearInterval(timerInterval);
             timerInterval = null;
             dutyStartTime = null;
             dutyTimer.textContent = '00:00:00';
             
             if (currentOfficer) {
-                activeUnits = activeUnits.filter(u => u.id !== currentOfficer.id);
-                renderActiveUnits();
+                await removeActiveUnit(currentOfficer.id);
+                await renderActiveUnits();
                 currentOfficer = null;
             }
             
@@ -4207,12 +4245,16 @@
 
         let dispatchCallCounter = 1;
 
-        function renderDispatchUnits() {
+        async function renderDispatchUnits() {
             const leoBody = document.getElementById('dispatchLeoUnits');
             const emsBody = document.getElementById('dispatchEmsUnits');
             const callsBody = document.getElementById('dispatchActiveCalls');
             
             if (!leoBody) return;
+
+            // Always fetch latest units from Supabase
+            const dbUnits = await fetchActiveUnits();
+            activeUnits = dbUnits;
             
             if (activeUnits.length === 0) {
                 leoBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
@@ -4311,6 +4353,7 @@
                 
                 if (currentOfficer) {
                     currentOfficer.status = status;
+                    updateActiveUnitStatus(currentOfficer.id, status);
                     renderActiveUnits();
                 }
             };
