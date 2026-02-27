@@ -2118,17 +2118,19 @@
     <!-- Tones Context Menu -->
     <div class="tones-context-menu" id="tonesContextMenu">
         <div class="menu-title">Tones</div>
-        <div class="tone-item tone-1" data-tone="1">
-            <span class="tone-icon"></span>
-            <span>Tone 1 - Priority</span>
-        </div>
-        <div class="tone-item tone-2" data-tone="2">
-            <span class="tone-icon"></span>
-            <span>Tone 2 - Alert</span>
-        </div>
-        <div class="tone-item tone-3" data-tone="3">
-            <span class="tone-icon"></span>
-            <span>Tone 3 - Routine</span>
+        <div id="tonesMenuContainer">
+            <div class="tone-item tone-1" data-tone="1">
+                <span class="tone-icon"></span>
+                <span>Tone 1 - Priority</span>
+            </div>
+            <div class="tone-item tone-2" data-tone="2">
+                <span class="tone-icon"></span>
+                <span>Tone 2 - Alert</span>
+            </div>
+            <div class="tone-item tone-3" data-tone="3">
+                <span class="tone-icon"></span>
+                <span>Tone 3 - Routine</span>
+            </div>
         </div>
     </div>
 
@@ -2146,6 +2148,7 @@
         <button class="nav-btn" id="openLogin">Login</button>
         <div class="nav-user">
             <span id="navUsername"></span>
+            <button class="nav-logout" id="staffDashboardBtn">Staff Dashboard</button>
             <button class="nav-logout" id="logoutBtn">Log out</button>
         </div>
     </header>
@@ -2340,29 +2343,10 @@
             
             <div class="hub-card">
                 <div class="hub-actions">
-                    <button class="hub-btn" id="hubOpenMDT">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                        Open MDT
-                    </button>
-                    <button class="hub-btn" id="hubRedeemKey">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-                        Redeem Key
-                    </button>
                     <button class="hub-btn" id="hubJoinCommunity">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                         Join Community
                     </button>
-                    <button class="hub-btn" id="staffDashboardBtn" style="background:#a855f7;border:none;color:#fff;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                        Staff Dashboard
-                    </button>
-                    <div class="hub-credits-badge">
-                        <span class="credit-dot"></span>
-                        <span id="hubCreditsDisplay">0 credits</span>
-                    </div>
-                </div>
-                <div class="hub-progress-bar" style="margin-top:12px;background:#1e222d;border-radius:6px;height:6px;overflow:hidden;">
-                    <div id="hubProgressFill" style="width:0%;height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);border-radius:6px;transition:width .3s;"></div>
                 </div>
             </div>
             
@@ -2646,12 +2630,6 @@
                 
                 <!-- Roster Content (hidden if no plan) -->
                 <div id="rosterContent">
-                    <div class="mdt-panel" id="mdtCommunitiesPanel" style="margin-bottom:24px;">
-                        <h3>Your Communities</h3>
-                        <div class="list" id="communityList">
-                            <div class="empty">No communities yet</div>
-                        </div>
-                    </div>
                 <!-- Create New Roster -->
                 <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;">
                     <input type="text" id="newRosterName" placeholder="New roster name (e.g., Police, Fire, EMS)" style="flex:1;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#fff;font-size:13px;">
@@ -2713,20 +2691,46 @@
                 </div>
             </div>
             <div class="mdt-panel" style="margin-top:24px;">
-                <h3>Departments</h3>
-                <table id="adminDepartmentsTable" style="width:100%;margin-top:10px;border-collapse:collapse;background:#14171f;border-radius:8px;">
-                    <thead>
-                        <tr>
-                            <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">Code</th>
-                            <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">Name</th>
-                            <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Departments will be rendered here by JS -->
-                    </tbody>
-                </table>
-            </div>
+                <h3>Tones</h3>
+                <p style="color:#6b7280;font-size:13px;margin-bottom:16px;">Upload custom tones for your police units</p>
+                <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+                    <input type="text" id="toneName" placeholder="Tone name (e.g. Priority, Alert)" style="flex:1;min-width:150px;padding:10px 14px;background:#0c0e12;border:1px solid #27272a;border-radius:8px;color:#fafafa;font-size:13px;">
+                    <input type="file" id="toneFile" accept="audio/*" style="flex:1;min-width:150px;padding:10px 14px;background:#0c0e12;border:1px solid #27272a;border-radius:8px;color:#fafafa;font-size:13px;">
+                    <input type="number" id="toneMaxUses" placeholder="Max uses (∞)" min="1" style="width:120px;padding:10px 14px;background:#0c0e12;border:1px solid #27272a;border-radius:8px;color:#fafafa;font-size:13px;">
+                    <button id="uploadToneBtn" style="padding:10px 20px;background:#22c55e;border:none;border-radius:6px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;">Upload Tone</button>
+                </div>
+                 <div id="tonesTableContainer">
+                     <table id="adminTonesTable" style="width:100%;border-collapse:collapse;background:#14171f;border-radius:8px;">
+                         <thead>
+                             <tr>
+                                 <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">Name</th>
+                                 <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">File Size</th>
+                                 <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">Times Played</th>
+                                 <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">Max Uses</th>
+                                 <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">Actions</th>
+                             </tr>
+                         </thead>
+                         <tbody id="adminTonesTableBody">
+                             <tr><td colspan="3" style="text-align:center;color:#6b7280;padding:20px;">No tones uploaded yet</td></tr>
+                         </tbody>
+                     </table>
+                 </div>
+             </div>
+             <div class="mdt-panel" style="margin-top:24px;">
+                 <h3>Departments</h3>
+                 <table id="adminDepartmentsTable" style="width:100%;margin-top:10px;border-collapse:collapse;background:#14171f;border-radius:8px;">
+                     <thead>
+                         <tr>
+                             <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">Code</th>
+                             <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">Name</th>
+                             <th style="color:#a1a1aa;padding:8px 12px;text-align:left;">Actions</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         <!-- Departments will be rendered here by JS -->
+                     </tbody>
+                 </table>
+             </div>
             <div class="mdt-panel" style="margin-top:24px;">
                 <!-- Discord Settings section removed as requested -->
             </div>
@@ -4317,9 +4321,199 @@
             if (currentDispatcher) currentDispatcher.status = '10-7';
         };
 
-        // Tones Context Menu
-        const tonesContextMenu = document.getElementById('tonesContextMenu');
+        // Tones System
+         const tonesContextMenu = document.getElementById('tonesContextMenu');
+         const tonesMenuContainer = document.getElementById('tonesMenuContainer');
+         const uploadToneBtn = document.getElementById('uploadToneBtn');
+         const toneName = document.getElementById('toneName');
+         const toneFile = document.getElementById('toneFile');
+         const toneMaxUses = document.getElementById('toneMaxUses');
+         const adminTonesTableBody = document.getElementById('adminTonesTableBody');
+         
+         // Upload Tone Handler
+         uploadToneBtn.onclick = async () => {
+             const name = toneName.value.trim();
+             const file = toneFile.files[0];
+             const maxUses = toneMaxUses.value ? parseInt(toneMaxUses.value) : null;
+             
+             if (!name || !file) {
+                 alert('Please enter a tone name and select a file');
+                 return;
+             }
+             
+             if (!currentCommunityId) {
+                 alert('Please enter a community first');
+                 return;
+             }
+             
+             // Read file as base64
+             const reader = new FileReader();
+             reader.onload = async (e) => {
+                 const audioData = e.target.result;
+                 const fileSize = file.size ? BigInt(file.size).toString() : '0';
+                 
+                 const { data, error } = await db
+                     .from('tones')
+                     .insert([{
+                         community_id: currentCommunityId,
+                         name: name,
+                         audio_data: audioData,
+                         file_name: file.name,
+                         file_size: parseInt(fileSize),
+                         max_uses: maxUses || null,
+                         times_played: 0
+                     }])
+                     .select();
+                 
+                 if (error) {
+                     alert('Error uploading tone: ' + error.message);
+                     return;
+                 }
+                 
+                 alert('Tone uploaded successfully!');
+                 toneName.value = '';
+                 toneFile.value = '';
+                 toneMaxUses.value = '';
+                 loadAdminTones();
+             };
+             reader.readAsDataURL(file);
+         };
         
+        // Load Tones for Admin Panel
+        async function loadAdminTones() {
+            if (!currentCommunityId) return;
+            
+            const { data: tones, error } = await db
+                .from('tones')
+                .select('*')
+                .eq('community_id', currentCommunityId)
+                .order('name', { ascending: true });
+            
+            if (error) {
+                console.error('Error loading tones:', error);
+                adminTonesTableBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#ef4444;padding:20px;">Error loading tones</td></tr>';
+                return;
+            }
+            
+            if (!tones || tones.length === 0) {
+                adminTonesTableBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#6b7280;padding:20px;">No tones uploaded yet</td></tr>';
+                return;
+            }
+            
+            adminTonesTableBody.innerHTML = tones.map(t => `
+                <tr style="border-bottom:1px solid #1e222d;">
+                    <td style="padding:12px;color:#e4e4e7;font-size:13px;">${t.name}</td>
+                    <td style="padding:12px;color:#a1a1aa;font-size:13px;">${(t.file_size / 1024).toFixed(2)} KB</td>
+                    <td style="padding:12px;color:#a1a1aa;font-size:13px;">${t.times_played || 0}</td>
+                    <td style="padding:12px;color:#a1a1aa;font-size:13px;">${t.max_uses ? t.max_uses : '∞'}</td>
+                    <td style="padding:12px;">
+                        <button onclick="playTonePreview('${t.id}')" style="padding:6px 12px;background:#3b82f6;border:none;border-radius:4px;color:#fff;font-size:11px;cursor:pointer;margin-right:6px;">Play</button>
+                        <button onclick="deleteTone('${t.id}')" style="padding:6px 12px;background:#ef4444;border:none;border-radius:4px;color:#fff;font-size:11px;cursor:pointer;">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Also load tones for police panel menu
+            await loadTonesForPoliceMenu();
+        }
+        
+        // Load Tones for Police Menu
+        async function loadTonesForPoliceMenu() {
+            if (!currentCommunityId) return;
+            
+            const { data: tones, error } = await db
+                .from('tones')
+                .select('*')
+                .eq('community_id', currentCommunityId)
+                .order('name', { ascending: true });
+            
+            if (error) {
+                console.error('Error loading tones for menu:', error);
+                return;
+            }
+            
+            if (!tones || tones.length === 0) {
+                tonesMenuContainer.innerHTML = '<div style="color:#6b7280;font-size:13px;padding:8px;">No tones available</div>';
+                return;
+            }
+            
+            tonesMenuContainer.innerHTML = tones.map((t, idx) => `
+                <div class="tone-item" data-tone="${t.id}" data-audio="${t.audio_data}" data-name="${t.name}">
+                    <span class="tone-icon"></span>
+                    <span>${t.name}</span>
+                </div>
+            `).join('');
+            
+            // Re-attach click handlers
+            document.querySelectorAll('.tone-item').forEach(item => {
+                item.onclick = () => {
+                    const toneName = item.dataset.name;
+                    const audioData = item.dataset.audio;
+                    
+                    if (audioData) {
+                        const audio = new Audio(audioData);
+                        audio.play();
+                        alert(`Playing: ${toneName}`);
+                    }
+                    tonesContextMenu.classList.remove('active');
+                };
+            });
+        }
+        
+        // Play Tone Preview (Admin Panel)
+         window.playTonePreview = async (toneId) => {
+             const { data: tone, error } = await db
+                 .from('tones')
+                 .select('audio_data, name, times_played, max_uses')
+                 .eq('id', toneId)
+                 .single();
+             
+             if (error || !tone) {
+                 alert('Error loading tone');
+                 return;
+             }
+             
+             // Check if max uses reached
+             const timesPlayed = tone.times_played || 0;
+             const maxUses = tone.max_uses;
+             
+             if (maxUses && timesPlayed >= maxUses) {
+                 alert(`This tone has reached its maximum plays (${maxUses})`);
+                 return;
+             }
+             
+             // Increment times_played
+             const newTimesPlayed = timesPlayed + 1;
+             await db
+                 .from('tones')
+                 .update({ times_played: newTimesPlayed })
+                 .eq('id', toneId);
+             
+             const audio = new Audio(tone.audio_data);
+             audio.play();
+             
+             // Refresh table
+             loadAdminTones();
+         };
+        
+        // Delete Tone
+        window.deleteTone = async (toneId) => {
+            if (!confirm('Delete this tone?')) return;
+            
+            const { error } = await db
+                .from('tones')
+                .delete()
+                .eq('id', toneId);
+            
+            if (error) {
+                alert('Error deleting tone: ' + error.message);
+                return;
+            }
+            
+            loadAdminTones();
+        };
+        
+        // Tones Context Menu
         policeMdt.addEventListener('contextmenu', (e) => {
             e.preventDefault();
             tonesContextMenu.style.left = e.clientX + 'px';
@@ -4329,15 +4523,6 @@
 
         document.addEventListener('click', () => {
             tonesContextMenu.classList.remove('active');
-        });
-
-        document.querySelectorAll('.tone-item').forEach(item => {
-            item.onclick = () => {
-                const tone = item.dataset.tone;
-                const toneNames = { '1': 'Priority', '2': 'Alert', '3': 'Routine' };
-                alert(`Tone ${tone} - ${toneNames[tone]} activated!`);
-                tonesContextMenu.classList.remove('active');
-            };
         });
 
         document.querySelectorAll('.status-btn[data-status]').forEach(btn => {
@@ -5386,6 +5571,7 @@
         adminBtn.onclick = async () => {
             communityScreen.classList.remove('active');
             adminPage.style.display = 'block';
+            loadAdminTones();
             loadAdminDepartments();
             loadWebhooks();
             loadRosters();
