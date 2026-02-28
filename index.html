@@ -2231,6 +2231,12 @@
          </div>
      </div>
 
+     <!-- Global Refresh Notification -->
+     <div id="globalNotification" style="display:none;position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);color:#fff;padding:20px 30px;text-align:center;z-index:1001;box-shadow:0 4px 12px rgba(59,130,246,0.3);">
+         <div style="font-size:16px;font-weight:600;margin-bottom:8px;">Website Refresh in Progress</div>
+         <div style="font-size:14px;color:rgba(255,255,255,0.9);">The website will refresh in <span id="countdownTimer" style="font-weight:700;font-size:18px;">5:00</span></div>
+     </div>
+
      <!-- Unit Status Context Menu -->
      <div class="tones-context-menu" id="unitStatusContextMenu" style="display:none;position:fixed;z-index:1000;">
          <div class="menu-title">Change Status</div>
@@ -2472,6 +2478,10 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                         Join Community
                     </button>
+                    <button class="hub-btn" id="hubCreateCommunity" style="background:#10b981;border:none;color:#fff;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                        Create Community
+                    </button>
                 </div>
             </div>
             
@@ -2503,14 +2513,14 @@
     <section class="dashboard" id="dashboardSection" style="display:none;">
         <div class="dash-content">
             <div class="actions">
-                <button class="btn-action btn-join" id="joinCommunityOld">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-                    Join Community
-                </button>
-                <button class="btn-action btn-create" id="createCommunityOld">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-                    Create Community
-                </button>
+               <button class="btn-action btn-join" id="joinCommunity">
+                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                   Join Community
+               </button>
+               <button class="btn-action btn-create" id="createCommunity">
+                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                   Create Community
+               </button>
                 <button class="btn-action btn-staff" id="staffDashboardBtnOld" style="display:none;background:#a855f7;border:none;color:#fff;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
                     Staff Dashboard
@@ -2607,6 +2617,61 @@
             </form>
         </div>
     </div>
+
+    <!-- Department Setup Screen -->
+    <section style="display:none;min-height:100vh;padding:40px 30px;background:#0c0e12;color:#e4e4e7;" id="departmentSetupSection">
+        <div style="max-width:900px;margin:0 auto;">
+            <div style="margin-bottom:40px;">
+                <h1 style="font-size:32px;font-weight:700;margin-bottom:8px;">Setup Departments</h1>
+                <p style="color:#a1a1aa;font-size:14px;">Create and configure departments for your CAD. You can create up to 10 departments.</p>
+            </div>
+            
+            <div id="departmentsContainer" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-bottom:30px;">
+            </div>
+            
+            <div style="display:flex;gap:10px;margin-bottom:40px;">
+                <button id="addDepartmentBtn" style="padding:11px 20px;background:#3b82f6;border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">+ Add Department</button>
+                <button id="finishSetupBtn" style="padding:11px 20px;background:#22c55e;border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">Finish Setup</button>
+                <button id="skipSetupBtn" style="padding:11px 20px;background:#6b7280;border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">Skip Setup</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Departments View Screen -->
+    <section style="display:none;min-height:100vh;padding:40px 30px;background:#0c0e12;color:#e4e4e7;" id="departmentsViewSection">
+        <div style="max-width:1000px;margin:0 auto;">
+            <div style="margin-bottom:30px;display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <h1 id="viewDeptCommunityName" style="font-size:32px;font-weight:700;margin-bottom:8px;"></h1>
+                    <p style="color:#a1a1aa;font-size:14px;">Access your departments below</p>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <button id="editCommunityBtn" style="padding:9px 16px;background:#a855f7;border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:none;">Edit Community</button>
+                    <button id="backFromDeptView" style="padding:9px 16px;background:#6b7280;border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">Back to Communities</button>
+                </div>
+            </div>
+            
+            <div id="departmentsListContainer" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-bottom:30px;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Edit Community Screen -->
+    <section style="display:none;min-height:100vh;padding:40px 30px;background:#0c0e12;color:#e4e4e7;" id="editCommunitySection">
+        <div style="max-width:1000px;margin:0 auto;">
+            <div style="margin-bottom:30px;display:flex;justify-content:space-between;align-items:center;">
+                <h1 style="font-size:32px;font-weight:700;">Edit Community</h1>
+                <button id="backFromEditCommunity" style="padding:9px 16px;background:#6b7280;border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">Back</button>
+            </div>
+            
+            <div style="background:#14171f;border:1px solid #1e222d;border-radius:8px;padding:30px;margin-bottom:30px;">
+                <h2 style="font-size:20px;font-weight:600;margin-bottom:20px;">Departments</h2>
+                <div id="editDepartmentsContainer" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;">
+                </div>
+                <button id="addNewDeptBtn" style="padding:11px 20px;background:#3b82f6;border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:20px;width:100%;">+ Add Department</button>
+            </div>
+        </div>
+    </section>
 
     <section class="community-screen" id="communityScreen">
         <div class="community-header">
@@ -4016,8 +4081,9 @@
                         <button class="btn-enter" data-id="${c.id}" data-name="${c.name}" data-code="${c.code}" data-website="${c.website || ''}" style="${c.suspended ? 'opacity:0.5;cursor:not-allowed;' : ''}" ${c.suspended ? 'disabled' : ''}>${c.suspended ? 'Suspended' : 'Enter'}</button>
                         ${c.type === 'owned' ? `<button class="btn-delete-community" data-id="${c.id}" title="Delete Community" style="padding:11px;background:#ef4444;border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="display:block;"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h16zM10 11v6M14 11v6"/></svg>
-                        </button>` : `<button class="btn-leave-community" data-id="${c.id}" title="Leave Community" style="padding:11px;background:#6b7280;border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="display:block;"><path d="M9 3h-2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h2M15 17l4-4m0 0l-4-4m4 4H9"/></svg>
+                        </button>` : `<button class="btn-leave-community" data-id="${c.id}" title="Leave Community" style="padding:9px 14px;background:transparent;border:1px solid #555;border-radius:6px;color:#707070;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:8px;transition:all 0.2s;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" style="display:block;stroke-linecap:round;stroke-linejoin:round;"><path d="M8 6h10M10 6V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v11M15 17l3-3m0 0l-3-3m3 3H6"/></svg>
+                            Leave
                         </button>`}
                     </div>
                 </div>
@@ -4064,15 +4130,28 @@
 
         async function openCommunity(id, name, code, website) {
              // Check if community is suspended
-             const { data: community } = await db.from('communities').select('suspended').eq('id', id).single();
+             const { data: community } = await db.from('communities').select('suspended, owner_id').eq('id', id).single();
              if (community && community.suspended) {
                  alert('This community is suspended and cannot be accessed');
                  return;
              }
              
+             // Check if user is owner
+             const isOwner = community && community.owner_id === currentUser.id;
+             
+             // Check if community has departments
+             const { data: departments } = await db.from('departments').select('*').eq('community_id', id);
+             
              currentCommunityId = id;
              currentErlcApiKey = '';
-             // Show only CAD page
+             
+             // If has departments, show departments view instead
+             if (departments && departments.length > 0) {
+                 showDepartmentsView(id, name, isOwner);
+                 return;
+             }
+             
+             // Otherwise show community screen with panel buttons
              document.getElementById('userHubSection').style.display = 'none';
              dashboardSection.classList.add('hidden');
              communityScreen.classList.add('active');
@@ -4084,10 +4163,10 @@
              const bannerImg = document.getElementById('communityBannerImage');
              const bannerOverlay = document.getElementById('bannerOverlay');
              const bannerCommunityName = document.getElementById('bannerCommunityName');
-             const { data } = await db.from('communities').select('banner_url').eq('id', id).single();
+             const { data: bannerData } = await db.from('communities').select('banner_url').eq('id', id).single();
              
-             if (data && data.banner_url) {
-                 bannerImg.src = data.banner_url;
+             if (bannerData && bannerData.banner_url) {
+                 bannerImg.src = bannerData.banner_url;
                  bannerImg.style.display = 'block';
                  bannerCommunityName.textContent = name;
                  bannerOverlay.style.display = 'flex';
@@ -4096,8 +4175,439 @@
                  bannerOverlay.style.display = 'none';
              }
          }
+         
+         // Department Setup System
+         let departmentSetupData = {
+             communityId: null,
+             communityName: null,
+             departments: []
+         };
+         
+         function showDepartmentSetup(communityId, communityName) {
+             departmentSetupData = {
+                 communityId,
+                 communityName,
+                 departments: []
+             };
+             
+             document.getElementById('userHubSection').style.display = 'none';
+             document.getElementById('departmentSetupSection').style.display = 'block';
+             renderDepartments();
+         }
+         
+         function renderDepartments() {
+             const container = document.getElementById('departmentsContainer');
+             if (departmentSetupData.departments.length === 0) {
+                 container.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#a1a1aa;padding:40px;">No departments created yet. Click "Add Department" to get started.</div>';
+                 return;
+             }
+             
+             container.innerHTML = departmentSetupData.departments.map((dept, idx) => `
+                 <div style="background:#14171f;border:1px solid #1e222d;border-radius:8px;padding:20px;">
+                     <div style="margin-bottom:15px;">
+                         <label style="display:block;color:#a1a1aa;font-size:12px;font-weight:500;margin-bottom:5px;">Department Name</label>
+                         <input type="text" value="${dept.name}" data-dept-index="${idx}" class="dept-name-input" style="width:100%;padding:8px 12px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#e4e4e7;font-size:13px;font-family:inherit;" placeholder="e.g., North Division">
+                     </div>
+                     
+                     <div style="margin-bottom:15px;">
+                         <label style="display:block;color:#a1a1aa;font-size:12px;font-weight:500;margin-bottom:5px;">Department Type</label>
+                         <select data-dept-index="${idx}" class="dept-type-select" style="width:100%;padding:8px 12px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#e4e4e7;font-size:13px;font-family:inherit;">
+                             <option value="police" ${dept.type === 'police' ? 'selected' : ''}>Police Department</option>
+                             <option value="sheriff" ${dept.type === 'sheriff' ? 'selected' : ''}>Sheriff Department</option>
+                             <option value="dispatch" ${dept.type === 'dispatch' ? 'selected' : ''}>Dispatch</option>
+                         </select>
+                     </div>
+                     
+                     <div style="margin-bottom:15px;">
+                         <label style="display:block;color:#a1a1aa;font-size:12px;font-weight:500;margin-bottom:5px;">Panel Code</label>
+                         <input type="text" value="${dept.code}" data-dept-index="${idx}" class="dept-code-input" style="width:100%;padding:8px 12px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#e4e4e7;font-size:13px;font-family:inherit;" placeholder="e.g., PD-01">
+                     </div>
+                     
+                     <button data-dept-index="${idx}" class="remove-dept-btn" style="width:100%;padding:8px;background:#ef4444;border:none;border-radius:6px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">Remove</button>
+                 </div>
+             `).join('');
+             
+             // Add event listeners
+             document.querySelectorAll('.dept-name-input').forEach(input => {
+                 input.addEventListener('change', (e) => {
+                     const idx = parseInt(e.target.dataset.deptIndex);
+                     departmentSetupData.departments[idx].name = e.target.value;
+                 });
+             });
+             
+             document.querySelectorAll('.dept-type-select').forEach(select => {
+                 select.addEventListener('change', (e) => {
+                     const idx = parseInt(e.target.dataset.deptIndex);
+                     departmentSetupData.departments[idx].type = e.target.value;
+                 });
+             });
+             
+             document.querySelectorAll('.dept-code-input').forEach(input => {
+                 input.addEventListener('change', (e) => {
+                     const idx = parseInt(e.target.dataset.deptIndex);
+                     departmentSetupData.departments[idx].code = e.target.value;
+                 });
+             });
+             
+             document.querySelectorAll('.remove-dept-btn').forEach(btn => {
+                 btn.addEventListener('click', (e) => {
+                     const idx = parseInt(e.target.dataset.deptIndex);
+                     departmentSetupData.departments.splice(idx, 1);
+                     renderDepartments();
+                 });
+             });
+         }
+         
+         document.getElementById('addDepartmentBtn').addEventListener('click', () => {
+             if (departmentSetupData.departments.length >= 10) {
+                 alert('Maximum 10 departments allowed');
+                 return;
+             }
+             departmentSetupData.departments.push({
+                 name: `Department ${departmentSetupData.departments.length + 1}`,
+                 type: 'police',
+                 code: `DP-${String(departmentSetupData.departments.length + 1).padStart(2, '0')}`
+             });
+             renderDepartments();
+         });
+         
+         document.getElementById('finishSetupBtn').addEventListener('click', async () => {
+             if (departmentSetupData.departments.length === 0) {
+                 alert('Please add at least one department');
+                 return;
+             }
+             
+             // Validate all departments have names and codes
+             for (let dept of departmentSetupData.departments) {
+                 if (!dept.name.trim() || !dept.code.trim()) {
+                     alert('All departments must have a name and code');
+                     return;
+                 }
+             }
+             
+             // Save departments to database
+             try {
+                 console.log('Saving departments:', departmentSetupData.departments);
+                 for (let dept of departmentSetupData.departments) {
+                     const { error } = await db.from('departments').insert({
+                         community_id: departmentSetupData.communityId,
+                         name: dept.name,
+                         type: dept.type,
+                         code: dept.code
+                     });
+                     if (error) {
+                         console.error('Insert error:', error);
+                         throw error;
+                     }
+                 }
+                 
+                 console.log('Departments saved, showing view');
+                 // Show departments view instead of going back to communities
+                 await showDepartmentsView(departmentSetupData.communityId, departmentSetupData.communityName);
+             } catch (err) {
+                 console.error('Error saving departments:', err);
+                 alert('Error saving departments: ' + err.message);
+             }
+         });
+         
+         document.getElementById('skipSetupBtn').addEventListener('click', () => {
+             document.getElementById('departmentSetupSection').style.display = 'none';
+             loadCommunities();
+         });
+         
+         // Edit Community Data
+         let editCommunityData = {
+             communityId: null,
+             communityName: null,
+             isOwner: false
+         };
+         
+         // Show Edit Community Screen
+         async function showEditCommunityScreen(communityId, communityName, isOwner) {
+             editCommunityData = {
+                 communityId,
+                 communityName,
+                 isOwner
+             };
+             
+             document.getElementById('departmentsViewSection').style.display = 'none';
+             document.getElementById('editCommunitySection').style.display = 'block';
+             
+             // Load departments for editing
+             try {
+                 const { data, error } = await db.from('departments').select('*').eq('community_id', communityId);
+                 if (error) throw error;
+                 
+                 const container = document.getElementById('editDepartmentsContainer');
+                 if (!data || data.length === 0) {
+                     container.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#a1a1aa;padding:40px;">No departments created yet.</div>';
+                 } else {
+                     container.innerHTML = data.map(dept => `
+                         <div style="background:#0c0e12;border:1px solid #27272a;border-radius:8px;padding:20px;">
+                             <div style="margin-bottom:15px;">
+                                 ${dept.logo_url ? `<img src="${dept.logo_url}" style="width:100%;height:150px;object-fit:cover;border-radius:6px;margin-bottom:10px;">` : `<div style="width:100%;height:150px;background:#1a1d2e;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#6b7280;margin-bottom:10px;">No Logo</div>`}
+                                 <input type="text" value="${dept.name}" class="edit-dept-name" data-dept-id="${dept.id}" style="width:100%;padding:8px 12px;background:#14171f;border:1px solid #27272a;border-radius:6px;color:#e4e4e7;font-size:13px;font-family:inherit;margin-bottom:8px;">
+                             </div>
+                             
+                             <div style="margin-bottom:8px;">
+                                 <label style="display:block;color:#a1a1aa;font-size:11px;font-weight:500;margin-bottom:4px;">Type</label>
+                                 <select class="edit-dept-type" data-dept-id="${dept.id}" style="width:100%;padding:8px 12px;background:#14171f;border:1px solid #27272a;border-radius:6px;color:#e4e4e7;font-size:13px;font-family:inherit;margin-bottom:8px;">
+                                     <option value="police" ${dept.type === 'police' ? 'selected' : ''}>Police</option>
+                                     <option value="sheriff" ${dept.type === 'sheriff' ? 'selected' : ''}>Sheriff</option>
+                                     <option value="dispatch" ${dept.type === 'dispatch' ? 'selected' : ''}>Dispatch</option>
+                                 </select>
+                             </div>
+                             
+                             <div style="margin-bottom:8px;">
+                                 <label style="display:block;color:#a1a1aa;font-size:11px;font-weight:500;margin-bottom:4px;">Panel Code</label>
+                                 <input type="text" value="${dept.code}" class="edit-dept-code" data-dept-id="${dept.id}" style="width:100%;padding:8px 12px;background:#14171f;border:1px solid #27272a;border-radius:6px;color:#e4e4e7;font-size:13px;font-family:monospace;margin-bottom:8px;">
+                             </div>
+                             
+                             <div style="margin-bottom:8px;">
+                                 <label style="display:block;color:#a1a1aa;font-size:11px;font-weight:500;margin-bottom:4px;">Logo</label>
+                                 <input type="file" accept="image/*" class="edit-dept-logo" data-dept-id="${dept.id}" style="width:100%;padding:8px 12px;background:#14171f;border:1px solid #27272a;border-radius:6px;color:#a1a1aa;font-size:12px;margin-bottom:8px;">
+                             </div>
+                             
+                             <div style="display:flex;gap:8px;">
+                                 <button class="save-dept-btn" data-dept-id="${dept.id}" style="flex:1;padding:8px;background:#22c55e;border:none;border-radius:6px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">Save</button>
+                                 <button class="delete-dept-btn" data-dept-id="${dept.id}" style="flex:1;padding:8px;background:#ef4444;border:none;border-radius:6px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">Delete</button>
+                             </div>
+                         </div>
+                     `).join('');
+                     
+                     // Add event listeners
+                     document.querySelectorAll('.save-dept-btn').forEach(btn => {
+                         btn.addEventListener('click', async (e) => {
+                             const deptId = e.target.dataset.deptId;
+                             const name = document.querySelector(`.edit-dept-name[data-dept-id="${deptId}"]`).value;
+                             const type = document.querySelector(`.edit-dept-type[data-dept-id="${deptId}"]`).value;
+                             const code = document.querySelector(`.edit-dept-code[data-dept-id="${deptId}"]`).value;
+                             const logoInput = document.querySelector(`.edit-dept-logo[data-dept-id="${deptId}"]`);
+                             
+                             if (!name.trim() || !code.trim()) {
+                                 alert('Please fill in all fields');
+                                 return;
+                             }
+                             
+                             let logoUrl = null;
+                             
+                             // Handle logo upload
+                             if (logoInput.files && logoInput.files[0]) {
+                                 const file = logoInput.files[0];
+                                 const reader = new FileReader();
+                                 logoUrl = await new Promise((resolve) => {
+                                     reader.onload = (e) => resolve(e.target.result);
+                                     reader.readAsDataURL(file);
+                                 });
+                             }
+                             
+                             try {
+                                 const updateData = { name, type, code };
+                                 if (logoUrl) updateData.logo_url = logoUrl;
+                                 
+                                 const { error } = await db.from('departments').update(updateData).eq('id', deptId);
+                                 if (error) throw error;
+                                 
+                                 alert('Department saved successfully!');
+                                 await showEditCommunityScreen(editCommunityData.communityId, editCommunityData.communityName, editCommunityData.isOwner);
+                             } catch (err) {
+                                 console.error('Error saving department:', err);
+                                 alert('Error saving department: ' + err.message);
+                             }
+                         });
+                     });
+                     
+                     document.querySelectorAll('.delete-dept-btn').forEach(btn => {
+                         btn.addEventListener('click', async (e) => {
+                             const deptId = e.target.dataset.deptId;
+                             if (confirm('Are you sure you want to delete this department?')) {
+                                 try {
+                                     const { error } = await db.from('departments').delete().eq('id', deptId);
+                                     if (error) throw error;
+                                     
+                                     alert('Department deleted successfully!');
+                                     await showEditCommunityScreen(editCommunityData.communityId, editCommunityData.communityName, editCommunityData.isOwner);
+                                 } catch (err) {
+                                     console.error('Error deleting department:', err);
+                                     alert('Error deleting department: ' + err.message);
+                                 }
+                             }
+                         });
+                     });
+                 }
+             } catch (err) {
+                 console.error('Error loading departments:', err);
+                 const container = document.getElementById('editDepartmentsContainer');
+                 container.innerHTML = `<div style="grid-column:1/-1;color:#ef4444;padding:20px;text-align:center;">Error loading departments: ${err.message}</div>`;
+             }
+         }
+         
+         document.getElementById('editCommunityBtn').addEventListener('click', () => {
+             showEditCommunityScreen(editCommunityData.communityId, editCommunityData.communityName, editCommunityData.isOwner);
+         });
+         
+         document.getElementById('backFromEditCommunity').addEventListener('click', () => {
+             document.getElementById('editCommunitySection').style.display = 'none';
+             document.getElementById('departmentsViewSection').style.display = 'block';
+         });
+         
+         document.getElementById('addNewDeptBtn').addEventListener('click', async () => {
+             const name = prompt('Enter department name:');
+             if (!name || !name.trim()) return;
+             
+             try {
+                 const { error } = await db.from('departments').insert({
+                     community_id: editCommunityData.communityId,
+                     name: name.trim(),
+                     type: 'police',
+                     code: `DP-${Date.now().toString().slice(-4)}`
+                 });
+                 if (error) throw error;
+                 
+                 alert('Department added! Configure it below.');
+                 await showEditCommunityScreen(editCommunityData.communityId, editCommunityData.communityName, editCommunityData.isOwner);
+             } catch (err) {
+                 console.error('Error adding department:', err);
+                 alert('Error adding department: ' + err.message);
+             }
+         });
 
-        let currentCommunityId = null;
+         // Departments View
+         async function showDepartmentsView(communityId, communityName, isOwner = false) {
+             console.log('showDepartmentsView called for:', communityId, communityName);
+             // Hide all other sections
+             document.getElementById('userHubSection').style.display = 'none';
+             document.getElementById('departmentSetupSection').style.display = 'none';
+             document.getElementById('departmentsViewSection').style.display = 'block';
+             document.getElementById('viewDeptCommunityName').textContent = communityName;
+             
+             // Show edit button only for owners
+             const editBtn = document.getElementById('editCommunityBtn');
+             if (isOwner) {
+                 editBtn.style.display = 'block';
+                 editCommunityData.communityId = communityId;
+                 editCommunityData.communityName = communityName;
+                 editCommunityData.isOwner = true;
+             } else {
+                 editBtn.style.display = 'none';
+             }
+             
+             console.log('Departments view should be visible now');
+             
+             // Load departments from database
+             try {
+                 const { data, error } = await db.from('departments').select('*').eq('community_id', communityId);
+                 if (error) throw error;
+                 
+                 const container = document.getElementById('departmentsListContainer');
+                 if (!data || data.length === 0) {
+                     container.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#a1a1aa;padding:40px;">No departments created yet.</div>';
+                     return;
+                 }
+                 
+                 container.innerHTML = data.map(dept => `
+                     <div style="background:#14171f;border:1px solid #1e222d;border-radius:8px;padding:20px;display:flex;flex-direction:column;">
+                         <div style="display:flex;gap:15px;align-items:flex-start;margin-bottom:16px;">
+                             <div style="flex-shrink:0;">
+                                 ${dept.logo_url ? `<img src="${dept.logo_url}" style="width:80px;height:80px;border-radius:6px;object-fit:cover;">` : `<div style="width:80px;height:80px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#6b7280;font-size:12px;">No Logo</div>`}
+                             </div>
+                             <div style="flex:1;text-align:left;">
+                                 <div style="font-size:18px;font-weight:600;margin-bottom:8px;color:#e4e4e7;">${dept.name}</div>
+                                 <div style="font-size:12px;color:#a1a1aa;">
+                                     Type: <span style="color:#3b82f6;font-weight:600;">${dept.type.toUpperCase()}</span>
+                                 </div>
+                             </div>
+                         </div>
+                         <button data-dept-id="${dept.id}" data-dept-type="${dept.type}" data-dept-code="${dept.code}" data-community-id="${communityId}" class="enter-dept-btn" style="width:100%;padding:10px;background:#3b82f6;border:none;border-radius:6px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:8px;">Enter Panel</button>
+                         <input type="password" data-dept-id="${dept.id}" class="dept-code-input" placeholder="Enter panel code" style="width:100%;padding:8px 10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#e4e4e7;font-size:12px;font-family:monospace;display:none;">
+                     </div>
+                 `).join('');
+                 
+                 // Add event listeners to enter department buttons
+                 document.querySelectorAll('.enter-dept-btn').forEach(btn => {
+                     btn.addEventListener('click', (e) => {
+                         const deptId = e.target.dataset.deptId;
+                         const codeInput = document.querySelector(`.dept-code-input[data-dept-id="${deptId}"]`);
+                         const enterBtn = e.target;
+                         
+                         if (codeInput.style.display === 'none') {
+                             // Show code input
+                             codeInput.style.display = 'block';
+                             codeInput.focus();
+                             enterBtn.textContent = 'Verify Code';
+                         } else {
+                             // Verify code
+                             const deptType = enterBtn.dataset.deptType;
+                             const deptCode = enterBtn.dataset.deptCode;
+                             const communityIdVal = enterBtn.dataset.communityId;
+                             const enteredCode = codeInput.value.trim();
+                             
+                             if (enteredCode !== deptCode) {
+                                 alert('Invalid code');
+                                 codeInput.value = '';
+                                 return;
+                             }
+                             
+                             // Code is correct - open the appropriate panel
+                             currentCommunityId = communityIdVal;
+                             document.getElementById('departmentsViewSection').style.display = 'none';
+                             document.getElementById('communityScreen').classList.add('active');
+                             
+                             // Hide all other panels
+                             document.getElementById('policeMdt').classList.remove('active');
+                             document.getElementById('sheriffMdt').classList.remove('active');
+                             document.getElementById('dispatchMdt').classList.remove('active');
+                             document.getElementById('civilianPage').classList.remove('active');
+                             document.getElementById('staffPage').classList.remove('active');
+                             
+                             // Show login modal based on department type
+                             if (deptType === 'police') {
+                                 document.getElementById('policeMdt').classList.add('active');
+                                 document.getElementById('policeLoginModal').classList.add('active');
+                             } else if (deptType === 'sheriff') {
+                                 if (!document.getElementById('sheriffMdt')) {
+                                     // Create sheriff panel same as police if it doesn't exist
+                                     document.getElementById('policeMdt').classList.add('active');
+                                 } else {
+                                     document.getElementById('sheriffMdt').classList.add('active');
+                                 }
+                             } else if (deptType === 'dispatch') {
+                                 document.getElementById('dispatchMdt').classList.add('active');
+                                 document.getElementById('dispatchLoginModal').classList.add('active');
+                             }
+                         }
+                     });
+                 });
+             } catch (err) {
+                 console.error('Error loading departments:', err);
+                 const container = document.getElementById('departmentsListContainer');
+                 container.innerHTML = `<div style="grid-column:1/-1;color:#ef4444;padding:20px;text-align:center;">Error loading departments: ${err.message}</div>`;
+             }
+         }
+         
+         // Update department
+         async function updateDepartment(deptId, newName) {
+             try {
+                 const { error } = await db.from('departments').update({ name: newName }).eq('id', deptId);
+                 if (error) throw error;
+                 
+                 // Reload departments view
+                 const communityId = departmentSetupData.communityId || currentCommunityId;
+                 const communityName = document.getElementById('viewDeptCommunityName').textContent;
+                 await showDepartmentsView(communityId, communityName);
+                 alert('Department updated successfully!');
+             } catch (err) {
+                 console.error('Error updating department:', err);
+                 alert('Error updating department: ' + err.message);
+             }
+         }
+         
+         document.getElementById('backFromDeptView').addEventListener('click', () => {
+             document.getElementById('departmentsViewSection').style.display = 'none';
+             loadCommunities();
+         });
+
+         let currentCommunityId = null;
         let currentErlcApiKey = ''; // ERLC API key for current community (stored in SQL)
         let isPulseStaff = false; // Whether current user is PulseCAD staff
 
@@ -4144,15 +4654,19 @@
                 return;
             }
             
+            const communityId = data[0].id;
             createModal.classList.remove('active');
             createCommunityForm.reset();
-            loadCommunities();
+            
+            // Show department creation setup instead of opening community directly
+            showDepartmentSetup(communityId, name);
         };
 
         if (joinCommunityBtn) {
             joinCommunityBtn.onclick = () => joinModal.classList.add('active');
         }
         document.getElementById('hubJoinCommunity').onclick = () => joinModal.classList.add('active');
+        document.getElementById('hubCreateCommunity').onclick = () => createModal.classList.add('active');
         cancelJoin.onclick = () => { joinModal.classList.remove('active'); joinCommunityForm.reset(); joinError.style.display = 'none'; };
         joinModal.onclick = e => { if (e.target === joinModal) { joinModal.classList.remove('active'); joinCommunityForm.reset(); joinError.style.display = 'none'; } };
 
@@ -6714,39 +7228,69 @@
         };
 
         // Global Refresh System
-        async function globalRefresh() {
-            const btn = document.getElementById('globalRefreshBtn');
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="animation:spin 1s linear infinite;"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Refreshing...';
-            }
-            try {
-                await loadCommunities();
-                if (document.getElementById('staffDashboard').style.display === 'block') {
-                    await loadStaffData();
-                    if (typeof loadAccessCodes === 'function') await loadAccessCodes();
-                }
-                if (policeMdt.classList.contains('active')) {
-                    await renderActiveUnits();
-                    await loadBolos();
-                }
-                if (dispatchMdt.classList.contains('active')) {
-                    await renderDispatchUnits();
-                }
-                if (civilianPage.classList.contains('active')) {
-                    await loadCharacters();
-                }
-                updateCreditsDisplay();
-            } catch (e) {
-                console.error('Global refresh error:', e);
-            }
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Refresh';
-            }
-        }
+         let globalRefreshCountdown = null;
+         
+         async function globalRefresh() {
+             const btn = document.getElementById('globalRefreshBtn');
+             const notification = document.getElementById('globalNotification');
+             const timer = document.getElementById('countdownTimer');
+             
+             if (btn) {
+                 btn.disabled = true;
+                 btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="animation:spin 1s linear infinite;"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Refreshing...';
+             }
+             
+             // Show notification
+             if (notification) {
+                 notification.style.display = 'block';
+             }
+             
+             // Countdown from 5 minutes (300 seconds)
+             let secondsLeft = 300;
+             if (globalRefreshCountdown) clearInterval(globalRefreshCountdown);
+             
+             globalRefreshCountdown = setInterval(() => {
+                 secondsLeft--;
+                 const mins = Math.floor(secondsLeft / 60);
+                 const secs = secondsLeft % 60;
+                 if (timer) {
+                     timer.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                 }
+                 
+                 // Refresh website when countdown hits 0
+                 if (secondsLeft <= 0) {
+                     if (globalRefreshCountdown) clearInterval(globalRefreshCountdown);
+                     location.reload();
+                 }
+             }, 1000);
+             
+             try {
+                 await loadCommunities();
+                 if (document.getElementById('staffDashboard').style.display === 'block') {
+                     await loadStaffData();
+                     if (typeof loadAccessCodes === 'function') await loadAccessCodes();
+                 }
+                 if (policeMdt.classList.contains('active')) {
+                     await renderActiveUnits();
+                     await loadBolos();
+                 }
+                 if (dispatchMdt.classList.contains('active')) {
+                     await renderDispatchUnits();
+                 }
+                 if (civilianPage.classList.contains('active')) {
+                     await loadCharacters();
+                 }
+                 updateCreditsDisplay();
+             } catch (e) {
+                 console.error('Global refresh error:', e);
+             }
+             if (btn) {
+                 btn.disabled = false;
+                 btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Refresh';
+             }
+         }
 
-        document.getElementById('globalRefreshBtn').onclick = globalRefresh;
+         document.getElementById('globalRefreshBtn').onclick = globalRefresh;
 
         // User Hub System
         const userHubSection = document.getElementById('userHubSection');
