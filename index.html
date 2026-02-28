@@ -4343,6 +4343,17 @@
             document.getElementById('heroSection').style.display = 'flex';
             loadActiveUsers();
         };
+        
+        // Auto-logout when user closes tab/window
+        window.addEventListener('beforeunload', async () => {
+            if (currentUser) {
+                try {
+                    await db.from('login_sessions').delete().eq('user_id', currentUser.id);
+                } catch (e) {
+                    console.error('Auto logout error:', e);
+                }
+            }
+        });
 
         // Check for OAuth callback and existing session on page load
         async function checkAuthSession() {
@@ -7655,19 +7666,81 @@
 
         async function loadActiveUsers() {
             const countEl = document.getElementById('activeUsersCount');
+            const listEl = document.getElementById('activeUsersList');
             if (!countEl) return;
             
             try {
-                const { data, error } = await db.from('login_sessions').select('*');
+                const { data, error } = await db.from('login_sessions').select('*, users(email, username)');
                 console.log('Login sessions query:', {data, error});
                 if (error) throw error;
                 
                 const count = (data || []).length;
                 console.log('Active users count:', count);
                 countEl.textContent = count;
+                
+                // Populate active users list if element exists
+                if (listEl) {
+                    if (!data || data.length === 0) {
+                        listEl.innerHTML = '<div style="color: #a1a1aa; text-align: center; padding: 40px;">No active users</div>';
+                        return;
+                    }
+                    
+                    listEl.innerHTML = data.map(session => `
+                        <div class="staff-item" data-session-id="${session.id}">
+                            <div class="staff-item-title">${session.users?.username || session.users?.email || 'Unknown'}</div>
+                            <div class="staff-item-desc">
+                                Email: ${session.users?.email || 'N/A'} | Session: ${new Date(session.created_at).toLocaleString()}
+                                <div style="margin-top: 10px; display: flex; gap: 10px;">
+                                    <button class="force-logout-btn" data-session-id="${session.id}" data-user-id="${session.user_id}" style="padding: 6px 12px; background: #ef4444; border: none; border-radius: 6px; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer;">Force Logout</button>
+                                    <button class="delete-user-btn" data-user-id="${session.user_id}" data-discord="${session.users?.email || ''}" style="padding: 6px 12px; background: #a855f7; border: none; border-radius: 6px; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer;">Delete Discord</button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    // Add event listeners for force logout buttons
+                    document.querySelectorAll('.force-logout-btn').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            const sessionId = e.target.dataset.sessionId;
+                            const userId = e.target.dataset.userId;
+                            if (confirm('Force logout this user?')) {
+                                try {
+                                    const { error } = await db.from('login_sessions').delete().eq('id', sessionId);
+                                    if (error) throw error;
+                                    loadActiveUsers();
+                                } catch (err) {
+                                    alert('Error: ' + err.message);
+                                }
+                            }
+                        });
+                    });
+                    
+                    // Add event listeners for delete user buttons
+                    document.querySelectorAll('.delete-user-btn').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            const userId = e.target.dataset.userId;
+                            const discord = e.target.dataset.discord;
+                            if (confirm(`Delete user ${discord}? This cannot be undone.`)) {
+                                try {
+                                    // Delete from login_sessions first
+                                    await db.from('login_sessions').delete().eq('user_id', userId);
+                                    // Then delete the user
+                                    const { error } = await db.from('users').delete().eq('id', userId);
+                                    if (error) throw error;
+                                    loadActiveUsers();
+                                } catch (err) {
+                                    alert('Error: ' + err.message);
+                                }
+                            }
+                        });
+                    });
+                }
             } catch (err) {
                 console.error('Error loading active users count:', err);
                 countEl.textContent = '0';
+                if (listEl) {
+                    listEl.innerHTML = `<div style="color: #ef4444; padding: 20px;">Error loading active users: ${err.message}</div>`;
+                }
             }
         }
 
