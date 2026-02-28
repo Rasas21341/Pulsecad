@@ -1,0 +1,3 @@
+ALTER TABLE communities ADD COLUMN IF NOT EXISTS banner_url TEXT;
+
+ALTER TABLE communities ADD COLUMN IF NOT EXISTS banner_updated_at TIMESTAMP DEFAULT NOW();

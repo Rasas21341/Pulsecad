@@ -1,8 +1,4 @@
-                                <!-- Quick Actions section removed from main area -->
-                                            <!-- Removed leftover template literal -->
-                    <!-- Quick Actions section removed from main area -->
-        // Removed stray function text
-<!DOCTYPE html>
+                                <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -2112,46 +2108,174 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Staff Sidebar */
+        .staff-sidebar {
+            width: 180px;
+            background: #0c0e12;
+            border-right: 1px solid #1e222d;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #1a1d2e;
+            border: 1px solid #27272a;
+            border-radius: 8px;
+            color: #e4e4e7;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .sidebar-btn:hover {
+            background: #252b3d;
+            border-color: #374151;
+        }
+
+        .sidebar-btn.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: #fff;
+        }
+
+        /* Staff Pages Container */
+        .staff-pages-container {
+            flex: 1;
+        }
+
+        .staff-page {
+            display: none !important;
+        }
+
+        .staff-page.active {
+            display: block !important;
+        }
+
+        .staff-page-header {
+            font-size: 28px;
+            font-weight: 700;
+            color: #e4e4e7;
+            margin-bottom: 24px;
+        }
+
+        .staff-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .staff-item {
+            padding: 16px;
+            background: #14171f;
+            border: 1px solid #1e222d;
+            border-radius: 8px;
+            color: #e4e4e7;
+            transition: all 0.2s;
+        }
+
+        .staff-item:hover {
+            border-color: #374151;
+            background: #1a1d2e;
+        }
+
+        .staff-item-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .staff-item-desc {
+            font-size: 13px;
+            color: #a1a1aa;
+        }
+
+        header {
+            z-index: 50;
+        }
+
+        .staff-dashboard {
+            display: flex !important;
+        }
+
+        .staff-dashboard[style*="display:none"] {
+            display: none !important;
+        }
+
     </style>
 </head>
 <body>
     <!-- Tones Context Menu -->
-    <div class="tones-context-menu" id="tonesContextMenu">
-        <div class="menu-title">Tones</div>
-        <div id="tonesMenuContainer">
-            <div class="tone-item tone-1" data-tone="1">
-                <span class="tone-icon"></span>
-                <span>Tone 1 - Priority</span>
-            </div>
-            <div class="tone-item tone-2" data-tone="2">
-                <span class="tone-icon"></span>
-                <span>Tone 2 - Alert</span>
-            </div>
-            <div class="tone-item tone-3" data-tone="3">
-                <span class="tone-icon"></span>
-                <span>Tone 3 - Routine</span>
-            </div>
-        </div>
-    </div>
+     <div class="tones-context-menu" id="tonesContextMenu">
+         <div class="menu-title">Tones</div>
+         <div id="tonesMenuContainer">
+             <div class="tone-item tone-1" data-tone="1">
+                 <span class="tone-icon"></span>
+                 <span>Tone 1 - Priority</span>
+             </div>
+             <div class="tone-item tone-2" data-tone="2">
+                 <span class="tone-icon"></span>
+                 <span>Tone 2 - Alert</span>
+             </div>
+             <div class="tone-item tone-3" data-tone="3">
+                 <span class="tone-icon"></span>
+                 <span>Tone 3 - Routine</span>
+             </div>
+         </div>
+     </div>
+
+     <!-- Unit Status Context Menu -->
+     <div class="tones-context-menu" id="unitStatusContextMenu" style="display:none;position:fixed;z-index:1000;">
+         <div class="menu-title">Change Status</div>
+         <div id="statusMenuContainer">
+             <div class="tone-item" data-status="10-8">
+                 <span>10-8 (On Duty)</span>
+             </div>
+             <div class="tone-item" data-status="10-7">
+                 <span>10-7 (Off Duty)</span>
+             </div>
+             <div class="tone-item" data-status="10-6">
+                 <span>10-6 (Busy)</span>
+             </div>
+             <div class="tone-item" data-status="10-4">
+                 <span>10-4 (Available)</span>
+             </div>
+             <div class="tone-item" data-status="10-23">
+                 <span>10-23 (Traffic Stop)</span>
+             </div>
+             <div class="tone-item" data-status="10-27">
+                 <span>10-27 (Investigating)</span>
+             </div>
+             <div class="tone-item" data-status="10-97">
+                 <span>10-97 (In Station)</span>
+             </div>
+         </div>
+     </div>
 
     <header>
-        <div class="brand">
-            <img src="https://cdn.discordapp.com/icons/1455410644634304725/75220689ed872e2ee4c7101f479813a5.webp?size=512" alt="Pulsecad">
-            <span>Pulsecad</span>
-        </div>
-        <nav class="nav-links">
-            <button class="nav-link" id="homeBtn">Home</button>
-            <button class="nav-link" id="pricesBtn">Prices</button>
-            <a class="nav-link" href="https://discord.gg/FXNTFaQWt9" target="_blank" style="text-decoration: none;">Discord</a>
-            <button class="nav-link" id="teamBtn">Team</button>
-        </nav>
-        <button class="nav-btn" id="openLogin">Login</button>
-        <div class="nav-user">
-            <span id="navUsername"></span>
-            <button class="nav-logout" id="staffDashboardBtn">Staff Dashboard</button>
-            <button class="nav-logout" id="logoutBtn">Log out</button>
-        </div>
-    </header>
+         <div class="brand">
+             <img src="https://cdn.discordapp.com/icons/1455410644634304725/75220689ed872e2ee4c7101f479813a5.webp?size=512" alt="Pulsecad">
+             <span>Pulsecad</span>
+         </div>
+         <nav class="nav-links">
+             <button class="nav-link" id="homeBtn">Home</button>
+             <button class="nav-link" id="pricesBtn">Prices</button>
+             <a class="nav-link" href="https://discord.gg/FXNTFaQWt9" target="_blank" style="text-decoration: none;">Discord</a>
+             <button class="nav-link" id="teamBtn">Team</button>
+         </nav>
+         <button class="nav-btn" id="openLogin">Login</button>
+         <div class="nav-user">
+             <span id="navUsername"></span>
+             <button class="nav-logout" id="staffDashboardBtn">Staff Dashboard</button>
+             <button class="nav-logout" id="logoutBtn">Log out</button>
+         </div>
+     </header>
 
     <section class="pricing-section" id="pricingSection">
         <button class="back-btn" id="backFromPricing">
@@ -2485,6 +2609,16 @@
 
     <section class="community-screen" id="communityScreen">
         <div class="community-header">
+            <div style="position:relative;margin-bottom:20px;">
+                <img id="communityBannerImage" style="display:none;width:100%;height:250px;object-fit:cover;border-radius:8px;">
+                <!-- Banner overlay with community name -->
+                <div id="bannerOverlay" style="position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);border-radius:8px;display:flex;align-items:center;padding:30px;color:#fff;display:none;">
+                    <div style="flex:1;">
+                        <h2 id="bannerCommunityName" style="font-size:32px;font-weight:700;margin:0;margin-bottom:8px;text-shadow:0 2px 8px rgba(0,0,0,0.8);"></h2>
+                        <p id="bannerCommunitySubtitle" style="font-size:16px;color:#e4e4e7;margin:0;text-shadow:0 1px 4px rgba(0,0,0,0.8);">Choose how you want to enter this server</p>
+                    </div>
+                </div>
+            </div>
             <button class="btn-back-dashboard" id="backToDashboard">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 Back to Dashboard
@@ -2612,6 +2746,22 @@
                         </div>
                         <button id="saveWebhookBtn" style="width:100%;padding:10px 0;background:#3b82f6;border:none;border-radius:6px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;">Save Webhooks</button>
                     </div>
+                </div>
+            </div>
+            <div class="mdt-panel">
+                <h3>Community Banner</h3>
+                <p style="color:#6b7280;font-size:13px;margin-bottom:16px;">Upload a banner image to display on your community page</p>
+                <div style="margin-bottom:16px;border:2px dashed #374151;border-radius:8px;padding:20px;text-align:center;cursor:pointer;" id="adminBannerDropZone">
+                    <img id="adminBannerPreview" style="max-width:100%;max-height:200px;display:none;margin-bottom:10px;border-radius:4px;">
+                    <div id="adminBannerUploadPrompt">
+                        <p style="color:#a1a1aa;margin:0;font-size:13px;">Click or drag image here</p>
+                        <p style="color:#6b7280;margin:5px 0 0 0;font-size:12px;">Max 5MB • PNG, JPG, WebP</p>
+                    </div>
+                    <input type="file" id="adminBannerFileInput" accept="image/png,image/jpeg,image/webp" style="display:none;">
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <button class="btn-primary" id="saveAdminBanner" style="background:#3b82f6;">Save Banner</button>
+                    <button class="btn-primary" id="removeAdminBanner" style="background:#ef4444;">Remove Banner</button>
                 </div>
             </div>
             <div class="mdt-panel" style="margin-top:24px;" id="rosterSection">
@@ -2781,8 +2931,24 @@
         </div>
     </div>
 
-    <section class="staff-dashboard" id="staffDashboard" style="display:none;min-height:100vh;padding:30px;background:#0a0d14;">
-        <div style="max-width:1200px;margin:0 auto;">
+    <section class="staff-dashboard" id="staffDashboard" style="display:none;min-height:100vh;padding:30px;background:#0a0d14;flex-direction:row;">
+        <!-- Staff Sidebar -->
+        <div class="staff-sidebar" id="staffSidebar" style="position:relative;width:180px;margin-right:20px;">
+            <button class="sidebar-btn active" id="communitiesNavBtn" data-page="communities">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Communities
+            </button>
+            <button class="sidebar-btn" id="usersNavBtn" data-page="users">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Users
+            </button>
+            <button class="sidebar-btn" id="accessCodesNavBtn" data-page="access-codes">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Access Codes
+            </button>
+        </div>
+
+        <div style="flex:1;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;">
                 <h2 style="font-size:24px;font-weight:600;">Staff Dashboard</h2>
                 <div style="display:flex;gap:10px;">
@@ -2793,23 +2959,51 @@
                     <button class="btn-back-community" id="backFromStaff">Back to Dashboard</button>
                 </div>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:30px;">
-                <div class="mdt-panel">
-                    <h3>Total Users</h3>
-                    <div id="totalUsers" style="font-size:36px;font-weight:700;color:#3b82f6;text-align:center;margin-top:10px;">0</div>
+
+            <!-- Staff Pages Container -->
+            <div class="staff-pages-container" id="staffPagesContainer">
+                <!-- Communities Page -->
+                <div class="staff-page" id="communitiesPage" style="display:block;width:100%;">
+                    <div class="staff-page-header">All Communities</div>
+                    <div class="staff-list" id="allCommunitiesList">
+                        <div style="color: #a1a1aa; text-align: center; padding: 40px;">Loading communities...</div>
+                    </div>
                 </div>
-                <div class="mdt-panel">
-                    <h3>Total Communities</h3>
-                    <div id="totalCommunities" style="font-size:36px;font-weight:700;color:#22c55e;text-align:center;margin-top:10px;">0</div>
+
+                <!-- Users Page -->
+                <div class="staff-page" id="usersPage" style="display:none;width:100%;">
+                    <div class="staff-page-header">All Users</div>
+                    <div class="staff-list" id="allUsersList">
+                        <div style="color: #a1a1aa; text-align: center; padding: 40px;">Loading users...</div>
+                    </div>
                 </div>
-                <div class="mdt-panel">
-                    <h3>Total Characters</h3>
-                    <div id="totalCharacters" style="font-size:36px;font-weight:700;color:#a855f7;text-align:center;margin-top:10px;">0</div>
+
+                <!-- Access Codes Page -->
+                <div class="staff-page" id="accessCodesPage" style="display:none;width:100%;">
+                    <div class="staff-page-header">Access Codes</div>
+                    <div class="staff-list" id="accessCodesList">
+                        <div style="color: #a1a1aa; text-align: center; padding: 40px;">Loading access codes...</div>
+                    </div>
                 </div>
             </div>
-            <div class="mdt-panel" style="margin-bottom:20px;">
-                <h3>All Communities</h3>
-                <table class="calls-table" style="margin-top:16px;">
+            <div id="oldStaffContent" style="display:none;">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:30px;">
+                    <div class="mdt-panel">
+                        <h3>Total Users</h3>
+                        <div id="totalUsers" style="font-size:36px;font-weight:700;color:#3b82f6;text-align:center;margin-top:10px;">0</div>
+                    </div>
+                    <div class="mdt-panel">
+                        <h3>Total Communities</h3>
+                        <div id="totalCommunities" style="font-size:36px;font-weight:700;color:#22c55e;text-align:center;margin-top:10px;">0</div>
+                    </div>
+                    <div class="mdt-panel">
+                        <h3>Total Characters</h3>
+                        <div id="totalCharacters" style="font-size:36px;font-weight:700;color:#a855f7;text-align:center;margin-top:10px;">0</div>
+                    </div>
+                </div>
+                <div class="mdt-panel" style="margin-bottom:20px;">
+                    <h3>All Communities</h3>
+                    <table class="calls-table" style="margin-top:16px;">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -2915,6 +3109,7 @@
                         <tr><td colspan="5" style="text-align:center;color:#6b7280;">No access codes yet</td></tr>
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     </section>
@@ -2927,9 +3122,9 @@
                 <button class="modal-close" id="closeDiscordSettings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
             </div>
             <div class="discord-settings-tabs" style="display:flex;gap:10px;margin-bottom:18px;">
-                <button class="discord-settings-tab active" id="discordSettingsTabBtn">Settings</button>
-                <button class="discord-settings-tab" id="charactersSettingsTabBtn">Characters</button>
-            </div>
+                 <button class="discord-settings-tab active" id="discordSettingsTabBtn">Settings</button>
+                 <button class="discord-settings-tab" id="charactersSettingsTabBtn">Characters</button>
+             </div>
             <div class="discord-settings-panel" id="discordSettingsPanel">
                 <div class="field">
                     <label>Discord Webhook URL</label>
@@ -2951,8 +3146,8 @@
                     <!-- Character cards will be rendered here -->
                 </div>
             </div>
-        </div>
-    </div>
+            </div>
+            </div>
 
     <!-- Accounts Modal -->
     <div class="staff-settings-modal" id="accountsModal">
@@ -3236,12 +3431,17 @@
                         document.getElementById('warrantForm').reset();
                     }
                 };
-                document.getElementById('copyWarrantLink').onclick = function() {
-                    const linkInput = document.getElementById('warrantLink');
-                    linkInput.select();
-                    document.execCommand('copy');
-                    alert('Warrant link copied!');
-                };
+                const copyWarrantLink = document.getElementById('copyWarrantLink');
+                if (copyWarrantLink) {
+                    copyWarrantLink.onclick = function() {
+                        const linkInput = document.getElementById('warrantLink');
+                        if (linkInput) {
+                            linkInput.select();
+                            document.execCommand('copy');
+                            alert('Warrant link copied!');
+                        }
+                    };
+                }
                 // ...existing code...
                 </script>
             <div id="lookupResults" style="margin-top:20px;">
@@ -3564,6 +3764,23 @@
             </div>
 
             <div class="dispatch-panel">
+                <h3>Officers in Police Panel</h3>
+                <table class="dispatch-table">
+                    <thead>
+                        <tr>
+                            <th>Unit Identifier</th>
+                            <th>Officer Name</th>
+                            <th>Rank</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dispatchOfficersInPanel">
+                        <tr><td colspan="4" style="text-align:center;color:#6b7280;">No officers in panel</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="dispatch-panel">
                 <h3>Active Calls</h3>
                 <table class="dispatch-table">
                     <thead>
@@ -3623,7 +3840,6 @@
                     <span id="liveMapPlayerCount">0 players online</span>
                     <span id="liveMapLastUpdate" style="color:#6b7280;font-size:11px;"></span>
                     <button id="testLiveMap" style="padding:6px 14px;background:#f97316;border:none;border-radius:6px;color:#fff;font-size:12px;cursor:pointer;">Test Map</button>
-                    <button id="refreshLiveMap" style="padding:6px 14px;background:#3b82f6;border:none;border-radius:6px;color:#fff;font-size:12px;cursor:pointer;">Refresh</button>
                     <button class="modal-close" id="closeLiveMap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                 </div>
             </div>
@@ -3748,7 +3964,7 @@
             
             const { data: memberOf, error: memberError } = await db
                 .from('community_members')
-                .select('community_id, communities(id, name, website, code, owner_id)')
+                .select('community_id, communities(id, name, website, code, owner_id, banner_url, suspended)')
                 .eq('user_id', currentUser.id);
             
             if (memberError) console.error('Error loading joined communities:', memberError);
@@ -3766,15 +3982,16 @@
             }
             
             communityList.innerHTML = all.map(c => `
-                <div class="item" data-id="${c.id}" data-type="${c.type}">
-                    <div class="item-info">
+                <div class="item" data-id="${c.id}" data-type="${c.type}" style="position:relative;overflow:hidden;border-radius:8px;">
+                    ${c.banner_url ? `<img src="${c.banner_url}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.3;z-index:0;">` : ''}
+                    <div class="item-info" style="position:relative;z-index:1;">
                         <div class="item-name">${c.name} <span style="color:#52525b;font-size:11px;">${c.type === 'owned' ? '(Owner)' : '(Member)'}</span></div>
                         ${c.website ? `<a href="${c.website}" target="_blank" class="item-url">${c.website}</a>` : ''}
                         <!-- Code display removed from community item -->
                                     <!-- Staff Dashboard button removed from community items -->
                         ${c.official_partner ? '<div style="margin-top:4px;background:#3b2c00;color:#ffb300;padding:2px 8px;border-radius:4px;font-size:12px;">Pulsecad Official Partner</div>' : ''}
                     </div>
-                    <button class="btn-enter" data-id="${c.id}" data-name="${c.name}" data-code="${c.code}" data-website="${c.website || ''}">Enter</button>
+                    <button class="btn-enter" data-id="${c.id}" data-name="${c.name}" data-code="${c.code}" data-website="${c.website || ''}" style="position:relative;z-index:2;${c.suspended ? 'opacity:0.5;cursor:not-allowed;' : ''}" ${c.suspended ? 'disabled' : ''}>${c.suspended ? 'Suspended' : 'Enter'}</button>
                 </div>
             `).join('');
 
@@ -3783,17 +4000,40 @@
             });
         }
 
-        function openCommunity(id, name, code, website) {
-            currentCommunityId = id;
-            currentErlcApiKey = '';
-            // Show only CAD page
-            document.getElementById('userHubSection').style.display = 'none';
-            dashboardSection.classList.add('hidden');
-            communityScreen.classList.add('active');
-            body.classList.add('in-community');
-            // Optionally set community name
-            communityViewName.textContent = name;
-        }
+        async function openCommunity(id, name, code, website) {
+             // Check if community is suspended
+             const { data: community } = await db.from('communities').select('suspended').eq('id', id).single();
+             if (community && community.suspended) {
+                 alert('This community is suspended and cannot be accessed');
+                 return;
+             }
+             
+             currentCommunityId = id;
+             currentErlcApiKey = '';
+             // Show only CAD page
+             document.getElementById('userHubSection').style.display = 'none';
+             dashboardSection.classList.add('hidden');
+             communityScreen.classList.add('active');
+             body.classList.add('in-community');
+             // Optionally set community name
+             communityViewName.textContent = name;
+             
+             // Load and display community banner
+             const bannerImg = document.getElementById('communityBannerImage');
+             const bannerOverlay = document.getElementById('bannerOverlay');
+             const bannerCommunityName = document.getElementById('bannerCommunityName');
+             const { data } = await db.from('communities').select('banner_url').eq('id', id).single();
+             
+             if (data && data.banner_url) {
+                 bannerImg.src = data.banner_url;
+                 bannerImg.style.display = 'block';
+                 bannerCommunityName.textContent = name;
+                 bannerOverlay.style.display = 'flex';
+             } else {
+                 bannerImg.style.display = 'none';
+                 bannerOverlay.style.display = 'none';
+             }
+         }
 
         let currentCommunityId = null;
         let currentErlcApiKey = ''; // ERLC API key for current community (stored in SQL)
@@ -3866,6 +4106,12 @@
             
             if (findError || !community) {
                 joinError.textContent = 'Community not found';
+                joinError.style.display = 'block';
+                return;
+            }
+            
+            if (community.suspended) {
+                joinError.textContent = 'This community is suspended';
                 joinError.style.display = 'block';
                 return;
             }
@@ -4119,28 +4365,33 @@
         }
 
         async function renderActiveUnits() {
-            // Fetch from Supabase so all sessions see all units
-            const dbUnits = await fetchActiveUnits();
-            // Merge: keep local unit in sync, but show all from DB
-            activeUnits = dbUnits;
+             // Fetch from Supabase so all sessions see all units
+             const dbUnits = await fetchActiveUnits();
+             // Filter out off-duty units (10-7)
+             activeUnits = dbUnits.filter(u => u.status !== '10-7');
 
-            if (activeUnits.length === 0) {
-                activeUnitsTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
-            } else {
-                activeUnitsTableBody.innerHTML = activeUnits.map(u => `
-                    <tr>
-                        <td><span style="padding:4px 8px;background:#3b82f6;border-radius:4px;font-size:11px;color:#fff;">${u.callsign}</span></td>
-                        <td>${u.name}</td>
-                        <td><span class="status-badge status-${u.status.replace(/\s+/g, '-').toLowerCase()}">${u.status}</span></td>
-                        <td>${u.subdivision || 'None'}</td>
-                    </tr>
-                `).join('');
-            }
-            // Also update dispatch view if it exists
-            if (typeof renderDispatchUnits === 'function') {
-                renderDispatchUnits();
-            }
-        }
+             if (activeUnits.length === 0) {
+                 activeUnitsTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
+             } else {
+                 activeUnitsTableBody.innerHTML = activeUnits.map(u => `
+                     <tr class="unit-row" data-unit-id="${u.id}" data-callsign="${u.callsign}" style="cursor:pointer;">
+                         <td><span style="padding:4px 8px;background:#3b82f6;border-radius:4px;font-size:11px;color:#fff;">${u.callsign}</span></td>
+                         <td>${u.name}</td>
+                         <td><span class="status-badge status-${u.status.replace(/\s+/g, '-').toLowerCase()}">${u.status}</span></td>
+                         <td>${u.subdivision || 'None'}</td>
+                     </tr>
+                 `).join('');
+                 
+                 // Add right-click handlers to unit rows
+                 activeUnitsTableBody.querySelectorAll('.unit-row').forEach(row => {
+                     row.addEventListener('contextmenu', e => showUnitContextMenu(e));
+                 });
+             }
+             // Also update dispatch view if it exists
+             if (typeof renderDispatchUnits === 'function') {
+                 renderDispatchUnits();
+             }
+         }
 
         policeBtn.onclick = () => policeLoginModal.classList.add('active');
         closePoliceLogin.onclick = () => { policeLoginModal.classList.remove('active'); policeLoginForm.reset(); };
@@ -4164,7 +4415,8 @@
                 callsign: callsign,
                 rank: rank,
                 status: '10-8',
-                subdivision: 'None'
+                subdivision: 'None',
+                inPanel: true
             };
             
             await saveActiveUnit(currentOfficer);
@@ -4174,6 +4426,11 @@
             policeLoginForm.reset();
             communityScreen.classList.remove('active');
             policeMdt.classList.add('active');
+            
+            // Update dispatch view to show officer in panel
+            if (typeof renderDispatchUnits === 'function') {
+                renderDispatchUnits();
+            }
             
             dutyStartTime = Date.now();
             timerInterval = setInterval(updateTimer, 1000);
@@ -4198,6 +4455,11 @@
                 await removeActiveUnit(currentOfficer.id);
                 await renderActiveUnits();
                 currentOfficer = null;
+                
+                // Update dispatch view
+                if (typeof renderDispatchUnits === 'function') {
+                    renderDispatchUnits();
+                }
             }
             
             policeMdt.classList.remove('active');
@@ -4261,32 +4523,76 @@
         let dispatchCallCounter = 1;
 
         async function renderDispatchUnits() {
-            const leoBody = document.getElementById('dispatchLeoUnits');
-            const emsBody = document.getElementById('dispatchEmsUnits');
-            const callsBody = document.getElementById('dispatchActiveCalls');
-            
-            if (!leoBody) return;
+             const leoBody = document.getElementById('dispatchLeoUnits');
+             const emsBody = document.getElementById('dispatchEmsUnits');
+             const callsBody = document.getElementById('dispatchActiveCalls');
+             const officersInPanelBody = document.getElementById('dispatchOfficersInPanel');
+             
+             if (!leoBody) return;
 
-            // Always fetch latest units from Supabase
-            const dbUnits = await fetchActiveUnits();
-            activeUnits = dbUnits;
-            
-            if (activeUnits.length === 0) {
-                leoBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
-            } else {
-                leoBody.innerHTML = activeUnits.map(u => {
-                    const assignedCall = dispatchActiveCalls.find(c => c.assignedUnits && c.assignedUnits.includes(u.callsign));
-                    return `
-                    <tr>
-                        <td style="font-weight:500;">[${u.callsign}] ${u.name}</td>
-                        <td>${u.status}</td>
-                        <td>${u.subdivision || 'None'}</td>
-                        <td>${assignedCall ? '#' + assignedCall.number : 'None'}</td>
-                    </tr>
-                `;}).join('');
-            }
-            
-            if (emsBody) emsBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
+             // Always fetch latest units from Supabase
+             const dbUnits = await fetchActiveUnits();
+             activeUnits = dbUnits.filter(u => u.status !== '10-7');
+             
+             if (activeUnits.length === 0) {
+                 leoBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
+             } else {
+                 leoBody.innerHTML = activeUnits.map(u => {
+                     const assignedCall = dispatchActiveCalls.find(c => c.assignedUnits && c.assignedUnits.includes(u.callsign));
+                     return `
+                     <tr class="unit-row" data-unit-id="${u.id}" data-callsign="${u.callsign}" style="cursor:pointer;">
+                         <td style="font-weight:500;">[${u.callsign}] ${u.name}</td>
+                         <td>${u.status}</td>
+                         <td>${u.subdivision || 'None'}</td>
+                         <td>${assignedCall ? '#' + assignedCall.number : 'None'}</td>
+                         <td><button class="kick-btn" data-unit-id="${u.id}" style="background:#ef4444;border:none;color:#fff;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;">Kick</button></td>
+                     </tr>
+                 `;}).join('');
+                 
+                 // Add right-click handlers to unit rows
+                 leoBody.querySelectorAll('.unit-row').forEach(row => {
+                     row.addEventListener('contextmenu', e => showUnitContextMenu(e));
+                 });
+                 
+                 // Add kick button handlers
+                 leoBody.querySelectorAll('.kick-btn').forEach(btn => {
+                     btn.addEventListener('click', async (e) => {
+                         e.stopPropagation();
+                         const unitId = btn.dataset.unitId;
+                         if (confirm('Kick this unit from the CAD?')) {
+                             await db.from('active_units').delete().eq('id', unitId);
+                             renderDispatchUnits();
+                         }
+                     });
+                 });
+                 }
+             
+             // Check which officers are currently in the police panel
+             // Officers who are currently logged in and viewing the police MDT
+             if (currentOfficer && currentOfficer.inPanel) {
+                 // Show the current officer in the dispatch view
+                 const officeringPanel = activeUnits.filter(u => {
+                     // If the current officer matches, they're in the panel
+                     return u.callsign === currentOfficer.callsign || u.id === String(currentOfficer.id);
+                 });
+                 
+                 if (officeringPanel.length > 0) {
+                     officersInPanelBody.innerHTML = officeringPanel.map(u => `
+                         <tr>
+                             <td style="font-weight:500;">[${u.callsign}]</td>
+                             <td>${u.name}</td>
+                             <td>${u.rank || 'N/A'}</td>
+                             <td><span class="status-badge status-${u.status.replace(/\s+/g, '-').toLowerCase()}">${u.status}</span></td>
+                         </tr>
+                     `).join('');
+                 } else {
+                     officersInPanelBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No officers in panel</td></tr>';
+                 }
+             } else {
+                 officersInPanelBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No officers in panel</td></tr>';
+             }
+             
+             if (emsBody) emsBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
             
             if (callsBody) {
                 if (dispatchActiveCalls.length === 0) {
@@ -4307,11 +4613,39 @@
         }
 
         function deleteDispatchCall(callId) {
-            dispatchActiveCalls = dispatchActiveCalls.filter(c => c.id !== callId);
-            renderDispatchUnits();
-        }
+             dispatchActiveCalls = dispatchActiveCalls.filter(c => c.id !== callId);
+             renderDispatchUnits();
+         }
 
-        document.getElementById('dispatch10-8').onclick = () => {
+         // Unit Status Context Menu Handler
+         let selectedUnitId = null;
+         function showUnitContextMenu(e) {
+             e.preventDefault();
+             selectedUnitId = e.currentTarget.dataset.unitId;
+             const menu = document.getElementById('unitStatusContextMenu');
+             menu.style.display = 'block';
+             menu.style.left = e.pageX + 'px';
+             menu.style.top = e.pageY + 'px';
+         }
+
+         // Handle status menu clicks
+         document.getElementById('statusMenuContainer').addEventListener('click', async (e) => {
+             const statusItem = e.target.closest('[data-status]');
+             if (statusItem && selectedUnitId) {
+                 const newStatus = statusItem.dataset.status;
+                 await updateActiveUnitStatus(selectedUnitId, newStatus);
+                 await renderActiveUnits();
+                 document.getElementById('unitStatusContextMenu').style.display = 'none';
+                 selectedUnitId = null;
+             }
+         });
+
+         // Close context menu when clicking elsewhere
+         document.addEventListener('click', () => {
+             document.getElementById('unitStatusContextMenu').style.display = 'none';
+         });
+
+         document.getElementById('dispatch10-8').onclick = () => {
             dispatchStatusEl.textContent = '10-8';
             if (currentDispatcher) currentDispatcher.status = '10-8';
         };
@@ -6243,36 +6577,53 @@
 
         function updateCreditsDisplay() {
             const credits = parseInt(localStorage.getItem('pulsecad_credits') || '0');
-            document.getElementById('hubCredits').textContent = credits;
-            document.getElementById('hubCreditsDisplay').textContent = credits + ' credits';
+            const hubCredits = document.getElementById('hubCredits');
+            const hubCreditsDisplay = document.getElementById('hubCreditsDisplay');
+            const hubProgressFill = document.getElementById('hubProgressFill');
+            
+            if (hubCredits) hubCredits.textContent = credits;
+            if (hubCreditsDisplay) hubCreditsDisplay.textContent = credits + ' credits';
             
             // Update progress bar (max 10 credits for full bar)
-            const progress = Math.min(credits / 10 * 100, 100);
-            document.getElementById('hubProgressFill').style.width = progress + '%';
+            if (hubProgressFill) {
+                const progress = Math.min(credits / 10 * 100, 100);
+                hubProgressFill.style.width = progress + '%';
+            }
         }
 
         // Hub button handlers
-        document.getElementById('hubOpenMDT').onclick = () => {
-            const credits = parseInt(localStorage.getItem('pulsecad_credits') || '0');
-            if (credits < 1) {
-                alert('You need at least 1 credit to access the MDT. Redeem a key to get credits!');
-                return;
-            }
-            // Show community list or first community
-            userHubSection.style.display = 'none';
-            communityScreen.classList.add('active');
-        };
+        const hubOpenMDTBtn = document.getElementById('hubOpenMDT');
+        if (hubOpenMDTBtn) {
+            hubOpenMDTBtn.onclick = () => {
+                const credits = parseInt(localStorage.getItem('pulsecad_credits') || '0');
+                if (credits < 1) {
+                    alert('You need at least 1 credit to access the MDT. Redeem a key to get credits!');
+                    return;
+                }
+                // Show community list or first community
+                userHubSection.style.display = 'none';
+                communityScreen.classList.add('active');
+            };
+        }
 
-        document.getElementById('hubRedeemKey').onclick = () => {
-            const section = document.getElementById('hubRedeemSection');
-            section.style.display = section.style.display === 'none' ? 'block' : 'none';
-            if (section.style.display === 'block') {
-                document.getElementById('hubKeyInput').focus();
-            }
-        };
+        const hubRedeemKeyBtn = document.getElementById('hubRedeemKey');
+        if (hubRedeemKeyBtn) {
+            hubRedeemKeyBtn.onclick = () => {
+                const section = document.getElementById('hubRedeemSection');
+                if (section) {
+                    section.style.display = section.style.display === 'none' ? 'block' : 'none';
+                    if (section.style.display === 'block') {
+                        const keyInput = document.getElementById('hubKeyInput');
+                        if (keyInput) keyInput.focus();
+                    }
+                }
+            };
+        }
 
         // Hub redeem functionality (SQL-backed)
-        document.getElementById('hubRedeemBtn').onclick = async () => {
+        const hubRedeemBtn = document.getElementById('hubRedeemBtn');
+        if (hubRedeemBtn) {
+            hubRedeemBtn.onclick = async () => {
             const inputCode = document.getElementById('hubKeyInput').value.trim().toUpperCase();
             const hubError = document.getElementById('hubRedeemError');
             const hubSuccess = document.getElementById('hubRedeemSuccess');
@@ -6367,7 +6718,8 @@
             setTimeout(() => {
                 hubSuccess.style.display = 'none';
             }, 3000);
-        };
+            };
+        }
 
         // Access Code System (SQL-backed)
         let accessCodes = [];
@@ -6729,10 +7081,14 @@
         };
 
         // Refresh button
-        refreshLiveMap.onclick = loadLiveMapPlayers;
+        if (refreshLiveMap) {
+            refreshLiveMap.onclick = loadLiveMapPlayers;
+        }
 
         // Test Map button - shows demo markers using v2 API format
-        document.getElementById('testLiveMap').onclick = () => {
+        const testLiveMapBtn = document.getElementById('testLiveMap');
+        if (testLiveMapBtn) {
+        testLiveMapBtn.onclick = () => {
             const demoPlayers = [
                 { Player: 'Officer_Smith:123', Team: 'Police', Callsign: '1A-01', Location: { LocationX: 1085, LocationZ: 2302, StreetName: 'Park Street', PostalCode: '218' }, Permission: 'Normal' },
                 { Player: 'Deputy_Jones:456', Team: 'Sheriff', Callsign: '2B-05', Location: { LocationX: 2370, LocationZ: 2510, StreetName: 'Industrial Park', PostalCode: '300' }, Permission: 'Admin' },
@@ -6768,6 +7124,7 @@
             
             renderMapMarkersV2(demoPlayers);
         };
+        }
 
         // Load players from ERLC API v2 (includes location data)
         async function loadLiveMapPlayers() {
@@ -6944,6 +7301,343 @@
         } else {
             createSnowflakes();
         }
-    </script>
-</body>
-</html>
+
+        // Staff Dashboard Navigation
+        function showStaffPage(pageName) {
+            // Hide old dashboard content
+            const oldContent = document.getElementById('oldStaffContent');
+            if (oldContent) oldContent.style.display = 'none';
+            
+            // Hide all pages
+            document.querySelectorAll('.staff-page').forEach(page => {
+                page.classList.remove('active');
+                page.style.display = 'none';
+            });
+
+            // Remove active from all buttons
+            document.querySelectorAll('[data-page]').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Determine actual page ID
+            let pageId = pageName + 'Page';
+            if (pageName === 'access-codes') {
+                pageId = 'accessCodesPage';
+            }
+
+            // Show selected page
+            const pageEl = document.getElementById(pageId);
+            if (pageEl) {
+                pageEl.classList.add('active');
+                pageEl.style.display = 'block';
+            }
+
+            // Mark button as active
+            const btnEl = document.getElementById(pageName + 'NavBtn');
+            if (btnEl) {
+                btnEl.classList.add('active');
+            }
+        }
+
+        // Sidebar button listeners
+        document.getElementById('communitiesNavBtn')?.addEventListener('click', () => showStaffPage('communities'));
+        document.getElementById('usersNavBtn')?.addEventListener('click', () => showStaffPage('users'));
+        document.getElementById('accessCodesNavBtn')?.addEventListener('click', () => showStaffPage('access-codes'));
+
+        // Show staff dashboard sidebar when staff button is clicked
+        function showStaffDashboardPages() {
+            const dashboard = document.getElementById('staffDashboard');
+            
+            // Load data when staff dashboard is shown
+            loadAllCommunities();
+            loadAllUsers();
+            loadStaffAccessCodes();
+            
+            // Show Communities by default
+            showStaffPage('communities');
+        }
+
+        // Hook into existing staff dashboard button click handlers
+        setTimeout(() => {
+            const originalStaffClick = document.getElementById('staffDashboardBtn')?.onclick;
+            if (originalStaffClick) {
+                document.getElementById('staffDashboardBtn').onclick = function(e) {
+                    originalStaffClick.call(this, e);
+                    showStaffDashboardPages();
+                };
+            }
+            
+            const originalStaffClickOld = document.getElementById('staffDashboardBtnOld')?.onclick;
+            if (originalStaffClickOld) {
+                document.getElementById('staffDashboardBtnOld').onclick = function(e) {
+                    originalStaffClickOld.call(this, e);
+                    showStaffDashboardPages();
+                };
+            }
+        }, 100);
+
+        // Data loaders
+        async function loadAllCommunities() {
+            const list = document.getElementById('allCommunitiesList');
+            if (!list) return;
+            
+            try {
+                const { data, error } = await db.from('communities').select('*');
+                if (error) throw error;
+                
+                if (!data || data.length === 0) {
+                    list.innerHTML = '<div style="color: #a1a1aa; text-align: center; padding: 40px;">No communities found</div>';
+                    return;
+                }
+
+                list.innerHTML = data.map(c => `
+                    <div class="staff-item">
+                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                             <div class="staff-item-title">${c.name || 'Unnamed'}</div>
+                             ${c.suspended ? '<span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">SUSPENDED</span>' : ''}
+                         </div>
+                         <div class="staff-item-desc">ID: ${c.id}</div>
+                         <div class="staff-item-desc">Code: ${c.code || 'N/A'}</div>
+                         <div style="margin-top:12px;display:flex;gap:8px;">
+                             <button class="suspend-btn" data-id="${c.id}" data-suspended="${c.suspended || false}" style="padding:6px 10px;background:${c.suspended ? '#22c55e' : '#ef4444'};border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:600;cursor:pointer;width:auto;">
+                                 ${c.suspended ? 'Unsuspend' : 'Suspend'}
+                             </button>
+                         </div>
+                     </div>
+                `).join('');
+                
+                // Add suspend handlers
+                setTimeout(() => {
+                    document.querySelectorAll('.suspend-btn').forEach(btn => {
+                        btn.addEventListener('click', async () => {
+                            const communityId = btn.dataset.id;
+                            const isSuspended = btn.dataset.suspended === 'true';
+                            const action = isSuspended ? 'Unsuspend' : 'Suspend';
+                            
+                            if (confirm(action + ' this community?')) {
+                                try {
+                                    const { error } = await db.from('communities').update({ suspended: !isSuspended }).eq('id', communityId);
+                                    if (error) {
+                                        alert('Error: ' + error.message);
+                                    } else {
+                                        loadAllCommunities();
+                                    }
+                                } catch (err) {
+                                    alert('Error: ' + err.message);
+                                }
+                            }
+                        });
+                    });
+                }, 0);
+            } catch (err) {
+                if (list) {
+                    list.innerHTML = `<div style="color: #ef4444; padding: 20px;">Error loading communities: ${err.message}</div>`;
+                }
+            }
+        }
+
+        async function loadAllUsers() {
+            const list = document.getElementById('allUsersList');
+            if (!list) return;
+            
+            try {
+                const { data, error } = await db.from('users').select('*');
+                if (error) throw error;
+                
+                if (!data || data.length === 0) {
+                    list.innerHTML = '<div style="color: #a1a1aa; text-align: center; padding: 40px;">No users found</div>';
+                    return;
+                }
+
+                list.innerHTML = data.map(u => `
+                    <div class="staff-item">
+                        <div class="staff-item-title">${u.username || u.email || 'Unnamed'}</div>
+                        <div class="staff-item-desc">Email: ${u.email} | Role: ${u.role || 'user'}</div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                if (list) {
+                    list.innerHTML = `<div style="color: #ef4444; padding: 20px;">Error loading users: ${err.message}</div>`;
+                }
+            }
+        }
+
+        // Load staff dashboard access codes (for staff panel)
+        function loadStaffAccessCodes() {
+            const list = document.getElementById('accessCodesList');
+            if (!list) return;
+            
+            try {
+                // Use existing accessCodes array
+                if (accessCodes.length === 0) {
+                    list.innerHTML = '<div style="color: #a1a1aa; text-align: center; padding: 40px;">No access codes found</div>';
+                    return;
+                }
+
+                list.innerHTML = accessCodes.map(ac => `
+                    <div class="staff-item">
+                        <div class="staff-item-title">${ac.code || 'N/A'}</div>
+                        <div class="staff-item-desc">Status: ${ac.redeemed ? 'Used' : 'Available'} | Created: ${ac.created ? new Date(ac.created).toLocaleDateString() : 'N/A'}</div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                if (list) {
+                    list.innerHTML = `<div style="color: #ef4444; padding: 20px;">Error loading access codes: ${err.message}</div>`;
+                }
+            }
+        }
+
+        // Community Banner Management - Admin Panel
+        let selectedAdminBannerFile = null;
+        
+        function setupAdminBannerHandlers() {
+            const adminBannerDropZone = document.getElementById('adminBannerDropZone');
+            const adminBannerFileInput = document.getElementById('adminBannerFileInput');
+            const adminBannerPreview = document.getElementById('adminBannerPreview');
+            const adminBannerUploadPrompt = document.getElementById('adminBannerUploadPrompt');
+            const saveAdminBannerBtn = document.getElementById('saveAdminBanner');
+            const removeAdminBannerBtn = document.getElementById('removeAdminBanner');
+
+            // Early return if elements don't exist
+            if (!adminBannerDropZone || !adminBannerFileInput || !saveAdminBannerBtn || !removeAdminBannerBtn) {
+                console.warn('Banner elements not found');
+                return;
+            }
+
+            // Click to upload
+            adminBannerDropZone.addEventListener('click', () => {
+                adminBannerFileInput.click();
+            });
+
+            // File selected
+            adminBannerFileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('File must be smaller than 5MB');
+                        return;
+                    }
+                    selectedAdminBannerFile = file;
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        adminBannerPreview.src = event.target.result;
+                        adminBannerPreview.style.display = 'block';
+                        adminBannerUploadPrompt.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Drag and drop
+            adminBannerDropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                adminBannerDropZone.style.background = '#1a1d2e';
+            });
+
+            adminBannerDropZone.addEventListener('dragleave', () => {
+                adminBannerDropZone.style.background = 'transparent';
+            });
+
+            adminBannerDropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                adminBannerDropZone.style.background = 'transparent';
+                const file = e.dataTransfer.files[0];
+                if (file) {
+                    adminBannerFileInput.files = e.dataTransfer.files;
+                    const event = new Event('change', { bubbles: true });
+                    adminBannerFileInput.dispatchEvent(event);
+                }
+            });
+
+            // Save banner
+            if (saveAdminBannerBtn) {
+                saveAdminBannerBtn.addEventListener('click', async () => {
+                    if (!selectedAdminBannerFile) {
+                        alert('Please select an image first');
+                        return;
+                    }
+                    if (!currentCommunityId) {
+                        alert('No community selected');
+                        return;
+                    }
+
+                    try {
+                        // Convert image to base64
+                        const reader = new FileReader();
+                        reader.onload = async (event) => {
+                            try {
+                                const base64Data = event.target.result;
+                                
+                                // Save directly to database
+                                const { error } = await db.from('communities').update({ 
+                                    banner_url: base64Data,
+                                    banner_updated_at: new Date().toISOString()
+                                }).eq('id', currentCommunityId);
+                                
+                                if (error) {
+                                    alert('Error saving banner: ' + error.message);
+                                    console.error('Save error:', error);
+                                } else {
+                                    alert('Banner saved successfully!');
+                                    selectedAdminBannerFile = null;
+                                    adminBannerPreview.style.display = 'none';
+                                    adminBannerUploadPrompt.style.display = 'block';
+                                    adminBannerFileInput.value = '';
+                                }
+                            } catch (err) {
+                                alert('Error: ' + err.message);
+                                console.error('Error:', err);
+                            }
+                        };
+                        reader.readAsDataURL(selectedAdminBannerFile);
+                    } catch (err) {
+                        alert('Error: ' + err.message);
+                        console.error('Banner error:', err);
+                    }
+                });
+            }
+
+            // Remove banner
+            if (removeAdminBannerBtn) {
+                removeAdminBannerBtn.addEventListener('click', async () => {
+                    if (!currentCommunityId) {
+                        alert('No community selected');
+                        return;
+                    }
+                    try {
+                        const { error } = await db.from('communities').update({ banner_url: null }).eq('id', currentCommunityId);
+                        if (error) {
+                            alert('Error removing banner: ' + error.message);
+                            console.error('Banner remove error:', error);
+                        } else {
+                            alert('Banner removed successfully!');
+                            adminBannerPreview.style.display = 'none';
+                            adminBannerUploadPrompt.style.display = 'block';
+                            adminBannerFileInput.value = '';
+                            selectedAdminBannerFile = null;
+                        }
+                    } catch (err) {
+                        alert('Error: ' + err.message);
+                        console.error('Banner error:', err);
+                    }
+                });
+            }
+        }
+
+        // Remove officer from active units when tab closes
+        window.addEventListener('unload', () => {
+            if (currentOfficer && currentCommunityId) {
+                // Delete immediately on unload
+                db.from('active_units').delete().eq('id', String(currentOfficer.id)).catch(e => console.error('Delete error:', e));
+            }
+        });
+
+        // Setup handlers when page loads - wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupAdminBannerHandlers);
+        } else {
+            setupAdminBannerHandlers();
+        }
+        </script>
+        </body>
+        </html>
