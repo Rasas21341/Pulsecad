@@ -8451,18 +8451,34 @@
         }
 
         // Remove officer and session when tab closes
-        const cleanupSession = () => {
-            if (currentOfficer && currentCommunityId) {
-                db.from('active_units').delete().eq('id', String(currentOfficer.id)).catch(e => console.error('Delete error:', e));
-            }
+        const cleanupSession = async () => {
             if (currentUser) {
-                db.from('login_sessions').delete().eq('user_id', currentUser.id).catch(e => console.error('Session delete error:', e));
+                try {
+                    await db.from('login_sessions').delete().eq('user_id', currentUser.id);
+                    console.log('Cleaned up login session for user:', currentUser.id);
+                } catch (e) {
+                    console.error('Session delete error:', e);
+                }
+            }
+            if (currentOfficer && currentCommunityId) {
+                try {
+                    await db.from('active_units').delete().eq('id', String(currentOfficer.id));
+                    console.log('Cleaned up active unit for officer:', currentOfficer.id);
+                } catch (e) {
+                    console.error('Delete error:', e);
+                }
             }
         };
         
-        window.addEventListener('beforeunload', cleanupSession);
-        window.addEventListener('pagehide', cleanupSession);
+        // Use pagehide first (most reliable), then unload, then beforeunload
+        window.addEventListener('pagehide', (e) => {
+            if (e.persisted === false) {  // Page is being unloaded, not just hidden
+                cleanupSession();
+            }
+        });
+        
         window.addEventListener('unload', cleanupSession);
+        window.addEventListener('beforeunload', cleanupSession);
 
         // Setup handlers when page loads - wait for DOM to be ready
         if (document.readyState === 'loading') {
