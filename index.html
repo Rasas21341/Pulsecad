@@ -2953,8 +2953,8 @@
         </div>
     </section>
 
-    <div class="overlay police-login-modal" id="policeLoginModal">
-        <div class="modal">
+    <div class="overlay police-login-modal" id="policeLoginModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);z-index:9999;justify-content:center;align-items:center;">
+        <div class="modal" style="max-width:400px;background:#14171f;border:1px solid #1e222d;border-radius:12px;padding:32px 28px;position:relative;">
             <button class="modal-close" id="closePoliceLogin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
             <img src="https://cdn.discordapp.com/icons/1455410644634304725/75220689ed872e2ee4c7101f479813a5.webp?size=512" alt="Pulsecad" class="modal-logo">
             <h2>Police Login</h2>
@@ -2972,13 +2972,13 @@
                     <label>Rank</label>
                     <input type="text" id="officerRank" placeholder="e.g. Deputy, Sergeant" required>
                 </div>
-                <button type="submit" class="btn-primary" style="background:#22c55e;margin-top:12px;">Go on Duty</button>
+                <button type="submit" class="btn-primary" style="background:#22c55e;margin-top:12px;width:100%;">Go on Duty</button>
             </form>
         </div>
     </div>
 
-    <div class="overlay dispatch-login-modal" id="dispatchLoginModal">
-        <div class="modal">
+    <div class="overlay dispatch-login-modal" id="dispatchLoginModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);z-index:9999;justify-content:center;align-items:center;">
+        <div class="modal" style="max-width:400px;background:#14171f;border:1px solid #1e222d;border-radius:12px;padding:32px 28px;position:relative;">
             <button class="modal-close" id="closeDispatchLogin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
             <img src="https://cdn.discordapp.com/icons/1455410644634304725/75220689ed872e2ee4c7101f479813a5.webp?size=512" alt="Pulsecad" class="modal-logo">
             <h2>Dispatch Login</h2>
@@ -2992,7 +2992,7 @@
                     <label>Callsign</label>
                     <input type="text" id="dispatcherCallsign" placeholder="e.g. 1L-01" required>
                 </div>
-                <button type="submit" class="btn-primary" style="background:#10b981;margin-top:12px;">Go on Duty</button>
+                <button type="submit" class="btn-primary" style="background:#10b981;margin-top:12px;width:100%;">Go on Duty</button>
             </form>
         </div>
     </div>
@@ -4526,54 +4526,46 @@
                  // Add event listeners to enter department buttons
                  document.querySelectorAll('.enter-dept-btn').forEach(btn => {
                      btn.addEventListener('click', (e) => {
-                         const deptId = e.target.dataset.deptId;
-                         const codeInput = document.querySelector(`.dept-code-input[data-dept-id="${deptId}"]`);
-                         const enterBtn = e.target;
+                         e.preventDefault();
+                         const deptType = e.target.dataset.deptType;
+                         const communityIdVal = e.target.dataset.communityId;
                          
-                         if (codeInput.style.display === 'none') {
-                             // Show code input
-                             codeInput.style.display = 'block';
-                             codeInput.focus();
-                             enterBtn.textContent = 'Verify Code';
-                         } else {
-                             // Verify code
-                             const deptType = enterBtn.dataset.deptType;
-                             const deptCode = enterBtn.dataset.deptCode;
-                             const communityIdVal = enterBtn.dataset.communityId;
-                             const enteredCode = codeInput.value.trim();
-                             
-                             if (enteredCode !== deptCode) {
-                                 alert('Invalid code');
-                                 codeInput.value = '';
-                                 return;
+                         console.log('Enter panel clicked, deptType:', deptType);
+                         
+                         // Directly open the appropriate panel without code verification
+                         currentCommunityId = communityIdVal;
+                         document.getElementById('departmentsViewSection').style.display = 'none';
+                         
+                         // Show login modal based on department type
+                         if (deptType === 'police') {
+                             const modal = document.getElementById('policeLoginModal');
+                             if (modal) {
+                                 modal.style.display = 'flex';
+                                 modal.style.position = 'fixed';
+                                 modal.style.inset = '0';
+                                 modal.style.zIndex = '999';
+                                 console.log('Police modal shown');
+                             } else {
+                                 console.log('Police modal not found');
                              }
-                             
-                             // Code is correct - open the appropriate panel
-                             currentCommunityId = communityIdVal;
-                             document.getElementById('departmentsViewSection').style.display = 'none';
-                             document.getElementById('communityScreen').classList.add('active');
-                             
-                             // Hide all other panels
-                             document.getElementById('policeMdt').classList.remove('active');
-                             document.getElementById('sheriffMdt').classList.remove('active');
-                             document.getElementById('dispatchMdt').classList.remove('active');
-                             document.getElementById('civilianPage').classList.remove('active');
-                             document.getElementById('staffPage').classList.remove('active');
-                             
-                             // Show login modal based on department type
-                             if (deptType === 'police') {
-                                 document.getElementById('policeMdt').classList.add('active');
-                                 document.getElementById('policeLoginModal').classList.add('active');
-                             } else if (deptType === 'sheriff') {
-                                 if (!document.getElementById('sheriffMdt')) {
-                                     // Create sheriff panel same as police if it doesn't exist
-                                     document.getElementById('policeMdt').classList.add('active');
-                                 } else {
-                                     document.getElementById('sheriffMdt').classList.add('active');
-                                 }
-                             } else if (deptType === 'dispatch') {
-                                 document.getElementById('dispatchMdt').classList.add('active');
-                                 document.getElementById('dispatchLoginModal').classList.add('active');
+                         } else if (deptType === 'sheriff') {
+                             const modal = document.getElementById('policeLoginModal');
+                             if (modal) {
+                                 modal.style.display = 'flex';
+                                 modal.style.position = 'fixed';
+                                 modal.style.inset = '0';
+                                 modal.style.zIndex = '999';
+                             }
+                         } else if (deptType === 'dispatch') {
+                             const modal = document.getElementById('dispatchLoginModal');
+                             if (modal) {
+                                 modal.style.display = 'flex';
+                                 modal.style.position = 'fixed';
+                                 modal.style.inset = '0';
+                                 modal.style.zIndex = '999';
+                                 console.log('Dispatch modal shown');
+                             } else {
+                                 console.log('Dispatch modal not found');
                              }
                          }
                      });
@@ -5097,9 +5089,9 @@
              }
          }
 
-        policeBtn.onclick = () => policeLoginModal.classList.add('active');
-        closePoliceLogin.onclick = () => { policeLoginModal.classList.remove('active'); policeLoginForm.reset(); };
-        policeLoginModal.onclick = e => { if (e.target === policeLoginModal) { policeLoginModal.classList.remove('active'); policeLoginForm.reset(); } };
+        policeBtn.onclick = () => { policeLoginModal.style.display = 'flex'; };
+        closePoliceLogin.onclick = () => { policeLoginModal.style.display = 'none'; policeLoginForm.reset(); };
+        policeLoginModal.onclick = e => { if (e.target === policeLoginModal) { policeLoginModal.style.display = 'none'; policeLoginForm.reset(); } };
 
         const mdtDepartment = document.getElementById('mdtDepartment');
 
@@ -5126,10 +5118,12 @@
             await saveActiveUnit(currentOfficer);
             await renderActiveUnits();
             
-            policeLoginModal.classList.remove('active');
+            // Hide police login modal
+            policeLoginModal.style.display = 'none';
             policeLoginForm.reset();
-            communityScreen.classList.remove('active');
-            policeMdt.classList.add('active');
+            
+            // Show police MDT
+            policeMdt.style.display = 'block';
             
             // Update dispatch view to show officer in panel
             if (typeof renderDispatchUnits === 'function') {
@@ -5185,9 +5179,9 @@
         let dispatchEmsCalls = [];
         let dispatchActiveCalls = [];
 
-        dispatchBtn.onclick = () => dispatchLoginModal.classList.add('active');
-        closeDispatchLogin.onclick = () => { dispatchLoginModal.classList.remove('active'); dispatchLoginForm.reset(); };
-        dispatchLoginModal.onclick = e => { if (e.target === dispatchLoginModal) { dispatchLoginModal.classList.remove('active'); dispatchLoginForm.reset(); } };
+        dispatchBtn.onclick = () => { dispatchLoginModal.style.display = 'flex'; };
+        closeDispatchLogin.onclick = () => { dispatchLoginModal.style.display = 'none'; dispatchLoginForm.reset(); };
+        dispatchLoginModal.onclick = e => { if (e.target === dispatchLoginModal) { dispatchLoginModal.style.display = 'none'; dispatchLoginForm.reset(); } };
 
         dispatchLoginForm.onsubmit = e => {
             e.preventDefault();
@@ -5204,10 +5198,12 @@
             dispatchIdentifier.textContent = `[${callsign}] ${name}`;
             dispatchStatusEl.textContent = '10-8';
             
-            dispatchLoginModal.classList.remove('active');
+            // Hide dispatch login modal
+            dispatchLoginModal.style.display = 'none';
             dispatchLoginForm.reset();
-            communityScreen.classList.remove('active');
-            dispatchMdt.classList.add('active');
+            
+            // Show dispatch MDT
+            dispatchMdt.style.display = 'block';
             
             renderDispatchUnits();
             // Auto-refresh dispatch units every 2 seconds to pick up new police units
