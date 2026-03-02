@@ -3008,10 +3008,6 @@
                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                  Users
              </button>
-             <button class="sidebar-btn" id="activeUsersNavBtn" data-page="active-users">
-                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                 Active Users
-             </button>
              <button class="sidebar-btn" id="accessCodesNavBtn" data-page="access-codes">
                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                  Access Codes
@@ -3030,14 +3026,6 @@
                 </div>
             </div>
 
-            <!-- Active Users Stat Card -->
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:30px;">
-                <div style="background:#14171f;border:1px solid #1e222d;border-radius:8px;padding:24px;text-align:center;">
-                    <div style="color:#a1a1aa;font-size:13px;font-weight:500;margin-bottom:12px;">Active Users</div>
-                    <div id="activeUsersCount" style="font-size:48px;font-weight:700;color:#3b82f6;">0</div>
-                </div>
-            </div>
-
             <!-- Staff Pages Container -->
             <div class="staff-pages-container" id="staffPagesContainer">
                 <!-- Communities Page -->
@@ -3053,14 +3041,6 @@
                     <div class="staff-page-header">All Users</div>
                     <div class="staff-list" id="allUsersList">
                         <div style="color: #a1a1aa; text-align: center; padding: 40px;">Loading users...</div>
-                    </div>
-                </div>
-
-                <!-- Active Users Page -->
-                <div class="staff-page" id="activeUsersPage" style="display:none;width:100%;">
-                    <div class="staff-page-header">Active Users</div>
-                    <div class="staff-list" id="activeUsersList">
-                        <div style="color: #a1a1aa; text-align: center; padding: 40px;">Loading active users...</div>
                     </div>
                 </div>
 
@@ -4611,6 +4591,18 @@
             body.classList.remove('in-community');
         };
 
+        // Disable developer tools and right-click
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+                (e.ctrlKey && e.key === 'u')) {
+                e.preventDefault();
+            }
+        });
+
         openLogin.onclick = () => authModal.classList.add('active');
         closeAuth.onclick = () => { authModal.classList.remove('active'); resetAuthForms(); };
         authModal.onclick = e => { if (e.target === authModal) { authModal.classList.remove('active'); resetAuthForms(); } };
@@ -4750,6 +4742,32 @@
                 registerError.textContent = error.message;
                 registerError.style.display = 'block';
                 return;
+            }
+
+            // Send webhook notification
+            console.log('Sending webhook notification for user:', username);
+            try {
+                const webhookUrl = 'https://discord.com/api/webhooks/1477875143492763838/5eUvSMvBmtPtlCA8UMGy81kxvRXny6OZ7J4uFwMPXg5_Oh8ZaSkHIuG4VDXAhFQ7lJCc';
+                const payload = {
+                    content: `✅ **New User Signup**\nUsername: **${username}**\nUser ID: \`${data.id}\`\nTimestamp: <t:${Math.floor(Date.now() / 1000)}:f>`
+                };
+                console.log('Webhook payload:', payload);
+                
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                console.log('Webhook response status:', response.status);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Webhook error:', errorText);
+                } else {
+                    console.log('Webhook sent successfully');
+                }
+            } catch (err) {
+                console.error('Failed to send webhook:', err);
             }
 
             registerForm.reset();
@@ -5029,8 +5047,11 @@
 
         // Save officer to Supabase active_units table
         async function saveActiveUnit(officer) {
-            if (!currentCommunityId) return;
-            await db.from('active_units').upsert({
+            if (!currentCommunityId) {
+                console.error('No community ID set');
+                return;
+            }
+            const { error } = await db.from('active_units').upsert({
                 id: String(officer.id),
                 community_id: currentCommunityId,
                 name: officer.name,
@@ -5040,23 +5061,36 @@
                 subdivision: officer.subdivision || 'None',
                 user_id: currentUser?.id || null
             });
+            if (error) console.error('Error saving active unit:', error);
         }
 
-        // Remove officer from Supabase active_units table
+        // Remove officer from active units
         async function removeActiveUnit(officerId) {
-            if (!currentCommunityId) return;
-            await db.from('active_units').delete().eq('id', String(officerId));
+            if (!currentCommunityId) {
+                console.error('No community ID set');
+                return;
+            }
+            const { error } = await db.from('active_units').delete().eq('id', String(officerId));
+            if (error) console.error('Error removing active unit:', error);
         }
 
-        // Update officer status in Supabase
+        // Update officer status
         async function updateActiveUnitStatus(officerId, status) {
-            await db.from('active_units').update({ status: status }).eq('id', String(officerId));
+            const { error } = await db.from('active_units').update({ status: status }).eq('id', String(officerId));
+            if (error) console.error('Error updating unit status:', error);
         }
 
-        // Fetch active units from Supabase for the current community
+        // Fetch active units from Supabase
         async function fetchActiveUnits() {
-            if (!currentCommunityId) return [];
-            const { data } = await db.from('active_units').select('*').eq('community_id', currentCommunityId);
+            if (!currentCommunityId) {
+                console.error('No community ID set');
+                return [];
+            }
+            const { data, error } = await db.from('active_units').select('*').eq('community_id', currentCommunityId);
+            if (error) {
+                console.error('Error fetching active units:', error);
+                return [];
+            }
             return data || [];
         }
 
@@ -8144,11 +8178,12 @@
                              <button class="suspend-btn" data-id="${c.id}" data-suspended="${c.suspended || false}" style="padding:6px 10px;background:${c.suspended ? '#22c55e' : '#ef4444'};border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:600;cursor:pointer;width:auto;">
                                  ${c.suspended ? 'Unsuspend' : 'Suspend'}
                              </button>
+                             <button class="delete-community-btn" data-id="${c.id}" style="padding:6px 10px;background:#dc2626;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:600;cursor:pointer;width:auto;">Delete</button>
                          </div>
                      </div>
                 `).join('');
                 
-                // Add suspend handlers
+                // Add suspend and delete handlers
                 setTimeout(() => {
                     document.querySelectorAll('.suspend-btn').forEach(btn => {
                         btn.addEventListener('click', async () => {
@@ -8159,6 +8194,26 @@
                             if (confirm(action + ' this community?')) {
                                 try {
                                     const { error } = await db.from('communities').update({ suspended: !isSuspended }).eq('id', communityId);
+                                    if (error) {
+                                        alert('Error: ' + error.message);
+                                    } else {
+                                        loadAllCommunities();
+                                    }
+                                } catch (err) {
+                                    alert('Error: ' + err.message);
+                                }
+                            }
+                        });
+                    });
+                    
+                    // Delete community handlers
+                    document.querySelectorAll('.delete-community-btn').forEach(btn => {
+                        btn.addEventListener('click', async () => {
+                            const communityId = btn.dataset.id;
+                            
+                            if (confirm('Are you sure you want to delete this community? This action cannot be undone.')) {
+                                try {
+                                    const { error } = await db.from('communities').delete().eq('id', communityId);
                                     if (error) {
                                         alert('Error: ' + error.message);
                                     } else {
