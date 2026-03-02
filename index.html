@@ -42,6 +42,7 @@
         .brand {
             display: flex;
             align-items: center;
+            
             gap: 12px;
         }
 
@@ -2306,7 +2307,6 @@
              <button class="nav-link" id="teamBtn">Team</button>
          </nav>
          <button class="nav-btn" id="openLogin">Login</button>
-         <button class="nav-btn" id="createCommunityBtn" style="display:none;margin-left:10px;background:#10b981;">Create Community</button>
          <div class="nav-user">
              <span id="navUsername"></span>
              <button class="nav-logout" id="staffDashboardBtn">Staff Dashboard</button>
@@ -2715,10 +2715,20 @@
                     </div>
                 </div>
             </div>
-            <button class="btn-back-dashboard" id="backToDashboard">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                Back to Dashboard
-            </button>
+            <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;">
+                <button class="btn-back-dashboard" id="backToDashboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Back to Dashboard
+                </button>
+                <button class="btn-back-dashboard" id="createCommunityFromArea" style="background:#10b981;flex:1;text-align:center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="display:inline;margin-right:6px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                    Create Community
+                </button>
+                <button class="btn-back-dashboard" id="staffDashboardFromArea" style="background:#a855f7;flex:1;text-align:center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="display:inline;margin-right:6px;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    Staff Dashboard
+                </button>
+            </div>
             <div class="community-info-header">
                 <h1 id="communityViewName"></h1>
                 <p id="communityViewCode"></p>
@@ -4637,15 +4647,16 @@
         closeAuth.onclick = () => { authModal.classList.remove('active'); resetAuthForms(); };
         authModal.onclick = e => { if (e.target === authModal) { authModal.classList.remove('active'); resetAuthForms(); } };
 
-        // Create Community Modal (Header Button)
+        // Create Community Modal (from community area)
         const createCommunityOverlay = document.getElementById('createCommunityOverlay');
-        const createCommunityHeaderBtn = document.getElementById('createCommunityBtn');
         const closeCommunityModal = document.getElementById('closeCommunityModal');
         const submitCreateCommunity = document.getElementById('submitCreateCommunity');
         const communityError = document.getElementById('communityError');
+        const createCommunityFromArea = document.getElementById('createCommunityFromArea');
+        const staffDashboardFromArea = document.getElementById('staffDashboardFromArea');
 
-        if (createCommunityHeaderBtn) {
-            createCommunityHeaderBtn.onclick = () => {
+        if (createCommunityFromArea) {
+            createCommunityFromArea.onclick = () => {
                 createCommunityOverlay.classList.add('active');
                 communityError.style.display = 'none';
                 document.getElementById('communityName').value = '';
@@ -4653,6 +4664,10 @@
                 document.getElementById('communityLogo').value = '';
                 document.getElementById('communityBanner').value = '';
             };
+        }
+        
+        if (staffDashboardFromArea) {
+            staffDashboardFromArea.onclick = () => showStaffDashboard();
         }
         
         if (closeCommunityModal) {
@@ -4910,8 +4925,6 @@
              resetAuthForms();
              document.getElementById('userHubSection').style.display = 'block';
              document.getElementById('dashboardSection').style.display = 'none';
-             document.getElementById('createCommunityBtn').style.display = 'inline-block';
-             document.getElementById('openLogin').style.display = 'none';
              loadCommunities();
              updateCreditsDisplay();
              // Show user hub
@@ -4971,8 +4984,6 @@
             body.classList.remove('logged-in');
             navUsername.textContent = '';
             document.getElementById('staffDashboardBtn').style.display = 'none';
-            document.getElementById('createCommunityBtn').style.display = 'none';
-            document.getElementById('openLogin').style.display = 'inline-block';
             // Hide user hub and show hero
             document.getElementById('userHubSection').style.display = 'none';
             document.getElementById('heroSection').style.display = 'flex';
