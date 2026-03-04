@@ -462,6 +462,9 @@
         .in-community header { display: none; }
         .in-community .community-screen { padding-top: 40px; }
         .in-community #staffDashboardBtn { display: none !important; }
+        .in-community #createCommunity { display: none !important; }
+        .in-community #createCommunityFromDept { display: none !important; }
+        .in-community #createCommunityFromArea { display: none !important; }
 
         .pricing-section {
             display: none;
@@ -2329,20 +2332,20 @@
               <h2>Create Community</h2>
               <p class="sub">Set up your new Pulsecad community</p>
               <div class="field">
-                  <label>Community Name</label>
-                  <input type="text" id="communityName" placeholder="e.g., Los Santos PD">
+                  <label>Community Name <span style="color:#ef4444;">*</span></label>
+                  <input type="text" id="communityNameOverlay" placeholder="e.g., Los Santos PD" required>
               </div>
               <div class="field">
                   <label>Description</label>
-                  <input type="text" id="communityDesc" placeholder="Brief description of your community">
+                  <input type="text" id="communityDescOverlay" placeholder="Brief description of your community">
               </div>
               <div class="field">
                   <label>Logo URL (Optional)</label>
-                  <input type="text" id="communityLogo" placeholder="https://example.com/logo.png">
+                  <input type="text" id="communityLogoOverlay" placeholder="https://example.com/logo.png">
               </div>
               <div class="field">
                   <label>Banner URL (Optional)</label>
-                  <input type="text" id="communityBanner" placeholder="https://example.com/banner.png">
+                  <input type="text" id="communityBannerOverlay" placeholder="https://example.com/banner.png">
               </div>
               <button class="btn-primary" id="submitCreateCommunity">Create Community</button>
               <div id="communityError" style="color:#ef4444;font-size:12px;margin-top:10px;text-align:center;display:none;"></div>
@@ -3133,7 +3136,7 @@
                 </div>
                 <div class="field">
                     <label>Callsign</label>
-                    <input type="text" id="officerCallsign" placeholder="e.g. 1B-01" required>
+                    <input type="text" id="officerCallsignInput" placeholder="e.g. 1B-01" required>
                 </div>
                 <div class="field">
                     <label>Rank</label>
@@ -3794,6 +3797,10 @@
                     <label>Postal</label>
                     <input type="text" id="callPostal" placeholder="Enter postal code" required>
                 </div>
+                <div class="field">
+                    <label>Officer Callsign</label>
+                    <input type="text" id="callOfficerCallsign" placeholder="e.g. 1B-01">
+                </div>
                 <div class="modal-btns">
                     <button type="button" class="btn-cancel" id="cancelCreateCall">Cancel</button>
                     <button type="submit" class="btn-confirm">Create</button>
@@ -3828,140 +3835,76 @@
     </div>
 
     <section class="police-mdt" id="policeMdt">
-        <div class="mdt-header">
-            <h2>Police MDT</h2>
-            <button class="btn-off-duty" id="offDutyBtn">Go Off Duty</button>
-        </div>
-        <div class="mdt-grid">
-            <div class="mdt-panel">
-                <h3>Officer Information</h3>
-                <div class="officer-timer" id="dutyTimer">00:00:00</div>
-                <div class="officer-info-item">
-                    <div class="label">Identifier</div>
-                    <div class="value" id="mdtCallsign">1B-01</div>
+        <div style="display:flex;flex-direction:column;height:100%;background:#0a0d14;">
+            <!-- Top Bar -->
+            <div style="background:#1a1f2e;border-bottom:1px solid #27272a;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;">
+                <div style="display:flex;gap:24px;align-items:center;">
+                    <div style="font-weight:600;color:#e4e4e7;font-size:16px;">Police MDT</div>
+                    <div style="display:flex;gap:16px;">
+                        <button style="background:none;border:none;color:#a1a1aa;cursor:pointer;padding:4px 12px;border-radius:4px;font-size:13px;font-family:inherit;" class="mdt-tab">Calls</button>
+                        <button style="background:none;border:none;color:#a1a1aa;cursor:pointer;padding:4px 12px;border-radius:4px;font-size:13px;font-family:inherit;" class="mdt-tab">Reports</button>
+                        <button style="background:none;border:none;color:#a1a1aa;cursor:pointer;padding:4px 12px;border-radius:4px;font-size:13px;font-family:inherit;" class="mdt-tab">People</button>
+                        <button style="background:none;border:none;color:#a1a1aa;cursor:pointer;padding:4px 12px;border-radius:4px;font-size:13px;font-family:inherit;" class="mdt-tab">Vehicles</button>
+                        <button style="background:none;border:none;color:#a1a1aa;cursor:pointer;padding:4px 12px;border-radius:4px;font-size:13px;font-family:inherit;" class="mdt-tab">Map</button>
+                    </div>
                 </div>
-                <div class="officer-info-item">
-                    <div class="label">Department</div>
-                    <div class="value" id="mdtDepartment">BCSO</div>
-                </div>
-                <div class="officer-info-item">
-                    <div class="label">Status</div>
-                    <div class="value"><span class="status-badge status-10-8" id="currentStatus">10-8</span></div>
-                </div>
-                <div class="officer-info-item">
-                    <div class="label">Subdivision</div>
-                    <div class="value" id="mdtSubdivision">None</div>
+                <div style="display:flex;gap:12px;align-items:center;">
+                    <div style="display:flex;align-items:center;gap:6px;color:#10b981;font-size:12px;">
+                        <div style="width:8px;height:8px;background:#10b981;border-radius:50%;"></div>
+                        Available
+                    </div>
+                    <div style="color:#a1a1aa;font-size:13px;" id="mdtTime">00:00:00</div>
+                    <button style="background:#3b82f6;border:none;color:#fff;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;" id="closePoliceMdt">Exit Panel</button>
                 </div>
             </div>
-            <div class="mdt-panel">
-                <h3>Control Panel</h3>
-                <div class="control-section">
-                    <div class="section-label">Status Controls</div>
-                    <div class="status-buttons">
-                        <button class="status-btn green" data-status="10-8">10-8 | In Service</button>
-                        <button class="status-btn red" data-status="10-7">10-7 | Out of Service</button>
+
+            <!-- Main Content -->
+            <div style="display:flex;flex:1;overflow:hidden;">
+                <!-- Left Sidebar -->
+                <div style="width:300px;background:#14171f;border-right:1px solid #27272a;padding:20px;overflow-y:auto;">
+                    <div style="margin-bottom:20px;">
+                        <div style="color:#e4e4e7;font-weight:600;margin-bottom:8px;font-size:13px;">OFFICER INFO</div>
+                        <div style="background:#0c0e12;padding:12px;border-radius:6px;border:1px solid #27272a;">
+                            <div style="color:#a1a1aa;font-size:11px;margin-bottom:4px;">Callsign</div>
+                            <div style="color:#e4e4e7;font-weight:600;font-size:14px;margin-bottom:12px;" id="mdtCallsign">1A-01</div>
+                            <div style="color:#a1a1aa;font-size:11px;margin-bottom:4px;">Status</div>
+                            <div style="color:#10b981;font-weight:600;font-size:12px;margin-bottom:12px;" id="officerStatus">10-8 (In Service)</div>
+                        </div>
                     </div>
-                </div>
-                <div class="control-section">
-                    <div class="status-buttons">
-                        <button class="status-btn yellow" data-status="10-6">10-6 | Busy</button>
-                        <button class="status-btn yellow" data-status="10-6">10-6 | Busy / Unavailable</button>
-                        <button class="status-btn blue" data-status="10-11">10-11 | Traffic Stop</button>
-                        <button class="status-btn blue" data-status="10-15">10-15 | Subject in Custody</button>
-                        <button class="status-btn blue" data-status="10-23">10-23 | Arrived on Scene</button>
+
+                    <div style="margin-bottom:20px;">
+                        <div style="color:#e4e4e7;font-weight:600;margin-bottom:8px;font-size:13px;">CHANGE STATUS</div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                            <button class="status-btn green" data-status="10-8" style="padding:8px;background:#22c55e;border:none;color:#fff;border-radius:4px;font-size:11px;cursor:pointer;font-family:inherit;">10-8</button>
+                            <button class="status-btn red" data-status="10-7" style="padding:8px;background:#ef4444;border:none;color:#fff;border-radius:4px;font-size:11px;cursor:pointer;font-family:inherit;">10-7</button>
+                            <button class="status-btn yellow" data-status="10-6" style="padding:8px;background:#eab308;border:none;color:#000;border-radius:4px;font-size:11px;cursor:pointer;font-family:inherit;">10-6</button>
+                            <button class="status-btn blue" data-status="10-23" style="padding:8px;background:#3b82f6;border:none;color:#fff;border-radius:4px;font-size:11px;cursor:pointer;font-family:inherit;">10-23</button>
+                        </div>
                     </div>
+
+                    <div>
+                         <div style="color:#e4e4e7;font-weight:600;margin-bottom:12px;font-size:13px;">ACTIVE CALLS</div>
+                         <div id="mdtActiveCalls" style="background:#0c0e12;padding:12px;border-radius:6px;border:1px solid #27272a;text-align:center;">
+                             <div style="color:#6b7280;font-size:12px;">No calls assigned</div>
+                         </div>
+                     </div>
                 </div>
-                <div class="control-section">
-                    <div class="status-buttons">
-                        <button class="status-btn orange" data-status="10-26">10-26 | Detaining Subject</button>
-                        <button class="status-btn orange" data-status="10-45">10-45 | Meal Break</button>
-                        <button class="status-btn orange" data-status="10-97">10-97 | En Route to Scene</button>
+
+                <!-- Main Panel -->
+                <div style="flex:1;padding:24px;overflow-y:auto;">
+                    <div style="max-width:1200px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+                            <div style="color:#e4e4e7;font-size:24px;font-weight:600;">My Assigned Calls</div>
+                            <button id="mdtCreateCallBtn" style="background:#3b82f6;border:none;color:#fff;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">+ Create Call</button>
+                        </div>
+                        <div style="background:#14171f;border:1px solid #27272a;border-radius:8px;padding:40px;text-align:center;min-height:300px;display:flex;align-items:center;justify-content:center;">
+                            <div style="color:#6b7280;">No calls assigned to you</div>
+                        </div>
                     </div>
-                </div>
-                <div class="control-section">
-                    <div class="status-buttons">
-                        <button class="status-btn red" data-status="10-99">10-99 | Emergency</button>
-                        <button class="status-btn purple" data-status="Signal 11">Signal 11 | Running Radar</button>
-                        <button class="status-btn purple" data-status="Signal 7">Signal 7 | Investigation</button>
-                        <button class="status-btn red" data-status="PANIC">Panic Button</button>
-                    </div>
-                </div>
-                <div class="control-section">
-                    <div class="section-label">Quick Actions</div>
-                    <div class="quick-actions">
-                        <button class="quick-btn">10 Codes</button>
-                        <button class="quick-btn">Notepad</button>
-                        <button class="quick-btn">Select Subdivision</button>
-                        <button class="quick-btn" id="createBoloBtn">Create Bolo</button>
-                        <button class="quick-btn" id="createCallBtn">Create Call</button>
-                        <button class="quick-btn" id="lookupBtn">Lookup</button>
-                        <button class="quick-btn" id="policeLiveMap" style="background:#22c55e;color:#fff;">Live Map <span style="background:#f59e0b;color:#000;font-size:8px;padding:1px 4px;border-radius:3px;margin-left:4px;">BETA</span></button>
-                    </div>
-                </div>
-            </div>
-            <div class="mdt-panel">
-                <h3>Live Chat</h3>
-                <div class="chat-messages" id="chatMessages">
-                    <div class="chat-message"><span class="time">10:41 AM</span> <span class="text">test</span></div>
-                </div>
-                <div class="chat-input-wrap">
-                    <input type="text" class="chat-input" id="chatInput" placeholder="Type a message...">
-                    <button class="chat-send" id="chatSend">Send</button>
                 </div>
             </div>
         </div>
-        <div class="mdt-bottom-grid">
-            <div class="mdt-panel">
-                <h3>Active Units</h3>
-                <table class="calls-table">
-                    <thead>
-                        <tr>
-                            <th>Callsign</th>
-                            <th>Name</th>
-                            <th>Status</th>
-                            <th>Subdivision</th>
-                        </tr>
-                    </thead>
-                    <tbody id="activeUnitsTableBody">
-                        
-                    </tbody>
-                </table>
-            </div>
-            <div class="mdt-panel">
-                <h3>Your Calls</h3>
-                <table class="calls-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Type</th>
-                            <th>Location</th>
-                            <th>Postal</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="callsTableBody">
-                        
-                    </tbody>
-                </table>
-            </div>
-            <div class="mdt-panel">
-                <h3>Active Bolos</h3>
-                <table class="bolos-table">
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Details</th>
-                            <th>Date & Time</th>
-                            <th>Issued By</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bolosTableBody">
-                        
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
+     </section>
 
     <!-- Assign Units to Call Modal -->
     <div class="overlay" id="assignUnitsModal">
@@ -4055,6 +3998,7 @@
                             <th>#</th>
                             <th>Type</th>
                             <th>Location & Postal</th>
+                            <th>Officer Callsign</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -4820,10 +4764,10 @@
             createCommunityFromArea.onclick = () => {
                 createCommunityOverlay.classList.add('active');
                 communityError.style.display = 'none';
-                document.getElementById('communityName').value = '';
-                document.getElementById('communityDesc').value = '';
-                document.getElementById('communityLogo').value = '';
-                document.getElementById('communityBanner').value = '';
+                document.getElementById('communityNameOverlay').value = '';
+                document.getElementById('communityDescOverlay').value = '';
+                document.getElementById('communityLogoOverlay').value = '';
+                document.getElementById('communityBannerOverlay').value = '';
             };
         }
         
@@ -4840,10 +4784,10 @@
             createCommunityFromDept.onclick = () => {
                 createCommunityOverlay.classList.add('active');
                 communityError.style.display = 'none';
-                document.getElementById('communityName').value = '';
-                document.getElementById('communityDesc').value = '';
-                document.getElementById('communityLogo').value = '';
-                document.getElementById('communityBanner').value = '';
+                document.getElementById('communityNameOverlay').value = '';
+                document.getElementById('communityDescOverlay').value = '';
+                document.getElementById('communityLogoOverlay').value = '';
+                document.getElementById('communityBannerOverlay').value = '';
             };
         }
 
@@ -4868,12 +4812,15 @@
             } 
         };
 
+        console.log('submitCreateCommunity element:', submitCreateCommunity);
         if (submitCreateCommunity) {
             submitCreateCommunity.onclick = async () => {
-                const name = document.getElementById('communityName').value.trim();
-                const description = document.getElementById('communityDesc').value.trim();
-                const logoUrl = document.getElementById('communityLogo').value.trim();
-                const bannerUrl = document.getElementById('communityBanner').value.trim();
+                const name = document.getElementById('communityNameOverlay').value.trim();
+                const description = document.getElementById('communityDescOverlay').value.trim();
+                const logoUrl = document.getElementById('communityLogoOverlay').value.trim();
+                const bannerUrl = document.getElementById('communityBannerOverlay').value.trim();
+
+                console.log('Community creation - Name:', name, 'Description:', description);
 
                 if (!name) {
                     communityError.textContent = 'Community name is required';
@@ -4896,14 +4843,16 @@
                     }])
                     .select('*');
 
-                submitCreateCommunity.disabled = false;
-                submitCreateCommunity.textContent = 'Create Community';
+                 console.log('Insert response - Data:', data, 'Error:', error);
 
-                if (error) {
-                    communityError.textContent = 'Error: ' + error.message;
-                    communityError.style.display = 'block';
-                    return;
-                }
+                 submitCreateCommunity.disabled = false;
+                 submitCreateCommunity.textContent = 'Create Community';
+
+                 if (error) {
+                     communityError.textContent = 'Error: ' + error.message;
+                     communityError.style.display = 'block';
+                     return;
+                 }
 
                 createCommunityOverlay.classList.remove('active');
                 
@@ -4941,17 +4890,33 @@
             const website = document.getElementById('communityWebsite').value.trim();
             const code = Math.random().toString(36).substr(2, 8).toUpperCase();
             
+            if (!name) {
+                alert('Community name is required');
+                return;
+            }
+            
+            console.log('Creating community with name:', name);
+            
             const { data, error } = await db
                 .from('communities')
                 .insert([{ name, website, code, owner_id: currentUser.id }])
-                .select();
+                .select('*');
+            
+            console.log('Insert result - data:', data, 'error:', error);
             
             if (error) {
                 alert('Error creating community: ' + error.message);
+                console.error('Create error:', error);
+                return;
+            }
+            
+            if (!data || data.length === 0) {
+                alert('Error: No data returned from insert');
                 return;
             }
             
             const communityId = data[0].id;
+            console.log('Community created with ID:', communityId, 'Name:', data[0].name);
             createModal.classList.remove('active');
             createCommunityForm.reset();
             
@@ -5354,6 +5319,8 @@
         const offDutyBtn = document.getElementById('offDutyBtn');
         const dutyTimer = document.getElementById('dutyTimer');
         const mdtCallsign = document.getElementById('mdtCallsign');
+        const mdtTime = document.getElementById('mdtTime');
+        const closePoliceMdt = document.getElementById('closePoliceMdt');
         const currentStatusBadge = document.getElementById('currentStatus');
         const chatInput = document.getElementById('chatInput');
         const chatSend = document.getElementById('chatSend');
@@ -5419,6 +5386,8 @@
              // Filter out off-duty units (10-7)
              activeUnits = dbUnits.filter(u => u.status !== '10-7');
 
+             if (!activeUnitsTableBody) return;
+
              if (activeUnits.length === 0) {
                  activeUnitsTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active units</td></tr>';
              } else {
@@ -5442,21 +5411,27 @@
              }
          }
 
-        policeBtn.onclick = () => { policeLoginModal.style.display = 'flex'; };
-        closePoliceLogin.onclick = () => { policeLoginModal.style.display = 'none'; policeLoginForm.reset(); };
-        policeLoginModal.onclick = e => { if (e.target === policeLoginModal) { policeLoginModal.style.display = 'none'; policeLoginForm.reset(); } };
+        if (policeBtn) policeBtn.onclick = () => { if (policeLoginModal) policeLoginModal.style.display = 'flex'; };
+        if (closePoliceLogin) closePoliceLogin.onclick = () => { if (policeLoginModal) policeLoginModal.style.display = 'none'; if (policeLoginForm) policeLoginForm.reset(); };
+        if (policeLoginModal) policeLoginModal.onclick = e => { if (e.target === policeLoginModal) { policeLoginModal.style.display = 'none'; if (policeLoginForm) policeLoginForm.reset(); } };
+        if (closePoliceMdt) closePoliceMdt.onclick = () => { 
+            if (policeMdt) policeMdt.style.display = 'none'; 
+            const notificationBell = document.getElementById('notificationBell');
+            if (notificationBell && currentUser) notificationBell.style.display = 'block';
+            if (policeLoginForm) policeLoginForm.reset(); 
+        };
 
         const mdtDepartment = document.getElementById('mdtDepartment');
 
         let currentOfficer = null;
 
-        policeLoginForm.onsubmit = async e => {
+        if (policeLoginForm) policeLoginForm.onsubmit = async e => {
             e.preventDefault();
             const name = document.getElementById('officerName').value.trim();
-            const callsign = document.getElementById('officerCallsign').value.trim();
+            const callsign = document.getElementById('officerCallsignInput').value.trim();
             const rank = document.getElementById('officerRank').value.trim();
             
-            mdtCallsign.textContent = callsign;
+            if (mdtCallsign) mdtCallsign.textContent = callsign;
             
             currentOfficer = {
                 id: Date.now(),
@@ -5477,30 +5452,67 @@
             
             // Show police MDT
             policeMdt.style.display = 'block';
+            const notificationBell = document.getElementById('notificationBell');
+            if (notificationBell) notificationBell.style.display = 'none';
             
             // Update dispatch view to show officer in panel
             if (typeof renderDispatchUnits === 'function') {
                 renderDispatchUnits();
             }
             
+            // Render MDT active calls
+            if (typeof renderMDTActiveCalls === 'function') {
+                renderMDTActiveCalls();
+            }
+            
             dutyStartTime = Date.now();
             timerInterval = setInterval(updateTimer, 1000);
             updateTimer();
-        };
+            
+            // Refresh active units and calls every 3 seconds
+             setInterval(() => {
+                 if (currentOfficer && policeMdt && policeMdt.style.display !== 'none') {
+                     renderActiveUnits();
+                     if (typeof renderMDTActiveCalls === 'function') {
+                         renderMDTActiveCalls();
+                     }
+                 }
+             }, 3000);
+            };
+
+            // Create Call button handler
+            const mdtCreateCallBtn = document.getElementById('mdtCreateCallBtn');
+            if (mdtCreateCallBtn) {
+             mdtCreateCallBtn.onclick = () => {
+                 const callType = prompt('Enter call type (e.g., Traffic Stop, Welfare Check):');
+                 if (!callType) return;
+                 
+                 const location = prompt('Enter location:');
+                 if (!location) return;
+                 
+                 const postal = prompt('Enter postal code (optional):');
+                 
+                 alert(`Call created!\n\nType: ${callType}\nLocation: ${location}\nPostal: ${postal || 'None'}\n\nThis would be saved to the database.`);
+                 console.log('Call created:', { callType, location, postal });
+             };
+            }
 
         function updateTimer() {
+            if (!dutyStartTime || !dutyTimer) return;
             const elapsed = Math.floor((Date.now() - dutyStartTime) / 1000);
             const hours = String(Math.floor(elapsed / 3600)).padStart(2, '0');
             const minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
             const seconds = String(elapsed % 60).padStart(2, '0');
-            dutyTimer.textContent = `${hours}:${minutes}:${seconds}`;
+            if (dutyTimer) dutyTimer.textContent = `${hours}:${minutes}:${seconds}`;
+            if (mdtTime) mdtTime.textContent = `${hours}:${minutes}:${seconds}`;
         }
 
-        offDutyBtn.onclick = async () => {
+        if (offDutyBtn) offDutyBtn.onclick = async () => {
             clearInterval(timerInterval);
             timerInterval = null;
             dutyStartTime = null;
-            dutyTimer.textContent = '00:00:00';
+            if (dutyTimer) dutyTimer.textContent = '00:00:00';
+            if (mdtTime) mdtTime.textContent = '00:00:00';
             
             if (currentOfficer) {
                 await removeActiveUnit(currentOfficer.id);
@@ -5656,6 +5668,7 @@
                             <td>${c.number}</td>
                             <td>${c.type}</td>
                             <td>${c.location} (${c.postal})</td>
+                            <td>${c.officerCallsign || 'Unassigned'}</td>
                             <td>
                                 <button class="btn-delete" style="background:#ef4444;border:none;color:#fff;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;" onclick="deleteDispatchCall(${c.id})">Delete</button>
                             </td>
@@ -5668,6 +5681,25 @@
         function deleteDispatchCall(callId) {
              dispatchActiveCalls = dispatchActiveCalls.filter(c => c.id !== callId);
              renderDispatchUnits();
+         }
+
+         function renderMDTActiveCalls() {
+             const mdtActiveCalls = document.getElementById('mdtActiveCalls');
+             if (!mdtActiveCalls) return;
+             
+             const assignedCalls = dispatchActiveCalls.filter(c => c.officerCallsign && c.officerCallsign === (currentOfficer ? currentOfficer.callsign : null));
+             
+             if (assignedCalls.length === 0) {
+                 mdtActiveCalls.innerHTML = '<div style="color:#6b7280;font-size:12px;">No calls assigned</div>';
+             } else {
+                 mdtActiveCalls.innerHTML = assignedCalls.map(c => `
+                     <div style="background:#14171f;border:1px solid #27272a;border-radius:4px;padding:8px;margin-bottom:8px;text-align:left;font-size:12px;">
+                         <div style="color:#e4e4e7;font-weight:600;">Call #${c.number}</div>
+                         <div style="color:#a1a1aa;font-size:11px;margin-top:4px;">${c.type}</div>
+                         <div style="color:#a1a1aa;font-size:11px;">${c.location}</div>
+                     </div>
+                 `).join('');
+             }
          }
 
          // Unit Status Context Menu Handler
@@ -5915,7 +5947,7 @@
         document.querySelectorAll('.status-btn[data-status]').forEach(btn => {
             btn.onclick = () => {
                 const status = btn.dataset.status;
-                currentStatusBadge.textContent = status;
+                if (currentStatusBadge) currentStatusBadge.textContent = status;
                 
                 let statusClass = 'status-badge ';
                 if (status === '10-8') statusClass += 'status-10-8';
@@ -5932,31 +5964,58 @@
                 else if (status === 'PANIC') statusClass += 'status-panic';
                 else statusClass += 'status-10-7';
                 
-                currentStatusBadge.className = statusClass;
+                if (currentStatusBadge) currentStatusBadge.className = statusClass;
+                
+                // Update sidebar status display
+                const officerStatus = document.getElementById('officerStatus');
+                const statusNames = {
+                    '10-8': '10-8 (In Service)',
+                    '10-7': '10-7 (Out of Service)',
+                    '10-6': '10-6 (Busy)',
+                    '10-23': '10-23 (Arrived on Scene)',
+                    '10-11': '10-11 (Traffic Stop)',
+                    '10-15': '10-15 (Subject in Custody)',
+                    '10-26': '10-26 (Detaining Subject)',
+                    '10-45': '10-45 (Meal Break)',
+                    '10-97': '10-97 (En Route)',
+                    '10-99': '10-99 (Emergency)',
+                    'Signal 11': 'Signal 11 (Radar)',
+                    'Signal 7': 'Signal 7 (Investigation)',
+                    'PANIC': 'PANIC (Emergency)'
+                };
+                if (officerStatus) {
+                    officerStatus.textContent = statusNames[status] || status;
+                }
                 
                 if (currentOfficer) {
                     currentOfficer.status = status;
                     updateActiveUnitStatus(currentOfficer.id, status);
                     renderActiveUnits();
+                    
+                    // Notify other users in the community (via database update they'll see on next fetch)
+                    console.log('Status updated to:', status);
                 }
             };
         });
 
-        chatSend.onclick = () => {
+        if (chatSend) chatSend.onclick = () => {
+            if (!chatInput) return;
             const msg = chatInput.value.trim();
             if (!msg) return;
             const now = new Date();
             const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-            const callsign = mdtCallsign.textContent;
+            const callsign = mdtCallsign ? mdtCallsign.textContent : 'Unknown';
             const msgEl = document.createElement('div');
             msgEl.className = 'chat-message';
             msgEl.innerHTML = `<span class="time">${time}</span> <span class="sender">${callsign}</span> <span class="text">${msg}</span>`;
-            chatMessages.appendChild(msgEl);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            if (chatMessages) {
+                chatMessages.appendChild(msgEl);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
             chatInput.value = '';
         };
 
-        chatInput.onkeypress = e => { if (e.key === 'Enter') chatSend.onclick(); };
+        if (chatInput) chatInput.onkeypress = e => { if (e.key === 'Enter' && chatSend) chatSend.onclick(); };
 
         const createCallBtn = document.getElementById('createCallBtn');
         const createCallModal = document.getElementById('createCallModal');
@@ -5993,25 +6052,30 @@
         };
 
         // Handle call form submit for both police & dispatch
-        createCallForm.onsubmit = e => {
-            e.preventDefault();
-            const type = document.getElementById('callType').value.trim();
-            const location = document.getElementById('callLocation').value.trim();
-            const postal = document.getElementById('callPostal').value.trim();
+         createCallForm.onsubmit = e => {
+             e.preventDefault();
+             const type = document.getElementById('callType').value.trim();
+             const location = document.getElementById('callLocation').value.trim();
+             const postal = document.getElementById('callPostal').value.trim();
+             const officerCallsign = document.getElementById('callOfficerCallsign').value.trim();
 
-            if (createCallModal._fromDispatch) {
-                const newCall = {
-                    id: Date.now(),
-                    number: callCounter,
-                    type: type,
-                    location: location,
-                    postal: postal,
-                    assignedUnits: []
-                };
-                dispatchActiveCalls.push(newCall);
-                callCounter++;
-                renderDispatchUnits();
-                createCallModal._fromDispatch = false;
+             if (createCallModal._fromDispatch) {
+                 const newCall = {
+                     id: Date.now(),
+                     number: callCounter,
+                     type: type,
+                     location: location,
+                     postal: postal,
+                     officerCallsign: officerCallsign || null,
+                     assignedUnits: []
+                 };
+                 dispatchActiveCalls.push(newCall);
+                 callCounter++;
+                 renderDispatchUnits();
+                 if (typeof renderMDTActiveCalls === 'function') {
+                     renderMDTActiveCalls();
+                 }
+                 createCallModal._fromDispatch = false;
             } else {
                 const existingEmpty = callsTableBody.querySelector('td');
                 if (existingEmpty && existingEmpty.textContent === '1') {
