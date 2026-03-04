@@ -120,6 +120,59 @@
             max-width: 420px;
         }
 
+        .trusted-by {
+            background: #0c0e12;
+            padding: 60px 24px;
+            text-align: center;
+            border-top: 1px solid #1e222d;
+            border-bottom: 1px solid #1e222d;
+        }
+
+        .trusted-by h2 {
+            color: #a1a1aa;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .trusted-by-logos {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .trusted-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+
+        .trusted-logo:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .trusted-logo img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #27272a;
+        }
+
+        .trusted-logo span {
+            color: #e4e4e7;
+            font-size: 13px;
+            font-weight: 500;
+            max-width: 100px;
+        }
+
         .overlay {
             position: fixed;
             inset: 0;
@@ -372,9 +425,11 @@
         .btn-confirm:hover { background: #16a34a; }
 
         .logged-in .hero { display: none !important; }
+        .logged-in .trusted-by { display: none !important; }
         .logged-in .pricing-section { display: none !important; }
         .logged-in .team-section { display: none !important; }
-        
+
+
         .logged-in .dashboard:not(.hidden) { display: block; }
         .logged-in .dashboard.hidden { display: none !important; }
         .logged-in .nav-btn { display: none; }
@@ -2112,40 +2167,67 @@
 
         /* Staff Sidebar */
         .staff-sidebar {
-            width: 180px;
+            width: 90px;
             background: #0c0e12;
             border-right: 1px solid #1e222d;
-            padding: 80px 16px 16px 16px;
+            padding: 80px 0 20px 0;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 0;
+            position: relative;
+            align-items: center;
         }
 
         .sidebar-btn {
             display: flex;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            padding: 8px 12px;
-            background: #1a1d2e;
-            border: 1px solid #27272a;
-            border-radius: 8px;
-            color: #e4e4e7;
+            padding: 18px 10px;
+            background: transparent;
+            border: none;
+            border-left: none;
+            border-radius: 0;
+            color: #9ca3af;
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
             font-family: inherit;
+            text-align: center;
+            width: 100%;
         }
 
         .sidebar-btn:hover {
-            background: #252b3d;
-            border-color: #374151;
+            color: #d1d5db;
+            background: rgba(59, 130, 246, 0.1);
         }
 
         .sidebar-btn.active {
-            background: #3b82f6;
-            border-color: #3b82f6;
-            color: #fff;
+            color: #3b82f6;
+        }
+
+        .sidebar-btn.active svg {
+            color: #3b82f6;
+            stroke: #3b82f6;
+        }
+
+        .sidebar-btn svg {
+            width: 32px;
+            height: 32px;
+            stroke-width: 1.5;
+            color: currentColor;
+            stroke: currentColor;
+            transition: all 0.2s;
+        }
+
+        .sidebar-btn span {
+            font-size: 11px;
+            white-space: normal;
+            word-break: break-word;
+            width: 100%;
+            line-height: 1.2;
         }
 
         /* Staff Pages Container */
@@ -2309,12 +2391,29 @@
          <button class="nav-btn" id="openLogin">Login</button>
          <div class="nav-user">
              <span id="navUsername"></span>
-             <button class="nav-logout" id="staffDashboardBtn">Staff Dashboard</button>
+             <button class="notification-bell" id="notificationBell" style="display:none;background:none;border:none;color:#e4e4e7;cursor:pointer;position:relative;padding:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="transition:all 0.2s;">
+                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                     <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                 </svg>
+                 <span id="notificationBadge" style="position:absolute;top:0;right:0;background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;display:none;font-weight:600;">0</span>
+             </button>
              <button class="nav-logout" id="logoutBtn">Log out</button>
          </div>
      </header>
 
-    <section class="pricing-section" id="pricingSection">
+     <!-- Notifications Dropdown -->
+     <div id="notificationDropdown" style="display:none;position:fixed;top:70px;right:30px;width:350px;background:#14171f;border:1px solid #1e222d;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.5);z-index:100;max-height:500px;overflow-y:auto;">
+         <div style="padding:16px;border-bottom:1px solid #1e222d;display:flex;justify-content:space-between;align-items:center;">
+             <h3 style="color:#e4e4e7;font-size:16px;font-weight:600;">Notifications</h3>
+             <button id="closeNotifications" style="background:none;border:none;color:#71717a;cursor:pointer;">✕</button>
+         </div>
+         <div id="notificationsList" style="max-height:400px;overflow-y:auto;">
+             <div style="padding:20px;color:#a1a1aa;text-align:center;">No notifications</div>
+         </div>
+     </div>
+
+     <section class="pricing-section" id="pricingSection">
         <button class="back-btn" id="backFromPricing">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Back
@@ -2492,6 +2591,16 @@
         <p>Create and join communities. Connect with others and build something together.</p>
     </main>
 
+    <section class="trusted-by" id="trustedBySection" style="display:block;">
+        <h2>Trusted by</h2>
+        <div class="trusted-by-logos">
+            <div class="trusted-logo">
+                <img src="https://cdn.discordapp.com/icons/1475741792321147102/97a4f2f9540f8b1479d1f8364ad98c0f.webp?size=512" alt="California City Roleplay">
+                <span>California City Roleplay</span>
+            </div>
+        </div>
+    </section>
+
     <section class="user-hub" id="userHubSection" style="display:none;">
         <div class="hub-container">
             <div class="hub-greeting">
@@ -2511,6 +2620,10 @@
                     <button class="hub-btn" id="hubCreateCommunity" style="background:#10b981;border:none;color:#fff;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
                         Create Community
+                    </button>
+                    <button class="hub-btn" id="hubStaffDashboard" style="background:#a855f7;border:none;color:#fff;display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                        Staff Dashboard
                     </button>
                 </div>
             </div>
@@ -2542,6 +2655,20 @@
     
     <section class="dashboard" id="dashboardSection" style="display:none;">
         <div class="dash-content">
+            <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+                <button class="btn-back-dashboard" id="backToDashboardFromDept" style="margin-bottom:0;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Back to Hub
+                </button>
+                <button class="btn-back-dashboard" id="createCommunityFromDept" style="background:#10b981;flex:1;text-align:center;margin-bottom:0;display:flex;align-items:center;justify-content:center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="margin-right:6px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                    Create Community
+                </button>
+                <button class="btn-back-dashboard" id="staffDashboardFromDept" style="background:#a855f7;flex:1;text-align:center;margin-bottom:0;display:flex;align-items:center;justify-content:center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="margin-right:6px;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    Staff Dashboard
+                </button>
+            </div>
             <div class="actions">
                <button class="btn-action btn-join" id="joinCommunity">
                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
@@ -3039,31 +3166,28 @@
 
     <section class="staff-dashboard" id="staffDashboard" style="display:none;min-height:100vh;padding:30px;background:#0a0d14;flex-direction:row;">
         <!-- Staff Sidebar -->
-         <div class="staff-sidebar" id="staffSidebar" style="position:relative;width:180px;margin-right:20px;">
-             <button class="sidebar-btn active" id="communitiesNavBtn" data-page="communities">
-                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                 Communities
-             </button>
-             <button class="sidebar-btn" id="usersNavBtn" data-page="users">
-                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                 Users
-             </button>
-             <button class="sidebar-btn" id="accessCodesNavBtn" data-page="access-codes">
-                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                 Access Codes
-             </button>
-         </div>
+        <div class="staff-sidebar" id="staffSidebar" style="position:relative;width:90px;margin-right:20px;">
+              <button class="sidebar-btn active" id="communitiesNavBtn" data-page="communities" title="Communities">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+                  <span>Communities</span>
+              </button>
+              <button class="sidebar-btn" id="usersNavBtn" data-page="users" title="Users">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  <span>Users</span>
+              </button>
+              <button class="sidebar-btn" id="accessCodesNavBtn" data-page="access-codes" title="Access Codes">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <span>Access Codes</span>
+              </button>
+              <button class="sidebar-btn" id="notificationsNavBtn" data-page="notifications" title="Notifications">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                  <span>Notifications</span>
+              </button>
+          </div>
 
         <div style="flex:1;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;">
                 <h2 style="font-size:24px;font-weight:600;">Staff Dashboard</h2>
-                <div style="display:flex;gap:10px;">
-                    <button id="globalRefreshBtn" style="padding:9px 20px;background:#22c55e;border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                        Refresh
-                    </button>
-                    <button class="btn-back-community" id="backFromStaff">Back to Dashboard</button>
-                </div>
             </div>
 
             <!-- Staff Pages Container -->
@@ -3091,7 +3215,39 @@
                         <div style="color: #a1a1aa; text-align: center; padding: 40px;">Loading access codes...</div>
                     </div>
                 </div>
-            </div>
+
+                <!-- Notifications Page -->
+                <div class="staff-page" id="notificationsPage" style="display:none;width:100%;">
+                    <div class="staff-page-header">Send Notifications & Changelogs</div>
+                    <div style="background:#14171f;border:1px solid #1e222d;border-radius:12px;padding:24px;margin-bottom:30px;">
+                        <h3 style="color:#e4e4e7;font-size:16px;font-weight:600;margin-bottom:16px;">Create New Notification</h3>
+                        <div class="field">
+                            <label>Notification Type</label>
+                            <select id="notificationType" style="width:100%;padding:11px 13px;background:#0c0e12;border:1px solid #27272a;border-radius:8px;color:#fafafa;font-size:13px;font-family:inherit;">
+                                <option value="changelog">Changelog</option>
+                                <option value="announcement">Announcement</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="update">Update</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Title</label>
+                            <input type="text" id="notificationTitle" placeholder="e.g., New Features Released" style="width:100%;padding:11px 13px;background:#0c0e12;border:1px solid #27272a;border-radius:8px;color:#fafafa;font-size:13px;font-family:inherit;">
+                        </div>
+                        <div class="field">
+                            <label>Message</label>
+                            <textarea id="notificationMessage" placeholder="Enter your notification message..." style="width:100%;padding:11px 13px;background:#0c0e12;border:1px solid #27272a;border-radius:8px;color:#fafafa;font-size:13px;font-family:inherit;min-height:120px;resize:vertical;"></textarea>
+                        </div>
+                        <button id="sendNotificationBtn" style="width:100%;padding:11px;background:#3b82f6;border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;margin-top:12px;">Send Notification to All Users</button>
+                        <div id="notificationStatus" style="color:#22c55e;font-size:12px;margin-top:10px;text-align:center;display:none;"></div>
+                    </div>
+
+                    <h3 style="color:#e4e4e7;font-size:16px;font-weight:600;margin-bottom:16px;">Recent Notifications</h3>
+                    <div class="staff-list" id="recentNotificationsList">
+                        <div style="color: #a1a1aa; text-align: center; padding: 40px;">Loading notifications...</div>
+                    </div>
+                </div>
+                </div>
             <div id="oldStaffContent" style="display:none;">
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:30px;">
                     <div class="mdt-panel">
@@ -3165,6 +3321,11 @@
                     // Call renderStaffCommunitiesTable() when staff dashboard is opened
                     // Always render the staff communities table when the staff dashboard is shown
                     function showStaffDashboard() {
+                        // Check if user is logged in and is staff
+                        if (!currentUser) {
+                            alert('You must be logged in to access the staff dashboard');
+                            return;
+                        }
                         document.getElementById('staffDashboard').style.display = 'block';
                         renderStaffCommunitiesTable();
                     }
@@ -4091,7 +4252,7 @@
                 <div class="item" data-id="${c.id}" data-type="${c.type}" style="position:relative;overflow:hidden;border-radius:8px;">
                     ${c.banner_url ? `<img src="${c.banner_url}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.3;z-index:0;">` : ''}
                     <div class="item-info" style="position:relative;z-index:1;">
-                        <div class="item-name">${c.name} <span style="color:#52525b;font-size:11px;">${c.type === 'owned' ? '(Owner)' : '(Member)'}</span></div>
+                        <div class="item-name">${c.name || 'Unnamed Community'} <span style="color:#52525b;font-size:11px;">${c.type === 'owned' ? '(Owner)' : '(Member)'}</span></div>
                         ${c.website ? `<a href="${c.website}" target="_blank" class="item-url">${c.website}</a>` : ''}
                         <!-- Code display removed from community item -->
                                     <!-- Staff Dashboard button removed from community items -->
@@ -4669,6 +4830,33 @@
         if (staffDashboardFromArea) {
             staffDashboardFromArea.onclick = () => showStaffDashboard();
         }
+
+        // Department view buttons
+        const createCommunityFromDept = document.getElementById('createCommunityFromDept');
+        const staffDashboardFromDept = document.getElementById('staffDashboardFromDept');
+        const backToDashboardFromDept = document.getElementById('backToDashboardFromDept');
+
+        if (createCommunityFromDept) {
+            createCommunityFromDept.onclick = () => {
+                createCommunityOverlay.classList.add('active');
+                communityError.style.display = 'none';
+                document.getElementById('communityName').value = '';
+                document.getElementById('communityDesc').value = '';
+                document.getElementById('communityLogo').value = '';
+                document.getElementById('communityBanner').value = '';
+            };
+        }
+
+        if (staffDashboardFromDept) {
+            staffDashboardFromDept.onclick = () => showStaffDashboard();
+        }
+
+        if (backToDashboardFromDept) {
+            backToDashboardFromDept.onclick = () => {
+                dashboardSection.classList.add('hidden');
+                document.getElementById('userHubSection').style.display = 'block';
+            };
+        }
         
         if (closeCommunityModal) {
             closeCommunityModal.onclick = () => createCommunityOverlay.classList.remove('active');
@@ -4706,7 +4894,7 @@
                         banner_url: bannerUrl || null,
                         owner_id: currentUser.id
                     }])
-                    .select();
+                    .select('*');
 
                 submitCreateCommunity.disabled = false;
                 submitCreateCommunity.textContent = 'Create Community';
@@ -4718,6 +4906,9 @@
                 }
 
                 createCommunityOverlay.classList.remove('active');
+                
+                // Small delay to ensure database record is fully committed
+                await new Promise(resolve => setTimeout(resolve, 500));
                 
                 // Reload communities and navigate to dashboard
                 await loadCommunities();
@@ -4773,6 +4964,11 @@
         }
         document.getElementById('hubJoinCommunity').onclick = () => joinModal.classList.add('active');
         document.getElementById('hubCreateCommunity').onclick = () => createModal.classList.add('active');
+        document.getElementById('hubStaffDashboard').onclick = () => {
+            document.getElementById('userHubSection').style.display = 'none';
+            document.getElementById('staffDashboard').style.display = 'flex';
+            showStaffDashboardPages();
+        };
         cancelJoin.onclick = () => { joinModal.classList.remove('active'); joinCommunityForm.reset(); joinError.style.display = 'none'; };
         joinModal.onclick = e => { if (e.target === joinModal) { joinModal.classList.remove('active'); joinCommunityForm.reset(); joinError.style.display = 'none'; } };
 
@@ -4962,12 +5158,11 @@
             
             const isStaff = isHardcodedStaff || !!staffAccess;
             
+            // Show staff dashboard button if user is staff
             if (isStaff) {
-                staffBtn.style.display = 'flex';
-            } else {
-                staffBtn.style.display = 'none';
+                document.getElementById('hubStaffDashboard').style.display = 'block';
             }
-        };
+            };
 
         logoutBtn.onclick = async () => {
             if (currentUser) {
@@ -4983,7 +5178,9 @@
             currentUser = null;
             body.classList.remove('logged-in');
             navUsername.textContent = '';
-            document.getElementById('staffDashboardBtn').style.display = 'none';
+            document.getElementById('staffDashboard').style.display = 'none';
+            document.getElementById('notificationBell').style.display = 'none';
+            document.getElementById('notificationDropdown').style.display = 'none';
             // Hide user hub and show hero
             document.getElementById('userHubSection').style.display = 'none';
             document.getElementById('heroSection').style.display = 'flex';
@@ -6173,38 +6370,16 @@
         const staffDashboard = document.getElementById('staffDashboard');
         const backFromStaff = document.getElementById('backFromStaff');
 
-        // Ensure Staff Dashboard button is enabled and visible
-        if (staffDashboardBtn) {
-            staffDashboardBtn.disabled = false;
-            staffDashboardBtn.style.display = '';
-        }
-
-        if (staffDashboardBtn) {
-            staffDashboardBtn.onclick = async () => {
-                // Hide user hub and show staff dashboard
-                document.getElementById('userHubSection').style.display = 'none';
-                dashboardSection.classList.add('hidden');
-                staffDashboard.style.display = 'block';
-                await loadStaffData();
-                if (typeof loadStaffSupportTickets === 'function') {
-                    loadStaffSupportTickets();
-                }
-                if (typeof renderAccessCodes === 'function') {
-                    renderAccessCodes();
+        // Only add event listeners if elements exist
+        if (backFromStaff) {
+            backFromStaff.onclick = () => {
+                staffDashboard.style.display = 'none';
+                // Return to user hub if logged in
+                if (currentUser) {
+                    document.getElementById('userHubSection').style.display = 'block';
                 }
             };
         }
-
-        backFromStaff.onclick = () => {
-            staffDashboard.style.display = 'none';
-            // Return to user hub if logged in
-            if (currentUser) {
-                document.getElementById('userHubSection').style.display = 'block';
-            } else {
-                dashboardSection.classList.remove('hidden');
-            }
-        };
-
 
 
         function generatePermissionsKey() {
@@ -7442,7 +7617,10 @@
              }
          }
 
-         document.getElementById('globalRefreshBtn').onclick = globalRefresh;
+         const globalRefreshBtn = document.getElementById('globalRefreshBtn');
+         if (globalRefreshBtn) {
+             globalRefreshBtn.onclick = globalRefresh;
+         }
 
         // User Hub System
         const userHubSection = document.getElementById('userHubSection');
@@ -8194,6 +8372,10 @@
             const oldContent = document.getElementById('oldStaffContent');
             if (oldContent) oldContent.style.display = 'none';
             
+            // Hide notification bell in staff dashboard
+            const bell = document.getElementById('notificationBell');
+            if (bell) bell.style.display = 'none';
+            
             // Hide all pages
             document.querySelectorAll('.staff-page').forEach(page => {
                 page.classList.remove('active');
@@ -8211,6 +8393,8 @@
                 pageId = 'accessCodesPage';
             } else if (pageName === 'active-users') {
                 pageId = 'activeUsersPage';
+            } else if (pageName === 'notifications') {
+                pageId = 'notificationsPage';
             }
 
             // Show selected page
@@ -8232,6 +8416,10 @@
         document.getElementById('usersNavBtn')?.addEventListener('click', () => showStaffPage('users'));
         document.getElementById('activeUsersNavBtn')?.addEventListener('click', () => showStaffPage('active-users'));
         document.getElementById('accessCodesNavBtn')?.addEventListener('click', () => showStaffPage('access-codes'));
+        document.getElementById('notificationsNavBtn')?.addEventListener('click', () => {
+            showStaffPage('notifications');
+            loadRecentNotifications();
+        });
 
         // Show staff dashboard sidebar when staff button is clicked
         function showStaffDashboardPages() {
@@ -8333,16 +8521,25 @@
                         btn.addEventListener('click', async () => {
                             const communityId = btn.dataset.id;
                             
-                            if (confirm('Are you sure you want to delete this community? This action cannot be undone.')) {
+                            if (confirm('Delete this community? This cannot be undone.')) {
+                                btn.disabled = true;
+                                btn.textContent = 'Deleting...';
+                                
                                 try {
                                     const { error } = await db.from('communities').delete().eq('id', communityId);
+                                    
                                     if (error) {
-                                        alert('Error: ' + error.message);
+                                        alert('Delete failed: ' + error.message);
+                                        btn.disabled = false;
+                                        btn.textContent = 'Delete';
                                     } else {
+                                        alert('Deleted!');
                                         loadAllCommunities();
                                     }
                                 } catch (err) {
                                     alert('Error: ' + err.message);
+                                    btn.disabled = false;
+                                    btn.textContent = 'Delete';
                                 }
                             }
                         });
@@ -8659,6 +8856,177 @@
         } else {
             setupAdminBannerHandlers();
         }
+
+        // ===== NOTIFICATION SYSTEM =====
+        
+        // Load and display notifications for logged-in users
+        async function loadUserNotifications() {
+            if (!currentUser) return;
+            
+            try {
+                const { data: notifications, error } = await db
+                    .from('notifications')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+                
+                if (error) throw error;
+                
+                const notificationsList = document.getElementById('notificationsList');
+                const notificationBadge = document.getElementById('notificationBadge');
+                
+                if (!notifications || notifications.length === 0) {
+                    notificationsList.innerHTML = '<div style="padding:20px;color:#a1a1aa;text-align:center;">No notifications</div>';
+                    notificationBadge.style.display = 'none';
+                    return;
+                }
+                
+                notificationBadge.textContent = notifications.length;
+                notificationBadge.style.display = 'flex';
+                
+                notificationsList.innerHTML = notifications.map(notif => `
+                    <div style="padding:16px;border-bottom:1px solid #1e222d;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#1a1d2e'" onmouseout="this.style.background='transparent'">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+                            <div>
+                                <span style="display:inline-block;background:#3b82f6;color:#fff;padding:4px 8px;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase;">${notif.type}</span>
+                                <h4 style="color:#e4e4e7;font-size:14px;font-weight:600;margin-top:8px;">${notif.title}</h4>
+                            </div>
+                            <div style="color:#71717a;font-size:11px;">${new Date(notif.created_at).toLocaleDateString()}</div>
+                        </div>
+                        <p style="color:#a1a1aa;font-size:13px;line-height:1.5;">${notif.message.substring(0, 100)}${notif.message.length > 100 ? '...' : ''}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+            }
+        }
+        
+        // Send notification (Staff only)
+        async function sendNotification() {
+            if (!currentUser) {
+                alert('You must be logged in');
+                return;
+            }
+            
+            const type = document.getElementById('notificationType').value;
+            const title = document.getElementById('notificationTitle').value.trim();
+            const message = document.getElementById('notificationMessage').value.trim();
+            const statusEl = document.getElementById('notificationStatus');
+            
+            if (!title || !message) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            try {
+                const { error } = await db.from('notifications').insert([{
+                    type: type,
+                    title: title,
+                    message: message,
+                    created_by: currentUser.id,
+                    created_at: new Date().toISOString()
+                }]);
+                
+                if (error) throw error;
+                
+                statusEl.textContent = '✓ Notification sent successfully!';
+                statusEl.style.color = '#22c55e';
+                statusEl.style.display = 'block';
+                
+                // Clear form
+                document.getElementById('notificationTitle').value = '';
+                document.getElementById('notificationMessage').value = '';
+                
+                // Hide status message after 3 seconds
+                setTimeout(() => {
+                    statusEl.style.display = 'none';
+                }, 3000);
+                
+                // Reload notifications list
+                loadRecentNotifications();
+            } catch (error) {
+                console.error('Error sending notification:', error);
+                statusEl.textContent = '✗ Error sending notification: ' + error.message;
+                statusEl.style.color = '#ef4444';
+                statusEl.style.display = 'block';
+            }
+        }
+        
+        // Load recent notifications for staff dashboard
+        async function loadRecentNotifications() {
+            try {
+                const { data: notifications, error } = await db
+                    .from('notifications')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(20);
+                
+                if (error) throw error;
+                
+                const recentList = document.getElementById('recentNotificationsList');
+                
+                if (!notifications || notifications.length === 0) {
+                    recentList.innerHTML = '<div style="color: #a1a1aa; text-align: center; padding: 40px;">No notifications sent yet.</div>';
+                    return;
+                }
+                
+                recentList.innerHTML = notifications.map(notif => `
+                    <div class="staff-item">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+                            <div>
+                                <span style="display:inline-block;background:#3b82f6;color:#fff;padding:4px 8px;border-radius:4px;font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:8px;">${notif.type}</span>
+                                <div class="staff-item-title">${notif.title}</div>
+                            </div>
+                        </div>
+                        <div class="staff-item-desc" style="margin-bottom:8px;">${notif.message}</div>
+                        <div style="font-size:12px;color:#52525b;">Sent: ${new Date(notif.created_at).toLocaleString()}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading recent notifications:', error);
+            }
+        }
+        
+        // Bell icon click handler
+        document.getElementById('notificationBell')?.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+            if (dropdown.style.display === 'block') {
+                loadUserNotifications();
+            }
+        });
+        
+        // Close notifications dropdown
+        document.getElementById('closeNotifications')?.addEventListener('click', function() {
+            document.getElementById('notificationDropdown').style.display = 'none';
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('notificationDropdown');
+            const bell = document.getElementById('notificationBell');
+            if (!dropdown.contains(e.target) && e.target !== bell) {
+                dropdown.style.display = 'none';
+            }
+        });
+        
+        // Send notification button
+        document.getElementById('sendNotificationBtn')?.addEventListener('click', sendNotification);
+        
+        // Load notifications on login
+        const originalShowDashboard = window.showDashboard;
+        window.showDashboard = function() {
+            if (originalShowDashboard) originalShowDashboard.call(this);
+            setTimeout(() => {
+                const bell = document.getElementById('notificationBell');
+                if (currentUser && bell) {
+                    bell.style.display = 'block';
+                    loadUserNotifications();
+                }
+            }, 500);
+        };
+        
         </script>
         </body>
         </html>
