@@ -5263,18 +5263,19 @@
         }
         
         // Handle slash commands
-        window.addEventListener('keydown', (e) => {
-            // Check if user pressed / and we're not in an input field
-            if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+        document.addEventListener('keypress', (e) => {
+            // Check if user typed /
+            if (e.key === '/' || e.charCode === 47) {
                 const activeElement = document.activeElement;
-                const isInput = activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA';
+                const isInput = activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.contentEditable === 'true';
                 
                 if (!isInput) {
-                    // Open command palette or show / command hint
-                    const command = prompt('Enter command (e.g., /supportpanel):');
+                    e.preventDefault();
+                    // Open command palette
+                    const command = prompt('Enter command:\n\n/supportpanel - Open support panel');
                     if (!command) return;
                     
-                    if (command === '/supportpanel') {
+                    if (command.toLowerCase() === '/supportpanel') {
                         window.location.href = '/supportpanel.html';
                     } else {
                         alert('Unknown command: ' + command);
