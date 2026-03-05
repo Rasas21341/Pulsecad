@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0c0e12">
+    <title>Support Panel - Pulsecad</title>
+    <link rel="icon" type="image/webp" href="https://cdn.discordapp.com/icons/1455410644634304725/75220689ed872e2ee4c7101f479813a5.webp?size=512">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0c0e12;
+            min-height: 100vh;
+            color: #e4e4e7;
+        }
+
+        .support-container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            background: #0c0e12;
+        }
+
+        .support-header {
+            background: #1a1f2e;
+            border-bottom: 1px solid #27272a;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .support-header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e4e4e7;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #a1a1aa;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .close-btn:hover {
+            color: #e4e4e7;
+        }
+
+        .support-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .support-sidebar {
+            width: 300px;
+            background: #14171f;
+            border-right: 1px solid #27272a;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            background: #0c0e12;
+            border: 1px solid #27272a;
+            border-radius: 6px;
+            color: #e4e4e7;
+            margin-bottom: 16px;
+            font-family: inherit;
+            font-size: 13px;
+        }
+
+        .tickets-label {
+            color: #a1a1aa;
+            font-size: 12px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .tickets-list {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 16px;
+        }
+
+        .ticket-item {
+            padding: 12px;
+            background: #1a1f2e;
+            border-bottom: 1px solid #27272a;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        .ticket-item:hover {
+            background: #1f2332;
+        }
+
+        .ticket-item.active {
+            background: #27272a;
+        }
+
+        .ticket-item-subject {
+            color: #e4e4e7;
+            font-weight: 600;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .ticket-item-id {
+            color: #6b7280;
+            font-size: 10px;
+        }
+
+        .create-btn {
+            width: 100%;
+            padding: 10px;
+            background: #3b82f6;
+            border: none;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .create-btn:hover {
+            background: #2563eb;
+        }
+
+        .support-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #0a0d14;
+            padding: 24px;
+            overflow: hidden;
+        }
+
+        .no-selection {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        .ticket-view {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .ticket-header {
+            margin-bottom: 16px;
+        }
+
+        .ticket-id {
+            color: #a1a1aa;
+            font-size: 11px;
+            margin-bottom: 4px;
+        }
+
+        .ticket-id-text {
+            color: #e4e4e7;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .ticket-subject-label {
+            color: #a1a1aa;
+            font-size: 11px;
+            margin-bottom: 4px;
+        }
+
+        .ticket-subject-text {
+            color: #e4e4e7;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            background: #1a1f2e;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #27272a;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            padding: 12px;
+            background: #14171f;
+            border-radius: 6px;
+        }
+
+        .message.own {
+            margin-left: 40px;
+            background: #27272a;
+        }
+
+        .message-author {
+            color: #e4e4e7;
+            font-weight: 600;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .support-badge {
+            margin-left: 6px;
+            background: #3b82f6;
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .message-text {
+            color: #a1a1aa;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .message-time {
+            color: #6b7280;
+            font-size: 10px;
+        }
+
+        .message-input-area {
+            display: flex;
+            gap: 8px;
+        }
+
+        .message-textarea {
+            flex: 1;
+            padding: 10px;
+            background: #14171f;
+            border: 1px solid #27272a;
+            border-radius: 6px;
+            color: #e4e4e7;
+            font-family: inherit;
+            font-size: 13px;
+            resize: none;
+            height: 60px;
+        }
+
+        .send-btn {
+            padding: 10px 16px;
+            background: #3b82f6;
+            border: none;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .send-btn:hover {
+            background: #2563eb;
+        }
+
+        .empty-state {
+            color: #6b7280;
+            font-size: 12px;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="support-container">
+        <div class="support-header">
+            <h1>Support Panel</h1>
+            <button class="close-btn" id="closeSupportPanel">✕</button>
+        </div>
+
+        <div class="support-content">
+            <!-- Left Sidebar -->
+            <div class="support-sidebar">
+                <input type="text" id="supportSearchInput" class="search-input" placeholder="Search tickets...">
+                <div class="tickets-label">OPEN TICKETS</div>
+                <div class="tickets-list" id="supportTicketsList">
+                    <div class="empty-state">No tickets</div>
+                </div>
+                <button id="createSupportTicketBtn" class="create-btn">+ New Ticket</button>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="support-panel">
+                <div class="no-selection" id="supportNoSelection">
+                    <div>
+                        <div style="font-size: 16px; margin-bottom: 8px;">No ticket selected</div>
+                        <div style="font-size: 12px;">Select a ticket from the list</div>
+                    </div>
+                </div>
+
+                <div class="ticket-view" id="supportTicketView">
+                    <div class="ticket-header">
+                        <div class="ticket-id">Ticket ID</div>
+                        <div class="ticket-id-text" id="supportTicketID">#001</div>
+                        <div class="ticket-subject-label">Subject</div>
+                        <div class="ticket-subject-text" id="supportTicketSubject">Ticket Subject</div>
+                    </div>
+
+                    <div class="messages-container" id="supportMessages"></div>
+
+                    <div class="message-input-area">
+                        <textarea id="supportMessageInput" class="message-textarea" placeholder="Type your response..."></textarea>
+                        <button id="sendSupportMessageBtn" class="send-btn">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const SUPABASE_URL = 'https://your-supabase-url.supabase.co';
+        const SUPABASE_KEY = 'your-supabase-key';
+        const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentUser = null;
+        let supportTickets = [];
+        let currentSupportTicket = null;
+        const WHITELISTED_USERS = ['hkamm_00320', 'theboyrp1234_official1'];
+
+        // Get DOM elements
+        const supportSearchInput = document.getElementById('supportSearchInput');
+        const supportTicketsList = document.getElementById('supportTicketsList');
+        const supportTicketView = document.getElementById('supportTicketView');
+        const supportNoSelection = document.getElementById('supportNoSelection');
+        const supportMessages = document.getElementById('supportMessages');
+        const supportMessageInput = document.getElementById('supportMessageInput');
+        const sendSupportMessageBtn = document.getElementById('sendSupportMessageBtn');
+        const supportTicketID = document.getElementById('supportTicketID');
+        const supportTicketSubject = document.getElementById('supportTicketSubject');
+        const createSupportTicketBtn = document.getElementById('createSupportTicketBtn');
+        const closeSupportPanelBtn = document.getElementById('closeSupportPanel');
+
+        // Close button
+        if (closeSupportPanelBtn) {
+            closeSupportPanelBtn.onclick = () => {
+                window.history.back();
+            };
+        }
+
+        // Load current user from localStorage
+        function loadCurrentUser() {
+            const stored = localStorage.getItem('currentUser');
+            if (stored) {
+                currentUser = JSON.parse(stored);
+            }
+        }
+
+        // Load support tickets
+        async function loadSupportTickets() {
+            loadCurrentUser();
+            if (!currentUser) {
+                alert('You must be logged in');
+                window.location.href = '/';
+                return;
+            }
+
+            try {
+                const { data: tickets, error } = await db
+                    .from('support_tickets')
+                    .select('*')
+                    .eq('user_id', currentUser.username)
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error('Error loading tickets:', error);
+                    supportTickets = [];
+                    return;
+                }
+
+                supportTickets = [];
+                for (const ticket of tickets || []) {
+                    const { data: messages, error: msgError } = await db
+                        .from('support_messages')
+                        .select('*')
+                        .eq('ticket_id', ticket.ticket_id)
+                        .order('timestamp', { ascending: true });
+
+                    supportTickets.push({
+                        id: ticket.ticket_id,
+                        subject: ticket.subject,
+                        status: ticket.status,
+                        messages: messages || []
+                    });
+                }
+
+                renderSupportTickets();
+            } catch (err) {
+                console.error('Failed to load tickets:', err);
+                supportTickets = [];
+            }
+        }
+
+        // Render ticket list
+        function renderSupportTickets() {
+            const searchTerm = supportSearchInput.value.toLowerCase();
+            const filtered = supportTickets.filter(t =>
+                t.subject.toLowerCase().includes(searchTerm)
+            );
+
+            supportTicketsList.innerHTML = filtered.map(ticket => `
+                <div onclick="selectSupportTicket('${ticket.id}')" class="ticket-item ${currentSupportTicket?.id === ticket.id ? 'active' : ''}">
+                    <div class="ticket-item-subject">${ticket.subject}</div>
+                    <div class="ticket-item-id">${ticket.id}</div>
+                </div>
+            `).join('');
+
+            if (filtered.length === 0) {
+                supportTicketsList.innerHTML = '<div class="empty-state">No tickets</div>';
+            }
+        }
+
+        // Select ticket
+        window.selectSupportTicket = (ticketId) => {
+            currentSupportTicket = supportTickets.find(t => t.id === ticketId);
+            if (currentSupportTicket) {
+                supportTicketID.textContent = currentSupportTicket.id;
+                supportTicketSubject.textContent = currentSupportTicket.subject;
+                supportMessages.innerHTML = currentSupportTicket.messages.map(msg => `
+                    <div class="message ${msg.author === currentUser?.username ? 'own' : ''}">
+                        <div class="message-author">
+                            ${msg.author}
+                            ${WHITELISTED_USERS.includes(msg.author) ? '<span class="support-badge">Support Team</span>' : ''}
+                        </div>
+                        <div class="message-text">${msg.message}</div>
+                        <div class="message-time">${new Date(msg.timestamp).toLocaleTimeString()}</div>
+                    </div>
+                `).join('');
+                supportNoSelection.style.display = 'none';
+                supportTicketView.style.display = 'flex';
+                renderSupportTickets();
+            }
+        };
+
+        // Send message
+        if (sendSupportMessageBtn) {
+            sendSupportMessageBtn.onclick = async () => {
+                const messageText = supportMessageInput.value.trim();
+                if (!messageText || !currentSupportTicket) return;
+
+                try {
+                    const { error } = await db
+                        .from('support_messages')
+                        .insert({
+                            ticket_id: currentSupportTicket.id,
+                            author: currentUser?.username || 'User',
+                            message: messageText
+                        });
+
+                    if (error) {
+                        console.error('Error saving message:', error);
+                        alert('Failed to send message');
+                        return;
+                    }
+
+                    currentSupportTicket.messages.push({
+                        author: currentUser?.username || 'User',
+                        message: messageText,
+                        timestamp: new Date().toISOString()
+                    });
+
+                    supportMessageInput.value = '';
+                    window.selectSupportTicket(currentSupportTicket.id);
+                    supportMessages.scrollTop = supportMessages.scrollHeight;
+                } catch (err) {
+                    console.error('Error:', err);
+                    alert('Failed to send message');
+                }
+            };
+        }
+
+        // Search
+        if (supportSearchInput) {
+            supportSearchInput.oninput = () => renderSupportTickets();
+        }
+
+        // Create ticket
+        if (createSupportTicketBtn) {
+            createSupportTicketBtn.onclick = async () => {
+                const subject = prompt('Ticket subject:');
+                if (!subject) return;
+                const description = prompt('Describe your issue:');
+                if (!description) return;
+
+                if (!currentUser) {
+                    alert('You must be logged in to create a ticket');
+                    return;
+                }
+
+                try {
+                    const ticketId = `#${String(supportTickets.length + 1).padStart(3, '0')}`;
+
+                    const { error: ticketError } = await db
+                        .from('support_tickets')
+                        .insert({
+                            ticket_id: ticketId,
+                            user_id: currentUser.username,
+                            subject: subject,
+                            status: 'open'
+                        });
+
+                    if (ticketError) {
+                        console.error('Error creating ticket:', ticketError);
+                        alert('Failed to create ticket');
+                        return;
+                    }
+
+                    const { error: msgError } = await db
+                        .from('support_messages')
+                        .insert({
+                            ticket_id: ticketId,
+                            author: currentUser.username,
+                            message: description
+                        });
+
+                    if (msgError) {
+                        console.error('Error adding message:', msgError);
+                    }
+
+                    await loadSupportTickets();
+                    window.selectSupportTicket(ticketId);
+                } catch (err) {
+                    console.error('Error:', err);
+                    alert('Failed to create ticket');
+                }
+            };
+        }
+
+        // Load on page load
+        loadSupportTickets();
+    </script>
+</body>
+</html>

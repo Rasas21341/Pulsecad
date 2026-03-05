@@ -2424,12 +2424,6 @@
                  </svg>
                  <span id="notificationBadge" style="position:absolute;top:0;right:0;background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;display:none;font-weight:600;">0</span>
              </button>
-             <button id="supportTicketBtn" style="display:none;background:none;border:none;color:#e4e4e7;cursor:pointer;position:relative;padding:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
-                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                 </svg>
-                 <span id="supportBadge" style="position:absolute;top:0;right:0;background:#f59e0b;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;display:none;font-weight:600;">0</span>
-             </button>
              <button class="nav-logout" id="logoutBtn">Log out</button>
          </div>
      </header>
@@ -3951,52 +3945,6 @@
         </div>
      </section>
 
-     <!-- Support Panel -->
-     <section class="support-panel" id="supportPanel" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#0c0e12;z-index:1000;flex-direction:column;">
-         <div style="background:#1a1f2e;border-bottom:1px solid #27272a;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;">
-             <div style="font-weight:600;color:#e4e4e7;font-size:18px;">Support Panel</div>
-             <button id="closeSupportPanel" style="background:none;border:none;color:#a1a1aa;cursor:pointer;font-size:24px;">✕</button>
-         </div>
-         <div style="display:flex;flex:1;overflow:hidden;">
-             <!-- Left Sidebar - Tickets List -->
-             <div style="width:300px;background:#14171f;border-right:1px solid #27272a;padding:20px;overflow-y:auto;display:flex;flex-direction:column;">
-                 <input type="text" id="supportSearchInput" placeholder="Search tickets..." style="width:100%;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#e4e4e7;margin-bottom:16px;font-family:inherit;font-size:13px;">
-                 <div style="color:#a1a1aa;font-size:12px;margin-bottom:8px;font-weight:500;">OPEN TICKETS</div>
-                 <div id="supportTicketsList" style="flex:1;overflow-y:auto;">
-                     <div style="color:#6b7280;font-size:12px;text-align:center;padding:20px;">No tickets</div>
-                 </div>
-                 <button id="createSupportTicketBtn" style="width:100%;padding:10px;background:#3b82f6;border:none;color:#fff;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:500;margin-top:16px;">+ New Ticket</button>
-             </div>
-             <!-- Right Panel - Ticket Details -->
-             <div style="flex:1;display:flex;flex-direction:column;background:#0a0d14;">
-                 <div id="supportNoSelection" style="flex:1;display:flex;align-items:center;justify-content:center;color:#6b7280;">
-                     <div style="text-align:center;">
-                         <div style="font-size:16px;margin-bottom:8px;">No ticket selected</div>
-                         <div style="font-size:12px;">Select a ticket from the list</div>
-                     </div>
-                 </div>
-                 <div id="supportTicketView" style="display:none;flex:1;display:flex;flex-direction:column;padding:24px;">
-                     <div style="margin-bottom:16px;">
-                         <div style="margin-bottom:12px;">
-                             <div style="color:#a1a1aa;font-size:11px;margin-bottom:4px;">Ticket ID</div>
-                             <div style="color:#e4e4e7;font-weight:600;font-size:14px;" id="supportTicketID">#001</div>
-                         </div>
-                         <div style="color:#a1a1aa;font-size:11px;margin-bottom:4px;">Subject</div>
-                         <div style="color:#e4e4e7;font-weight:600;font-size:13px;" id="supportTicketSubject">Ticket Subject</div>
-                     </div>
-                     <!-- Messages -->
-                     <div id="supportMessages" style="flex:1;overflow-y:auto;background:#1a1f2e;border-radius:6px;padding:16px;margin-bottom:16px;border:1px solid #27272a;display:flex;flex-direction:column;gap:12px;">
-                     </div>
-                     <!-- Message Input -->
-                     <div style="display:flex;gap:8px;">
-                         <textarea id="supportMessageInput" placeholder="Type your response..." style="flex:1;padding:10px;background:#14171f;border:1px solid #27272a;border-radius:6px;color:#e4e4e7;font-family:inherit;font-size:13px;resize:none;height:60px;"></textarea>
-                         <button id="sendSupportMessageBtn" style="padding:10px 16px;background:#3b82f6;border:none;color:#fff;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:500;">Send</button>
-                     </div>
-                 </div>
-             </div>
-         </div>
-     </section>
-
      <!-- Assign Units to Call Modal -->
     <div class="overlay" id="assignUnitsModal">
         <div class="modal modal-sm">
@@ -5314,6 +5262,27 @@
             }
         }
         
+        // Handle slash commands
+        window.addEventListener('keydown', (e) => {
+            // Check if user pressed / and we're not in an input field
+            if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+                const activeElement = document.activeElement;
+                const isInput = activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA';
+                
+                if (!isInput) {
+                    // Open command palette or show / command hint
+                    const command = prompt('Enter command (e.g., /supportpanel):');
+                    if (!command) return;
+                    
+                    if (command === '/supportpanel') {
+                        window.location.href = '/supportpanel.html';
+                    } else {
+                        alert('Unknown command: ' + command);
+                    }
+                }
+            }
+        });
+
         // Check for staff panel URL access
         async function checkStaffPanelAccess() {
             // Check if URL contains ?staffpanel or /staffpanel
@@ -5697,139 +5666,6 @@
             policeMdt.classList.remove('active');
             communityScreen.classList.add('active');
         };
-
-        // Support Tickets System
-        const supportPanel = document.getElementById('supportPanel');
-        const supportTicketBtn = document.getElementById('supportTicketBtn');
-        const closeSupportPanel = document.getElementById('closeSupportPanel');
-        const supportSearchInput = document.getElementById('supportSearchInput');
-        const supportTicketsList = document.getElementById('supportTicketsList');
-        const supportTicketView = document.getElementById('supportTicketView');
-        const supportNoSelection = document.getElementById('supportNoSelection');
-        const supportMessages = document.getElementById('supportMessages');
-        const supportMessageInput = document.getElementById('supportMessageInput');
-        const sendSupportMessageBtn = document.getElementById('sendSupportMessageBtn');
-        const claimTicketBtn = document.getElementById('claimTicketBtn');
-        const supportTicketID = document.getElementById('supportTicketID');
-        const supportTicketUser = document.getElementById('supportTicketUser');
-        const supportTicketSubject = document.getElementById('supportTicketSubject');
-        const createSupportTicketBtn = document.getElementById('createSupportTicketBtn');
-        const supportBadge = document.getElementById('supportBadge');
-
-        const WHITELISTED_USERS = ['hkamm_00320', 'theboyrp1234_official1'];
-        let supportTickets = [];
-        let currentSupportTicket = null;
-        let currentSupportUser = null;
-
-        if (supportTicketBtn) {
-            supportTicketBtn.onclick = () => {
-                supportPanel.style.display = 'flex';
-                loadSupportTickets();
-            };
-        }
-
-        if (closeSupportPanel) {
-            closeSupportPanel.onclick = () => {
-                supportPanel.style.display = 'none';
-                currentSupportTicket = null;
-            };
-        }
-
-        async function loadSupportTickets() {
-            // Load only current user's tickets from storage
-            const userId = currentUser?.username || 'guest';
-            const stored = localStorage.getItem(`supportTickets_${userId}`);
-            supportTickets = stored ? JSON.parse(stored) : [];
-            renderSupportTickets();
-        }
-
-        function saveSupportTickets() {
-            const userId = currentUser?.username || 'guest';
-            localStorage.setItem(`supportTickets_${userId}`, JSON.stringify(supportTickets));
-        }
-
-        function renderSupportTickets() {
-            const searchTerm = supportSearchInput.value.toLowerCase();
-            const filtered = supportTickets.filter(t => 
-                t.subject.toLowerCase().includes(searchTerm)
-            );
-
-            supportTicketsList.innerHTML = filtered.map(ticket => `
-                <div onclick="selectSupportTicket('${ticket.id}')" style="padding:12px;background:#1a1f2e;border-bottom:1px solid #27272a;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#1f2332'" onmouseout="this.style.background='${currentSupportTicket?.id === ticket.id ? '#27272a' : '#1a1f2e'}'">
-                    <div style="color:#e4e4e7;font-weight:600;font-size:12px;margin-bottom:4px;">${ticket.subject}</div>
-                    <div style="color:#6b7280;font-size:10px;">${ticket.id}</div>
-                </div>
-            `).join('');
-
-            if (filtered.length === 0) {
-                supportTicketsList.innerHTML = '<div style="color:#6b7280;font-size:12px;text-align:center;padding:20px;">No tickets</div>';
-            }
-        }
-
-        window.selectSupportTicket = (ticketId) => {
-            currentSupportTicket = supportTickets.find(t => t.id === ticketId);
-            if (currentSupportTicket) {
-                supportTicketID.textContent = currentSupportTicket.id;
-                supportTicketSubject.textContent = currentSupportTicket.subject;
-                supportMessages.innerHTML = currentSupportTicket.messages.map(msg => `
-                    <div style="padding:12px;background:#14171f;border-radius:6px;${msg.author === (currentUser?.username) ? 'margin-left:40px;background:#27272a;' : ''}">
-                        <div style="color:#e4e4e7;font-weight:600;font-size:12px;margin-bottom:4px;">
-                            ${msg.author}
-                            ${WHITELISTED_USERS.includes(msg.author) ? '<span style="margin-left:6px;background:#3b82f6;color:#fff;padding:2px 6px;border-radius:3px;font-size:10px;font-weight:600;">Support Team</span>' : ''}
-                        </div>
-                        <div style="color:#a1a1aa;font-size:12px;margin-bottom:4px;">${msg.text}</div>
-                        <div style="color:#6b7280;font-size:10px;">${msg.timestamp}</div>
-                    </div>
-                `).join('');
-                supportNoSelection.style.display = 'none';
-                supportTicketView.style.display = 'flex';
-            }
-        };
-
-        if (sendSupportMessageBtn) {
-            sendSupportMessageBtn.onclick = () => {
-                const messageText = supportMessageInput.value.trim();
-                if (!messageText || !currentSupportTicket) return;
-
-                currentSupportTicket.messages.push({
-                    author: currentUser?.username || 'User',
-                    text: messageText,
-                    timestamp: new Date().toLocaleTimeString()
-                });
-
-                supportMessageInput.value = '';
-                saveSupportTickets();
-                window.selectSupportTicket(currentSupportTicket.id);
-                supportMessages.scrollTop = supportMessages.scrollHeight;
-            };
-        }
-
-        if (supportSearchInput) {
-            supportSearchInput.oninput = () => renderSupportTickets();
-        }
-
-        if (createSupportTicketBtn) {
-            createSupportTicketBtn.onclick = () => {
-                const subject = prompt('Ticket subject:');
-                if (!subject) return;
-                const newTicket = {
-                    id: `#${String(supportTickets.length + 1).padStart(3, '0')}`,
-                    user: currentUser?.username || 'User',
-                    username: currentUser?.username || 'User',
-                    subject: subject,
-                    status: 'open',
-                    claimed: false,
-                    messages: [{
-                        author: currentUser?.username || 'User',
-                        text: prompt('Describe your issue:') || 'No description',
-                        timestamp: new Date().toLocaleTimeString()
-                    }]
-                };
-                supportTickets.push(newTicket);
-                renderSupportTickets();
-                window.selectSupportTicket(newTicket.id);
-            };
-        }
 
         // Dispatch MDT
         const dispatchBtn = document.getElementById('dispatchBtn');
