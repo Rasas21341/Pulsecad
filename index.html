@@ -2352,7 +2352,30 @@
           </div>
       </div>
 
-     <!-- Unit Status Context Menu -->
+      <!-- Civilian Lookup Modal -->
+      <div class="overlay" id="civilianLookupOverlay">
+         <div class="modal" style="max-width: 500px;">
+             <button class="modal-close" id="closeCivilianLookup">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+             </button>
+             <h2>Lookup Civilian</h2>
+             <p class="sub">Search the civilian database</p>
+             <div class="field">
+                 <label>Civilian Name <span style="color:#ef4444;">*</span></label>
+                 <input type="text" id="civilianNameInput" placeholder="Enter full name or partial name" required>
+             </div>
+             <div id="civilianResults" style="display:none;margin-top:16px;">
+                 <div style="color:#a1a1aa;font-size:12px;margin-bottom:8px;">Search Results</div>
+                 <div id="civilianResultsList" style="max-height:300px;overflow-y:auto;border:1px solid #27272a;border-radius:6px;background:#0c0e12;"></div>
+             </div>
+             <div style="display:flex;gap:10px;margin-top:16px;">
+                 <button type="button" class="btn-cancel" id="searchCivilian" style="flex:1;background:#10b981;border:none;color:#fff;padding:10px;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:500;">Search</button>
+                 <button type="button" class="btn-cancel" id="closeCivilianLookupBtn" style="flex:1;background:#6b7280;border:none;color:#fff;padding:10px;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:500;">Close</button>
+             </div>
+         </div>
+      </div>
+
+      <!-- Unit Status Context Menu -->
      <div class="tones-context-menu" id="unitStatusContextMenu" style="display:none;position:fixed;z-index:1000;">
          <div class="menu-title">Change Status</div>
          <div id="statusMenuContainer">
@@ -2400,6 +2423,12 @@
                      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                  </svg>
                  <span id="notificationBadge" style="position:absolute;top:0;right:0;background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;display:none;font-weight:600;">0</span>
+             </button>
+             <button id="supportTicketBtn" style="display:none;background:none;border:none;color:#e4e4e7;cursor:pointer;position:relative;padding:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                 </svg>
+                 <span id="supportBadge" style="position:absolute;top:0;right:0;background:#f59e0b;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;display:none;font-weight:600;">0</span>
              </button>
              <button class="nav-logout" id="logoutBtn">Log out</button>
          </div>
@@ -3332,7 +3361,10 @@
                         document.getElementById('staffDashboard').style.display = 'block';
                         renderStaffCommunitiesTable();
                     }
-                    document.getElementById('staffDashboardBtn').addEventListener('click', showStaffDashboard);
+                    const staffDashboardBtn = document.getElementById('staffDashboardBtn');
+                    if (staffDashboardBtn) {
+                        staffDashboardBtn.addEventListener('click', showStaffDashboard);
+                    }
                     // Also call on navigation or reload if needed
                     // ...existing code...
                     </script>
@@ -3837,9 +3869,21 @@
     <section class="police-mdt" id="policeMdt">
         <div style="display:flex;flex-direction:column;height:100%;background:#0a0d14;">
             <!-- Top Bar -->
-            <div style="background:#1a1f2e;border-bottom:1px solid #27272a;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;">
-                <div style="display:flex;gap:24px;align-items:center;">
+            <div style="background:#1a1f2e;border-bottom:1px solid #27272a;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+                <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
                     <div style="font-weight:600;color:#e4e4e7;font-size:16px;">Police MDT</div>
+                    <!-- Officer Info at Top -->
+                    <div style="display:flex;gap:12px;align-items:center;padding:0 12px;border-left:1px solid #27272a;border-right:1px solid #27272a;">
+                        <div>
+                            <div style="color:#a1a1aa;font-size:10px;">Callsign</div>
+                            <div style="color:#e4e4e7;font-weight:600;font-size:12px;" id="mdtCallsignTop">1A-01</div>
+                        </div>
+                        <div style="width:1px;height:20px;background:#27272a;"></div>
+                        <div>
+                            <div style="color:#a1a1aa;font-size:10px;">Status</div>
+                            <div style="color:#10b981;font-weight:600;font-size:12px;" id="officerStatusTop">10-8</div>
+                        </div>
+                    </div>
                     <div style="display:flex;gap:16px;">
                         <button style="background:none;border:none;color:#a1a1aa;cursor:pointer;padding:4px 12px;border-radius:4px;font-size:13px;font-family:inherit;" class="mdt-tab">Calls</button>
                         <button style="background:none;border:none;color:#a1a1aa;cursor:pointer;padding:4px 12px;border-radius:4px;font-size:13px;font-family:inherit;" class="mdt-tab">Reports</button>
@@ -3854,6 +3898,7 @@
                         Available
                     </div>
                     <div style="color:#a1a1aa;font-size:13px;" id="mdtTime">00:00:00</div>
+                    <button style="background:#a855f7;border:none;color:#fff;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;" id="mdtLookupCivilian">Lookup Civilian</button>
                     <button style="background:#3b82f6;border:none;color:#fff;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;" id="closePoliceMdt">Exit Panel</button>
                 </div>
             </div>
@@ -3906,7 +3951,53 @@
         </div>
      </section>
 
-    <!-- Assign Units to Call Modal -->
+     <!-- Support Panel -->
+     <section class="support-panel" id="supportPanel" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#0c0e12;z-index:1000;flex-direction:column;">
+         <div style="background:#1a1f2e;border-bottom:1px solid #27272a;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;">
+             <div style="font-weight:600;color:#e4e4e7;font-size:18px;">Support Panel</div>
+             <button id="closeSupportPanel" style="background:none;border:none;color:#a1a1aa;cursor:pointer;font-size:24px;">✕</button>
+         </div>
+         <div style="display:flex;flex:1;overflow:hidden;">
+             <!-- Left Sidebar - Tickets List -->
+             <div style="width:300px;background:#14171f;border-right:1px solid #27272a;padding:20px;overflow-y:auto;display:flex;flex-direction:column;">
+                 <input type="text" id="supportSearchInput" placeholder="Search tickets..." style="width:100%;padding:10px;background:#0c0e12;border:1px solid #27272a;border-radius:6px;color:#e4e4e7;margin-bottom:16px;font-family:inherit;font-size:13px;">
+                 <div style="color:#a1a1aa;font-size:12px;margin-bottom:8px;font-weight:500;">OPEN TICKETS</div>
+                 <div id="supportTicketsList" style="flex:1;overflow-y:auto;">
+                     <div style="color:#6b7280;font-size:12px;text-align:center;padding:20px;">No tickets</div>
+                 </div>
+                 <button id="createSupportTicketBtn" style="width:100%;padding:10px;background:#3b82f6;border:none;color:#fff;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:500;margin-top:16px;">+ New Ticket</button>
+             </div>
+             <!-- Right Panel - Ticket Details -->
+             <div style="flex:1;display:flex;flex-direction:column;background:#0a0d14;">
+                 <div id="supportNoSelection" style="flex:1;display:flex;align-items:center;justify-content:center;color:#6b7280;">
+                     <div style="text-align:center;">
+                         <div style="font-size:16px;margin-bottom:8px;">No ticket selected</div>
+                         <div style="font-size:12px;">Select a ticket from the list</div>
+                     </div>
+                 </div>
+                 <div id="supportTicketView" style="display:none;flex:1;display:flex;flex-direction:column;padding:24px;">
+                     <div style="margin-bottom:16px;">
+                         <div style="margin-bottom:12px;">
+                             <div style="color:#a1a1aa;font-size:11px;margin-bottom:4px;">Ticket ID</div>
+                             <div style="color:#e4e4e7;font-weight:600;font-size:14px;" id="supportTicketID">#001</div>
+                         </div>
+                         <div style="color:#a1a1aa;font-size:11px;margin-bottom:4px;">Subject</div>
+                         <div style="color:#e4e4e7;font-weight:600;font-size:13px;" id="supportTicketSubject">Ticket Subject</div>
+                     </div>
+                     <!-- Messages -->
+                     <div id="supportMessages" style="flex:1;overflow-y:auto;background:#1a1f2e;border-radius:6px;padding:16px;margin-bottom:16px;border:1px solid #27272a;display:flex;flex-direction:column;gap:12px;">
+                     </div>
+                     <!-- Message Input -->
+                     <div style="display:flex;gap:8px;">
+                         <textarea id="supportMessageInput" placeholder="Type your response..." style="flex:1;padding:10px;background:#14171f;border:1px solid #27272a;border-radius:6px;color:#e4e4e7;font-family:inherit;font-size:13px;resize:none;height:60px;"></textarea>
+                         <button id="sendSupportMessageBtn" style="padding:10px 16px;background:#3b82f6;border:none;color:#fff;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:500;">Send</button>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </section>
+
+     <!-- Assign Units to Call Modal -->
     <div class="overlay" id="assignUnitsModal">
         <div class="modal modal-sm">
             <button class="modal-close" id="closeAssignUnits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -4729,12 +4820,15 @@
         let isPulseStaff = false; // Whether current user is PulseCAD staff
 
         const backToDashboard = document.getElementById('backToDashboard');
-        backToDashboard.onclick = () => {
-            communityScreen.classList.remove('active');
-            document.getElementById('userHubSection').style.display = 'block';
-            dashboardSection.classList.remove('hidden');
-            body.classList.remove('in-community');
-        };
+        if (backToDashboard) {
+            backToDashboard.onclick = () => {
+                communityScreen.classList.remove('active');
+                document.getElementById('userHubSection').style.display = 'block';
+                dashboardSection.classList.remove('hidden');
+                dashboardSection.style.display = 'block';
+                body.classList.remove('in-community');
+            };
+        }
 
         // Disable developer tools and right-click
         document.addEventListener('contextmenu', e => e.preventDefault());
@@ -5432,6 +5526,8 @@
             const rank = document.getElementById('officerRank').value.trim();
             
             if (mdtCallsign) mdtCallsign.textContent = callsign;
+            const mdtCallsignTop = document.getElementById('mdtCallsignTop');
+            if (mdtCallsignTop) mdtCallsignTop.textContent = callsign;
             
             currentOfficer = {
                 id: Date.now(),
@@ -5460,6 +5556,9 @@
                 renderDispatchUnits();
             }
             
+            // Load calls from Supabase
+            await loadCallsFromSupabase();
+            
             // Render MDT active calls
             if (typeof renderMDTActiveCalls === 'function') {
                 renderMDTActiveCalls();
@@ -5473,6 +5572,7 @@
              setInterval(() => {
                  if (currentOfficer && policeMdt && policeMdt.style.display !== 'none') {
                      renderActiveUnits();
+                     loadCallsFromSupabase();
                      if (typeof renderMDTActiveCalls === 'function') {
                          renderMDTActiveCalls();
                      }
@@ -5484,30 +5584,99 @@
             const mdtCreateCallBtn = document.getElementById('mdtCreateCallBtn');
             if (mdtCreateCallBtn) {
              mdtCreateCallBtn.onclick = () => {
-                 const callType = prompt('Enter call type (e.g., Traffic Stop, Welfare Check):');
-                 if (!callType) return;
-                 
-                 const location = prompt('Enter location:');
-                 if (!location) return;
-                 
-                 const postal = prompt('Enter postal code (optional):');
-                 
-                 alert(`Call created!\n\nType: ${callType}\nLocation: ${location}\nPostal: ${postal || 'None'}\n\nThis would be saved to the database.`);
-                 console.log('Call created:', { callType, location, postal });
+                 callNumberInput.value = generateCallNumber();
+                 createCallModal.classList.add('active');
+                 createCallModal._fromDispatch = false;
              };
             }
 
         function updateTimer() {
-            if (!dutyStartTime || !dutyTimer) return;
-            const elapsed = Math.floor((Date.now() - dutyStartTime) / 1000);
-            const hours = String(Math.floor(elapsed / 3600)).padStart(2, '0');
-            const minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
-            const seconds = String(elapsed % 60).padStart(2, '0');
-            if (dutyTimer) dutyTimer.textContent = `${hours}:${minutes}:${seconds}`;
-            if (mdtTime) mdtTime.textContent = `${hours}:${minutes}:${seconds}`;
-        }
+             if (!dutyStartTime || !dutyTimer) return;
+             const elapsed = Math.floor((Date.now() - dutyStartTime) / 1000);
+             const hours = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+             const minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+             const seconds = String(elapsed % 60).padStart(2, '0');
+             if (dutyTimer) dutyTimer.textContent = `${hours}:${minutes}:${seconds}`;
+             if (mdtTime) mdtTime.textContent = `${hours}:${minutes}:${seconds}`;
+         }
 
-        if (offDutyBtn) offDutyBtn.onclick = async () => {
+         // MDT Lookup Civilian
+         const mdtLookupCivilian = document.getElementById('mdtLookupCivilian');
+         const civilianLookupOverlay = document.getElementById('civilianLookupOverlay');
+         const civilianNameInput = document.getElementById('civilianNameInput');
+         const civilianResults = document.getElementById('civilianResults');
+         const civilianResultsList = document.getElementById('civilianResultsList');
+         const searchCivilian = document.getElementById('searchCivilian');
+         const closeCivilianLookup = document.getElementById('closeCivilianLookup');
+         const closeCivilianLookupBtn = document.getElementById('closeCivilianLookupBtn');
+         
+         if (mdtLookupCivilian) {
+             mdtLookupCivilian.onclick = () => {
+                 civilianLookupOverlay.classList.add('active');
+                 civilianNameInput.value = '';
+                 civilianResults.style.display = 'none';
+                 civilianResultsList.innerHTML = '';
+                 civilianNameInput.focus();
+             };
+         }
+         
+         if (closeCivilianLookup) {
+             closeCivilianLookup.onclick = () => {
+                 civilianLookupOverlay.classList.remove('active');
+             };
+         }
+         
+         if (closeCivilianLookupBtn) {
+             closeCivilianLookupBtn.onclick = () => {
+                 civilianLookupOverlay.classList.remove('active');
+             };
+         }
+         
+         if (searchCivilian) {
+             searchCivilian.onclick = async () => {
+                 const searchName = civilianNameInput.value.trim();
+                 if (!searchName) {
+                     alert('Please enter a name to search');
+                     return;
+                 }
+                 
+                 // Mock data - replace with actual database query
+                 const mockCivilians = [
+                     { id: 1, name: 'John Smith', dob: '1985-05-15', license: 'Active' },
+                     { id: 2, name: 'Jane ' + searchName, dob: '1990-03-22', license: 'Valid' },
+                     { id: 3, name: searchName + ' Johnson', dob: '1988-07-10', license: 'Suspended' }
+                 ];
+                 
+                 // Filter results based on search
+                 const results = mockCivilians.filter(c => 
+                     c.name.toLowerCase().includes(searchName.toLowerCase())
+                 );
+                 
+                 if (results.length === 0) {
+                     civilianResultsList.innerHTML = '<div style="padding:12px;color:#ef4444;">No civilians found matching: ' + searchName + '</div>';
+                 } else {
+                     civilianResultsList.innerHTML = results.map(c => `
+                         <div style="padding:12px;border-bottom:1px solid #27272a;cursor:pointer;transition:all 0.2s;background:#1a1f2e;" onmouseover="this.style.background='#1f2332'" onmouseout="this.style.background='#1a1f2e'" onclick="alert('Selected: ${c.name}\\nDOB: ${c.dob}\\nLicense: ${c.license}')">
+                             <div style="color:#e4e4e7;font-weight:600;font-size:13px;margin-bottom:4px;">${c.name}</div>
+                             <div style="color:#a1a1aa;font-size:11px;">DOB: ${c.dob} | License: ${c.license}</div>
+                         </div>
+                     `).join('');
+                 }
+                 
+                 civilianResults.style.display = 'block';
+             };
+         }
+         
+         // Allow Enter key to search
+         if (civilianNameInput) {
+             civilianNameInput.onkeypress = (e) => {
+                 if (e.key === 'Enter') {
+                     searchCivilian.click();
+                 }
+             };
+         }
+
+         if (offDutyBtn) offDutyBtn.onclick = async () => {
             clearInterval(timerInterval);
             timerInterval = null;
             dutyStartTime = null;
@@ -5529,6 +5698,139 @@
             communityScreen.classList.add('active');
         };
 
+        // Support Tickets System
+        const supportPanel = document.getElementById('supportPanel');
+        const supportTicketBtn = document.getElementById('supportTicketBtn');
+        const closeSupportPanel = document.getElementById('closeSupportPanel');
+        const supportSearchInput = document.getElementById('supportSearchInput');
+        const supportTicketsList = document.getElementById('supportTicketsList');
+        const supportTicketView = document.getElementById('supportTicketView');
+        const supportNoSelection = document.getElementById('supportNoSelection');
+        const supportMessages = document.getElementById('supportMessages');
+        const supportMessageInput = document.getElementById('supportMessageInput');
+        const sendSupportMessageBtn = document.getElementById('sendSupportMessageBtn');
+        const claimTicketBtn = document.getElementById('claimTicketBtn');
+        const supportTicketID = document.getElementById('supportTicketID');
+        const supportTicketUser = document.getElementById('supportTicketUser');
+        const supportTicketSubject = document.getElementById('supportTicketSubject');
+        const createSupportTicketBtn = document.getElementById('createSupportTicketBtn');
+        const supportBadge = document.getElementById('supportBadge');
+
+        const WHITELISTED_USERS = ['hkamm_00320', 'theboyrp1234_official1'];
+        let supportTickets = [];
+        let currentSupportTicket = null;
+        let currentSupportUser = null;
+
+        if (supportTicketBtn) {
+            supportTicketBtn.onclick = () => {
+                supportPanel.style.display = 'flex';
+                loadSupportTickets();
+            };
+        }
+
+        if (closeSupportPanel) {
+            closeSupportPanel.onclick = () => {
+                supportPanel.style.display = 'none';
+                currentSupportTicket = null;
+            };
+        }
+
+        async function loadSupportTickets() {
+            // Load only current user's tickets from storage
+            const userId = currentUser?.username || 'guest';
+            const stored = localStorage.getItem(`supportTickets_${userId}`);
+            supportTickets = stored ? JSON.parse(stored) : [];
+            renderSupportTickets();
+        }
+
+        function saveSupportTickets() {
+            const userId = currentUser?.username || 'guest';
+            localStorage.setItem(`supportTickets_${userId}`, JSON.stringify(supportTickets));
+        }
+
+        function renderSupportTickets() {
+            const searchTerm = supportSearchInput.value.toLowerCase();
+            const filtered = supportTickets.filter(t => 
+                t.subject.toLowerCase().includes(searchTerm)
+            );
+
+            supportTicketsList.innerHTML = filtered.map(ticket => `
+                <div onclick="selectSupportTicket('${ticket.id}')" style="padding:12px;background:#1a1f2e;border-bottom:1px solid #27272a;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#1f2332'" onmouseout="this.style.background='${currentSupportTicket?.id === ticket.id ? '#27272a' : '#1a1f2e'}'">
+                    <div style="color:#e4e4e7;font-weight:600;font-size:12px;margin-bottom:4px;">${ticket.subject}</div>
+                    <div style="color:#6b7280;font-size:10px;">${ticket.id}</div>
+                </div>
+            `).join('');
+
+            if (filtered.length === 0) {
+                supportTicketsList.innerHTML = '<div style="color:#6b7280;font-size:12px;text-align:center;padding:20px;">No tickets</div>';
+            }
+        }
+
+        window.selectSupportTicket = (ticketId) => {
+            currentSupportTicket = supportTickets.find(t => t.id === ticketId);
+            if (currentSupportTicket) {
+                supportTicketID.textContent = currentSupportTicket.id;
+                supportTicketSubject.textContent = currentSupportTicket.subject;
+                supportMessages.innerHTML = currentSupportTicket.messages.map(msg => `
+                    <div style="padding:12px;background:#14171f;border-radius:6px;${msg.author === (currentUser?.username) ? 'margin-left:40px;background:#27272a;' : ''}">
+                        <div style="color:#e4e4e7;font-weight:600;font-size:12px;margin-bottom:4px;">
+                            ${msg.author}
+                            ${WHITELISTED_USERS.includes(msg.author) ? '<span style="margin-left:6px;background:#3b82f6;color:#fff;padding:2px 6px;border-radius:3px;font-size:10px;font-weight:600;">Support Team</span>' : ''}
+                        </div>
+                        <div style="color:#a1a1aa;font-size:12px;margin-bottom:4px;">${msg.text}</div>
+                        <div style="color:#6b7280;font-size:10px;">${msg.timestamp}</div>
+                    </div>
+                `).join('');
+                supportNoSelection.style.display = 'none';
+                supportTicketView.style.display = 'flex';
+            }
+        };
+
+        if (sendSupportMessageBtn) {
+            sendSupportMessageBtn.onclick = () => {
+                const messageText = supportMessageInput.value.trim();
+                if (!messageText || !currentSupportTicket) return;
+
+                currentSupportTicket.messages.push({
+                    author: currentUser?.username || 'User',
+                    text: messageText,
+                    timestamp: new Date().toLocaleTimeString()
+                });
+
+                supportMessageInput.value = '';
+                saveSupportTickets();
+                window.selectSupportTicket(currentSupportTicket.id);
+                supportMessages.scrollTop = supportMessages.scrollHeight;
+            };
+        }
+
+        if (supportSearchInput) {
+            supportSearchInput.oninput = () => renderSupportTickets();
+        }
+
+        if (createSupportTicketBtn) {
+            createSupportTicketBtn.onclick = () => {
+                const subject = prompt('Ticket subject:');
+                if (!subject) return;
+                const newTicket = {
+                    id: `#${String(supportTickets.length + 1).padStart(3, '0')}`,
+                    user: currentUser?.username || 'User',
+                    username: currentUser?.username || 'User',
+                    subject: subject,
+                    status: 'open',
+                    claimed: false,
+                    messages: [{
+                        author: currentUser?.username || 'User',
+                        text: prompt('Describe your issue:') || 'No description',
+                        timestamp: new Date().toLocaleTimeString()
+                    }]
+                };
+                supportTickets.push(newTicket);
+                renderSupportTickets();
+                window.selectSupportTicket(newTicket.id);
+            };
+        }
+
         // Dispatch MDT
         const dispatchBtn = document.getElementById('dispatchBtn');
         const dispatchLoginModal = document.getElementById('dispatchLoginModal');
@@ -5543,6 +5845,23 @@
         let dispatchLeoUnits = [];
         let dispatchEmsCalls = [];
         let dispatchActiveCalls = [];
+
+        async function loadCallsFromSupabase() {
+            if (!currentCommunityId) return;
+            
+            const { data, error } = await db
+                .from('calls')
+                .select('*')
+                .eq('community_id', currentCommunityId);
+            
+            if (error) {
+                console.error('Error loading calls:', error);
+                return;
+            }
+            
+            dispatchActiveCalls = data || [];
+            renderDispatchUnits();
+        }
 
         dispatchBtn.onclick = () => { dispatchLoginModal.style.display = 'flex'; };
         closeDispatchLogin.onclick = () => { dispatchLoginModal.style.display = 'none'; dispatchLoginForm.reset(); };
@@ -5570,10 +5889,15 @@
             // Show dispatch MDT
             dispatchMdt.style.display = 'block';
             
-            renderDispatchUnits();
-            // Auto-refresh dispatch units every 2 seconds to pick up new police units
+            // Load calls from Supabase
+            loadCallsFromSupabase();
+            
+            // Auto-refresh dispatch units and calls every 2 seconds
             if (dispatchRefreshInterval) clearInterval(dispatchRefreshInterval);
-            dispatchRefreshInterval = setInterval(renderDispatchUnits, 2000);
+            dispatchRefreshInterval = setInterval(() => {
+                renderDispatchUnits();
+                loadCallsFromSupabase();
+            }, 2000);
         };
 
         let dispatchRefreshInterval = null;
@@ -5664,21 +5988,27 @@
                     callsBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">No active calls</td></tr>';
                 } else {
                     callsBody.innerHTML = dispatchActiveCalls.map(c => `
-                        <tr>
-                            <td>${c.number}</td>
-                            <td>${c.type}</td>
-                            <td>${c.location} (${c.postal})</td>
-                            <td>${c.officerCallsign || 'Unassigned'}</td>
-                            <td>
-                                <button class="btn-delete" style="background:#ef4444;border:none;color:#fff;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;" onclick="deleteDispatchCall(${c.id})">Delete</button>
-                            </td>
-                        </tr>
-                    `).join('');
+                         <tr>
+                             <td>${c.number}</td>
+                             <td>${c.type}</td>
+                             <td>${c.location} (${c.postal})</td>
+                             <td>${c.officer_callsign || 'Unassigned'}</td>
+                             <td>
+                                 <button class="btn-delete" style="background:#ef4444;border:none;color:#fff;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;" onclick="deleteDispatchCall(${c.id})">Delete</button>
+                             </td>
+                         </tr>
+                     `).join('');
                 }
             }
         }
 
-        function deleteDispatchCall(callId) {
+        async function deleteDispatchCall(callId) {
+             // Delete from Supabase
+             const { error } = await db.from('calls').delete().eq('id', callId);
+             if (error) {
+                 console.error('Error deleting call:', error);
+             }
+             
              dispatchActiveCalls = dispatchActiveCalls.filter(c => c.id !== callId);
              renderDispatchUnits();
          }
@@ -5687,7 +6017,7 @@
              const mdtActiveCalls = document.getElementById('mdtActiveCalls');
              if (!mdtActiveCalls) return;
              
-             const assignedCalls = dispatchActiveCalls.filter(c => c.officerCallsign && c.officerCallsign === (currentOfficer ? currentOfficer.callsign : null));
+             const assignedCalls = dispatchActiveCalls.filter(c => c.officer_callsign && c.officer_callsign === (currentOfficer ? currentOfficer.callsign : null));
              
              if (assignedCalls.length === 0) {
                  mdtActiveCalls.innerHTML = '<div style="color:#6b7280;font-size:12px;">No calls assigned</div>';
@@ -5697,9 +6027,23 @@
                          <div style="color:#e4e4e7;font-weight:600;">Call #${c.number}</div>
                          <div style="color:#a1a1aa;font-size:11px;margin-top:4px;">${c.type}</div>
                          <div style="color:#a1a1aa;font-size:11px;">${c.location}</div>
+                         <button onclick="deleteMDTCall(${c.id})" style="background:#ef4444;border:none;color:#fff;padding:4px 8px;border-radius:3px;font-size:10px;cursor:pointer;margin-top:6px;font-family:inherit;">Delete Call</button>
                      </div>
                  `).join('');
              }
+         }
+
+         async function deleteMDTCall(callId) {
+             // Delete from Supabase
+             const { error } = await db.from('calls').delete().eq('id', callId);
+             if (error) {
+                 console.error('Error deleting call:', error);
+                 return;
+             }
+             
+             dispatchActiveCalls = dispatchActiveCalls.filter(c => c.id !== callId);
+             renderMDTActiveCalls();
+             renderDispatchUnits();
          }
 
          // Unit Status Context Menu Handler
@@ -5986,6 +6330,10 @@
                 if (officerStatus) {
                     officerStatus.textContent = statusNames[status] || status;
                 }
+                const officerStatusTop = document.getElementById('officerStatusTop');
+                if (officerStatusTop) {
+                    officerStatusTop.textContent = statusNames[status] || status;
+                }
                 
                 if (currentOfficer) {
                     currentOfficer.status = status;
@@ -6025,82 +6373,142 @@
         const callNumberInput = document.getElementById('callNumber');
         const callsTableBody = document.getElementById('callsTableBody');
 
-        let callCounter = 1;
+        async function getNextCallNumber() {
+            if (!currentCommunityId) return 1;
+            
+            // Get the highest call number for this community
+            const { data, error } = await db
+                .from('calls')
+                .select('number')
+                .eq('community_id', currentCommunityId)
+                .order('number', { ascending: false })
+                .limit(1);
+            
+            if (error || !data || data.length === 0) {
+                return 1;
+            }
+            
+            return data[0].number + 1;
+        }
 
         function generateCallNumber() {
             const prefix = 'CALL';
-            const num = String(callCounter).padStart(4, '0');
-            const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
-            return `${prefix}-${num}-${rand}`;
+            const rand = Math.random().toString(36).substring(2, 8).toUpperCase();
+            return `${prefix}-${rand}`;
         }
 
-        createCallBtn.onclick = () => {
-            callNumberInput.value = generateCallNumber();
-            createCallModal._fromDispatch = false;
-            createCallModal.classList.add('active');
-        };
+        if (createCallBtn) {
+            createCallBtn.onclick = () => {
+                callNumberInput.value = generateCallNumber();
+                createCallModal._fromDispatch = false;
+                createCallModal.classList.add('active');
+            };
+        }
 
-        closeCreateCall.onclick = () => { createCallModal.classList.remove('active'); createCallForm.reset(); };
-        cancelCreateCall.onclick = () => { createCallModal.classList.remove('active'); createCallForm.reset(); };
-        createCallModal.onclick = e => { if (e.target === createCallModal) { createCallModal.classList.remove('active'); createCallForm.reset(); } };
+        if (closeCreateCall) closeCreateCall.onclick = () => { createCallModal.classList.remove('active'); createCallForm.reset(); };
+        if (cancelCreateCall) cancelCreateCall.onclick = () => { createCallModal.classList.remove('active'); createCallForm.reset(); };
+        if (createCallModal) createCallModal.onclick = e => { if (e.target === createCallModal) { createCallModal.classList.remove('active'); createCallForm.reset(); } };
 
         // Dispatch Create Call
-        document.getElementById('dispatchCreateCall').onclick = () => {
-            callNumberInput.value = generateCallNumber();
-            createCallModal.classList.add('active');
-            createCallModal._fromDispatch = true;
-        };
+        const dispatchCreateCallBtn = document.getElementById('dispatchCreateCall');
+        if (dispatchCreateCallBtn) {
+            dispatchCreateCallBtn.onclick = () => {
+                callNumberInput.value = generateCallNumber();
+                createCallModal.classList.add('active');
+                createCallModal._fromDispatch = true;
+            };
+        }
 
         // Handle call form submit for both police & dispatch
-         createCallForm.onsubmit = e => {
-             e.preventDefault();
-             const type = document.getElementById('callType').value.trim();
-             const location = document.getElementById('callLocation').value.trim();
-             const postal = document.getElementById('callPostal').value.trim();
-             const officerCallsign = document.getElementById('callOfficerCallsign').value.trim();
+        if (createCallForm) {
+         createCallForm.onsubmit = async e => {
+             try {
+                 e.preventDefault();
+                 const type = document.getElementById('callType').value.trim();
+                 const location = document.getElementById('callLocation').value.trim();
+                 const postal = document.getElementById('callPostal').value.trim();
+                 const officerCallsign = document.getElementById('callOfficerCallsign').value.trim();
 
-             if (createCallModal._fromDispatch) {
-                 const newCall = {
-                     id: Date.now(),
-                     number: callCounter,
-                     type: type,
-                     location: location,
-                     postal: postal,
-                     officerCallsign: officerCallsign || null,
-                     assignedUnits: []
-                 };
-                 dispatchActiveCalls.push(newCall);
-                 callCounter++;
-                 renderDispatchUnits();
-                 if (typeof renderMDTActiveCalls === 'function') {
-                     renderMDTActiveCalls();
+                 if (!currentCommunityId) {
+                     console.error('No community selected');
+                     return;
                  }
-                 createCallModal._fromDispatch = false;
-            } else {
-                const existingEmpty = callsTableBody.querySelector('td');
-                if (existingEmpty && existingEmpty.textContent === '1') {
-                    callsTableBody.innerHTML = '';
-                }
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${callCounter}</td>
-                    <td>${type}</td>
-                    <td>${location}</td>
-                    <td>${postal}</td>
-                    <td>
-                        <button class="btn-details">View Details</button>
-                        <button class="btn-delete" style="margin-left:8px;background:#ef4444;border:none;color:#fff;padding:6px 14px;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;">Delete</button>
-                    </td>
-                `;
-                row.querySelector('.btn-delete').onclick = function() { row.remove(); };
-                callsTableBody.appendChild(row);
-                callCounter++;
-            }
-            createCallModal.classList.remove('active');
-            createCallForm.reset();
-        };
 
-        // Assign Units to Call
+                 if (createCallModal._fromDispatch) {
+                     const callId = Date.now();
+                     const callNumber = await getNextCallNumber();
+                     const newCall = {
+                         id: callId,
+                         community_id: currentCommunityId,
+                         number: callNumber,
+                         type: type,
+                         location: location,
+                         postal: postal || null,
+                         officer_callsign: officerCallsign || null
+                     };
+                     
+                     // Save to Supabase
+                     try {
+                         const { error } = await db.from('calls').insert([newCall]);
+                         if (error) {
+                             console.error('Error saving call to Supabase:', error);
+                             alert('Error creating call: ' + (error?.message || 'Unknown error'));
+                             return;
+                         }
+                     } catch (err) {
+                         console.error('Call insert exception:', err);
+                         alert('Error creating call: ' + err.message);
+                         return;
+                     }
+
+                     dispatchActiveCalls.push(newCall);
+                     renderDispatchUnits();
+                     if (typeof renderMDTActiveCalls === 'function') {
+                         renderMDTActiveCalls();
+                     }
+                     createCallModal._fromDispatch = false;
+                } else {
+                    // Police MDT - create call in dispatch system with officer's callsign
+                    const callId = Date.now();
+                    const callNumber = await getNextCallNumber();
+                    const newCall = {
+                        id: callId,
+                        community_id: currentCommunityId,
+                        number: callNumber,
+                        type: type,
+                        location: location,
+                        postal: postal || null,
+                        officer_callsign: currentOfficer ? currentOfficer.callsign : (officerCallsign || null)
+                    };
+
+                    // Save to Supabase
+                    try {
+                        const { error } = await db.from('calls').insert([newCall]);
+                        if (error) {
+                            console.error('Error saving call to Supabase:', error);
+                            alert('Error creating call: ' + (error?.message || 'Unknown error'));
+                            return;
+                        }
+                    } catch (err) {
+                        console.error('Call insert exception:', err);
+                        alert('Error creating call: ' + err.message);
+                        return;
+                    }
+
+                    dispatchActiveCalls.push(newCall);
+                    if (typeof renderMDTActiveCalls === 'function') {
+                        renderMDTActiveCalls();
+                    }
+                }
+                createCallModal.classList.remove('active');
+                createCallForm.reset();
+             } catch (err) {
+                 console.error('Error creating call:', err);
+             }
+        };
+        }
+
+             // Assign Units to Call
         const assignUnitsModal = document.getElementById('assignUnitsModal');
         const assignCallSelect = document.getElementById('assignCallSelect');
         const assignUnitsCheckboxes = document.getElementById('assignUnitsCheckboxes');
@@ -6161,17 +6569,26 @@
         const lookupSearchBtn = document.getElementById('lookupSearchBtn');
         const lookupResultsList = document.getElementById('lookupResultsList');
 
-        lookupBtn.onclick = () => {
-            lookupResultsList.innerHTML = '<div class="lookup-empty">Enter a name to search</div>';
-            lookupFirstName.value = '';
-            lookupLastName.value = '';
-            lookupModal.classList.add('active');
-        };
+        if (lookupBtn) {
+            lookupBtn.onclick = () => {
+                if (lookupResultsList) {
+                    lookupResultsList.innerHTML = '<div class="lookup-empty">Enter a name to search</div>';
+                }
+                if (lookupFirstName) lookupFirstName.value = '';
+                if (lookupLastName) lookupLastName.value = '';
+                if (lookupModal) lookupModal.classList.add('active');
+            };
+        }
 
-        closeLookup.onclick = () => lookupModal.classList.remove('active');
-        lookupModal.onclick = e => { if (e.target === lookupModal) lookupModal.classList.remove('active'); };
+        if (closeLookup && lookupModal) {
+            closeLookup.onclick = () => lookupModal.classList.remove('active');
+        }
+        if (lookupModal) {
+            lookupModal.onclick = e => { if (e.target === lookupModal) lookupModal.classList.remove('active'); };
+        }
 
-        lookupSearchBtn.onclick = async () => {
+        if (lookupSearchBtn) {
+            lookupSearchBtn.onclick = async () => {
             const firstName = lookupFirstName.value.trim().toLowerCase();
             const lastName = lookupLastName.value.trim().toLowerCase();
             
@@ -6267,10 +6684,15 @@
                     <button class="btn-ticket" onclick="openTicketModal('${c.id}', '${c.first_name} ${c.last_name}')">Issue Ticket</button>
                 </div>
             `}).join('');
-        };
+            };
+            }
 
-        lookupFirstName.onkeypress = e => { if (e.key === 'Enter') lookupSearchBtn.onclick(); };
-        lookupLastName.onkeypress = e => { if (e.key === 'Enter') lookupSearchBtn.onclick(); };
+            if (lookupFirstName && lookupSearchBtn) {
+            lookupFirstName.onkeypress = e => { if (e.key === 'Enter') lookupSearchBtn.onclick(); };
+            }
+            if (lookupLastName && lookupSearchBtn) {
+            lookupLastName.onkeypress = e => { if (e.key === 'Enter') lookupSearchBtn.onclick(); };
+            }
 
         // Civilian Page
         const civilianBtn = document.getElementById('civilianBtn');
@@ -6430,7 +6852,6 @@
         };
 
         // Staff Dashboard
-        const staffDashboardBtn = document.getElementById('staffDashboardBtn');
         const staffDashboard = document.getElementById('staffDashboard');
         const backFromStaff = document.getElementById('backFromStaff');
 
