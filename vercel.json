@@ -1,5 +1,9 @@
 {
+  "buildCommand": "echo 'No build needed'",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/$1" }
+    { "source": "/supportpanel", "destination": "/supportpanel.html" },
+    { "source": "/", "destination": "/index.html" }
   ]
 }
